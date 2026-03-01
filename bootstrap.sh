@@ -24,5 +24,12 @@ mkdir -p ~/.agent
 rm -rf ~/.agent/skills
 ln -sfn ~/dot-agents/shared-skills ~/.agent/skills
 
+# 4. Global Workflows
+echo "Linking Global Workflows..."
+mkdir -p ~/dot-agents/shared-workflows
+mkdir -p ~/.agent
+rm -rf ~/.agent/workflows
+ln -sfn ~/dot-agents/shared-workflows ~/.agent/workflows
+
 echo "✅ Agent dotfiles symlinked successfully!"
 echo "To sync with another machine, push this repo, pull it there, and run this script."
