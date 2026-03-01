@@ -3,31 +3,27 @@
 
 echo "Starting Agent Dotfiles Synchronization..."
 
-# Compile the final .merged-skills directory
-echo "Merging upstream and custom skills..."
-mkdir -p ~/.merged-skills
+# Compile the final ~/.agent/skills directory
+echo "Merging upstream and custom skills directly into ~/.agent/skills..."
+mkdir -p ~/.agent
+rm -rf ~/.agent/skills
+mkdir -p ~/.agent/skills
 # 1. Start with copying everything from the community upstream
-rsync -a --exclude='.git' ~/dot-agents/upstream-skills/ ~/.merged-skills/
+rsync -a --exclude='.git' ~/dot-agents/upstream-skills/skills/ ~/.agent/skills/
 # 2. Overwrite with your personal custom skills 
-rsync -a ~/dot-agents/custom-skills/ ~/.merged-skills/
+rsync -a ~/dot-agents/custom-skills/ ~/.agent/skills/
 
 # 1. Antigravity (Gemini) Skills 
 echo "Linking Antigravity Skills..."
 mkdir -p ~/.gemini/antigravity
 rm -rf ~/.gemini/antigravity/skills
-ln -sfn ~/.merged-skills ~/.gemini/antigravity/skills
+ln -sfn ~/.agent/skills ~/.gemini/antigravity/skills
 
 # 2. Claude Skills
 echo "Linking Claude Skills..."
 mkdir -p ~/.claude
 rm -rf ~/.claude/skills
-ln -sfn ~/.merged-skills ~/.claude/skills
-
-# 3. Legacy Agent Folder
-echo "Linking Legacy ~/.agent skills folder..."
-mkdir -p ~/.agent
-rm -rf ~/.agent/skills
-ln -sfn ~/.merged-skills ~/.agent/skills
+ln -sfn ~/.agent/skills ~/.claude/skills
 
 # 4. Global Workflows
 echo "Linking Global Workflows..."
