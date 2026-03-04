@@ -12,6 +12,7 @@ echo "Starting Agent Dotfiles Synchronization..."
 # 1. Install/update community skills (if requested with --upstream flag)
 if [ "$1" = "--upstream" ]; then
     echo "Installing community skills from upstream-sources.txt..."
+    FAILED=0
     while IFS= read -r line || [ -n "$line" ]; do
         # Skip empty lines and comments
         [[ -z "$line" || "$line" == \#* ]] && continue
@@ -22,7 +23,10 @@ if [ "$1" = "--upstream" ]; then
         if [ -z "$skills" ] || [ "$skills" = "*" ]; then
             # Install all skills from this source
             echo "  → $source (all skills)"
-            pnpm dlx skills add "$source" -g $AGENTS --skill '*' -y
+            if ! pnpm dlx skills add "$source" -g $AGENTS --skill '*' -y; then
+                echo "  ✗ FAILED: $source"
+                FAILED=$((FAILED + 1))
+            fi
         else
             # Cherry-pick specific skills
             SKILL_FLAGS=""
@@ -30,9 +34,19 @@ if [ "$1" = "--upstream" ]; then
                 SKILL_FLAGS="$SKILL_FLAGS --skill $skill"
             done
             echo "  → $source ($skills)"
-            pnpm dlx skills add "$source" -g $AGENTS $SKILL_FLAGS -y
+            if ! pnpm dlx skills add "$source" -g $AGENTS $SKILL_FLAGS -y; then
+                echo "  ✗ FAILED: $source ($skills)"
+                FAILED=$((FAILED + 1))
+            fi
         fi
+
+        # Brief pause between sources to avoid pnpm dlx cache collisions
+        sleep 2
     done < ~/dot-agents/upstream-sources.txt
+
+    if [ $FAILED -gt 0 ]; then
+        echo "  ⚠ $FAILED source(s) failed. Re-run or install manually."
+    fi
 fi
 
 # 2. Overlay custom skills on top of all agent skill directories
