@@ -6,21 +6,23 @@ Personal AI agent configuration — skills, workflows, and rules — synchronize
 
 ```
 dot-agents/
-├── bootstrap.sh           # Overlay custom skills & link workflows
-├── custom-skills/          # Personal skills (always override community)
+├── bootstrap.sh             # Install upstream + overlay custom skills + link workflows
+├── upstream-sources.txt     # Git-tracked list of community skill repos
+├── custom-skills/           # Personal skills (always override community)
 │   ├── system-design-mentor/
 │   └── markdown-new/
-└── shared-workflows/       # Global rules and workflow definitions
+└── shared-workflows/        # Global rules and workflow definitions
     └── antigravity-global-rules.md
 ```
 
-Community skills (from [antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills)) are managed externally by the [`skills` CLI](https://www.npmjs.com/package/skills). This repo only tracks **your own** custom skills and workflows.
+Community skills are managed by the [`skills` CLI](https://www.npmjs.com/package/skills). This repo only tracks **your own** custom skills, workflows, and the list of upstream sources.
 
 ### How it works
 
-1. **Community skills** are installed globally via `pnpm dlx skills` into each agent's native directory (`~/.claude/skills`, `~/.gemini/antigravity/skills`, `~/.agents/skills`).
-2. **Custom skills** from `custom-skills/` are `rsync`'d on top, so your overrides always win if there's a name collision.
-3. **Workflows** in `shared-workflows/` are symlinked to `~/.agent/workflows` for global access.
+1. `upstream-sources.txt` lists community skill repositories (one per line).
+2. `bootstrap.sh --upstream` iterates over that list and installs each via `pnpm dlx skills add`.
+3. Custom skills from `custom-skills/` are `rsync`'d on top, so your overrides always win.
+4. Workflows in `shared-workflows/` are symlinked to `~/.agent/workflows/`.
 
 ### Supported agents
 
@@ -36,54 +38,43 @@ Community skills (from [antigravity-awesome-skills](https://github.com/sickn33/a
 # 1. Clone this repo
 git clone <your-remote> ~/dot-agents
 
-# 2. Install community skills + overlay custom ones
+# 2. Install everything
 ~/dot-agents/bootstrap.sh --upstream
 ```
 
 ## Daily usage
 
-```bash
-# Update community skills to latest
-pnpm dlx skills update
+| Task                          | Command                                |
+| ----------------------------- | -------------------------------------- |
+| Apply custom skill changes    | `~/dot-agents/bootstrap.sh`            |
+| Full sync (upstream + custom) | `~/dot-agents/bootstrap.sh --upstream` |
+| Quick-update community skills | `pnpm dlx skills update`               |
 
-# Apply custom skill overrides after editing
-~/dot-agents/bootstrap.sh
+## Adding a community skill source
 
-# Do both at once (update upstream + overlay custom)
-~/dot-agents/bootstrap.sh --upstream
-```
+1. Add a line to `upstream-sources.txt`:
+   ```
+   vercel-labs/agent-skills
+   ```
+2. Run `~/dot-agents/bootstrap.sh --upstream`
+3. Commit & push — the other machine gets it on `git pull`
 
 ## Adding a custom skill
 
-```bash
-# Create the skill directory
-mkdir -p ~/dot-agents/custom-skills/my-new-skill
-
-# Write the SKILL.md (name + description in YAML frontmatter, instructions in markdown)
-cat > ~/dot-agents/custom-skills/my-new-skill/SKILL.md << 'EOF'
----
-name: my-new-skill
-description: What this skill does and when to use it.
----
-
-# My New Skill
-
-Instructions for the agent...
-EOF
-
-# Deploy it
-~/dot-agents/bootstrap.sh
-
-# Commit
-cd ~/dot-agents && git add -A && git commit -m "Add my-new-skill"
-```
+1. Create the skill:
+   ```bash
+   mkdir -p ~/dot-agents/custom-skills/my-new-skill
+   ```
+2. Write `SKILL.md` with YAML frontmatter (`name`, `description`) and markdown instructions.
+3. Deploy: `~/dot-agents/bootstrap.sh`
+4. Commit & push.
 
 ## Custom skills
 
-| Skill                  | Description                                                                                                              |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `system-design-mentor` | Staff-level engineering mentor for Frontend and Backend system design using Socratic questioning and trade-off analysis. |
-| `markdown-new`         | Convert public web pages into clean Markdown via markdown.new for AI workflows.                                          |
+| Skill                  | Description                                                            |
+| ---------------------- | ---------------------------------------------------------------------- |
+| `system-design-mentor` | Staff-level engineering mentor for Frontend and Backend system design. |
+| `markdown-new`         | Convert public web pages into clean Markdown via markdown.new.         |
 
 ## Workflows
 

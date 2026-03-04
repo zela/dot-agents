@@ -5,12 +5,19 @@
 # This script overlays your personal custom skills on top,
 # ensuring your overrides always win over community defaults.
 
+AGENTS="-a claude-code -a antigravity -a github-copilot"
+
 echo "Starting Agent Dotfiles Synchronization..."
 
 # 1. Install/update community skills (if requested with --upstream flag)
 if [ "$1" = "--upstream" ]; then
-    echo "Installing community skills via pnpm dlx skills..."
-    pnpm dlx skills add sickn33/antigravity-awesome-skills -g -a claude-code -a antigravity -a github-copilot --skill '*' -y
+    echo "Installing community skills from upstream-sources.txt..."
+    while IFS= read -r source || [ -n "$source" ]; do
+        # Skip empty lines and comments
+        [[ -z "$source" || "$source" == \#* ]] && continue
+        echo "  → $source"
+        pnpm dlx skills add "$source" -g $AGENTS --skill '*' -y
+    done < ~/dot-agents/upstream-sources.txt
 fi
 
 # 2. Overlay custom skills on top of all agent skill directories
