@@ -52,12 +52,18 @@ git clone <your-remote> ~/dot-agents
 
 ## Adding a community skill source
 
-1. Add a line to `upstream-sources.txt`:
-   ```
-   vercel-labs/agent-skills
-   ```
-2. Run `~/dot-agents/bootstrap.sh --upstream`
-3. Commit & push — the other machine gets it on `git pull`
+Add a line to `upstream-sources.txt` and run `~/dot-agents/bootstrap.sh --upstream`.
+
+```
+# Format: <source> [skill1 skill2 ...]
+# Use * or omit skills to install all from that source.
+
+sickn33/antigravity-awesome-skills *
+vercel-labs/skills find-skills
+some-org/repo skill-a skill-b
+```
+
+On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 
 ## Adding a custom skill
 

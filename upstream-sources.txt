@@ -1,2 +1,6 @@
-sickn33/antigravity-awesome-skills
-vercel-labs/agent-skills
+# Upstream skill sources
+# Format: <source> [skill1 skill2 ...]
+# Use * or omit skills to install all from that source.
+
+sickn33/antigravity-awesome-skills *
+vercel-labs/skills find-skills

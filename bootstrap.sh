@@ -12,11 +12,26 @@ echo "Starting Agent Dotfiles Synchronization..."
 # 1. Install/update community skills (if requested with --upstream flag)
 if [ "$1" = "--upstream" ]; then
     echo "Installing community skills from upstream-sources.txt..."
-    while IFS= read -r source || [ -n "$source" ]; do
+    while IFS= read -r line || [ -n "$line" ]; do
         # Skip empty lines and comments
-        [[ -z "$source" || "$source" == \#* ]] && continue
-        echo "  → $source"
-        pnpm dlx skills add "$source" -g $AGENTS --skill '*' -y
+        [[ -z "$line" || "$line" == \#* ]] && continue
+
+        # Parse: first word = source, remaining words = skill names
+        read -r source skills <<< "$line"
+
+        if [ -z "$skills" ] || [ "$skills" = "*" ]; then
+            # Install all skills from this source
+            echo "  → $source (all skills)"
+            pnpm dlx skills add "$source" -g $AGENTS --skill '*' -y
+        else
+            # Cherry-pick specific skills
+            SKILL_FLAGS=""
+            for skill in $skills; do
+                SKILL_FLAGS="$SKILL_FLAGS --skill $skill"
+            done
+            echo "  → $source ($skills)"
+            pnpm dlx skills add "$source" -g $AGENTS $SKILL_FLAGS -y
+        fi
     done < ~/dot-agents/upstream-sources.txt
 fi
 
