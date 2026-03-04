@@ -1,36 +1,45 @@
 #!/bin/bash
 # ~/dot-agents/bootstrap.sh
+#
+# Community skills are managed by `pnpm dlx skills`.
+# This script overlays your personal custom skills on top,
+# ensuring your overrides always win over community defaults.
 
 echo "Starting Agent Dotfiles Synchronization..."
 
-# Compile the final ~/.agent/skills directory
-echo "Merging upstream and custom skills directly into ~/.agent/skills..."
-mkdir -p ~/.agent
-rm -rf ~/.agent/skills
-mkdir -p ~/.agent/skills
-# 1. Start with copying everything from the community upstream
-rsync -a --exclude='.git' ~/dot-agents/upstream-skills/skills/ ~/.agent/skills/
-# 2. Overwrite with your personal custom skills 
-rsync -a ~/dot-agents/custom-skills/ ~/.agent/skills/
+# 1. Install/update community skills (if requested with --upstream flag)
+if [ "$1" = "--upstream" ]; then
+    echo "Installing community skills via pnpm dlx skills..."
+    pnpm dlx skills add sickn33/antigravity-awesome-skills -g -a claude-code -a antigravity -a github-copilot --skill '*' -y
+fi
 
-# 1. Antigravity (Gemini) Skills 
-echo "Linking Antigravity Skills..."
-mkdir -p ~/.gemini/antigravity
-rm -rf ~/.gemini/antigravity/skills
-ln -sfn ~/.agent/skills ~/.gemini/antigravity/skills
+# 2. Overlay custom skills on top of all agent skill directories
+echo "Overlaying custom skills..."
+CUSTOM_DIR=~/dot-agents/custom-skills
+AGENT_DIRS=(
+    ~/.claude/skills
+    ~/.gemini/antigravity/skills
+    ~/.agents/skills
+)
 
-# 2. Claude Skills
-echo "Linking Claude Skills..."
-mkdir -p ~/.claude
-rm -rf ~/.claude/skills
-ln -sfn ~/.agent/skills ~/.claude/skills
+for dir in "${AGENT_DIRS[@]}"; do
+    if [ -d "$dir" ]; then
+        rsync -a "$CUSTOM_DIR/" "$dir/"
+        echo "  ✓ $dir"
+    else
+        echo "  ⚠ $dir not found, skipping"
+    fi
+done
 
-# 4. Global Workflows
+# 3. Global Workflows
 echo "Linking Global Workflows..."
-mkdir -p ~/dot-agents/shared-workflows
 mkdir -p ~/.agent
 rm -rf ~/.agent/workflows
 ln -sfn ~/dot-agents/shared-workflows ~/.agent/workflows
 
-echo "✅ Agent dotfiles symlinked and merged successfully!"
-echo "To sync with another machine, push this repo, pull it there, and run this script."
+echo ""
+echo "✅ Agent dotfiles synchronized!"
+echo ""
+echo "Usage:"
+echo "  ./bootstrap.sh              # Overlay custom skills only"
+echo "  ./bootstrap.sh --upstream   # Also install/update community skills"
