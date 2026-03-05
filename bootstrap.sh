@@ -23,7 +23,7 @@ if [ "$1" = "--upstream" ]; then
         if [ -z "$skills" ] || [ "$skills" = "*" ]; then
             # Install all skills from this source
             echo "  → $source (all skills)"
-            if ! pnpm dlx skills add "$source" -g $AGENTS --skill '*' -y; then
+            if ! pnpm dlx skills add "$source" -g $AGENTS --skill '*' -y < /dev/null; then
                 echo "  ✗ FAILED: $source"
                 FAILED=$((FAILED + 1))
             fi
@@ -34,7 +34,7 @@ if [ "$1" = "--upstream" ]; then
                 SKILL_FLAGS="$SKILL_FLAGS --skill $skill"
             done
             echo "  → $source ($skills)"
-            if ! pnpm dlx skills add "$source" -g $AGENTS $SKILL_FLAGS -y; then
+            if ! pnpm dlx skills add "$source" -g $AGENTS $SKILL_FLAGS -y < /dev/null; then
                 echo "  ✗ FAILED: $source ($skills)"
                 FAILED=$((FAILED + 1))
             fi

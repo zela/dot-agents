@@ -2,5 +2,5 @@
 # Format: <source> [skill1 skill2 ...]
 # Use * or omit skills to install all from that source.
 
-sickn33/antigravity-awesome-skills *
+sickn33/antigravity-awesome-skills system-design-mentor api-patterns node-best-practices systematic-debugging
 vercel-labs/skills find-skills
