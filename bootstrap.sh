@@ -11,6 +11,8 @@ echo "Starting Agent Dotfiles Synchronization..."
 
 # 1. Install/update community skills (if requested with --upstream flag)
 if [ "$1" = "--upstream" ]; then
+    echo "Cleaning existing skills..."
+    rm -rf ~/.claude/skills ~/.gemini/antigravity/skills ~/.agents/skills
     echo "Installing community skills from upstream-sources.txt..."
     FAILED=0
     while IFS= read -r line || [ -n "$line" ]; do
