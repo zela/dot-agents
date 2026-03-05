@@ -2,5 +2,11 @@
 # Format: <source> [skill1 skill2 ...]
 # Use * or omit skills to install all from that source.
 
-sickn33/antigravity-awesome-skills system-design-mentor api-patterns node-best-practices systematic-debugging
+# Architecture & System Design
+# Frontend & UI
+# Agents & Orchestration
+# Security
+# DevOps & Quality
+sickn33/antigravity-awesome-skills architecture architecture-patterns api-patterns brainstorming frontend-design frontend-developer react-patterns ui-ux-designer debugging-strategies error-handling-patterns multi-agent-patterns ai-agents-architect parallel-agents monorepo-architect testing-patterns bash-scripting deployment-pipeline-design frontend-mobile-security-xss-scan frontend-security-coder vibe-code-auditor
+
 vercel-labs/skills find-skills
