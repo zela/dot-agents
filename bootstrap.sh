@@ -6,13 +6,19 @@
 # ensuring your overrides always win over community defaults.
 
 AGENTS="-a claude-code -a antigravity -a github-copilot"
+AGENT_DIRS=(
+    ~/.claude/skills
+    ~/.gemini/antigravity/skills
+    ~/.agents/skills
+)
+CUSTOM_DIR=~/dot-agents/custom-skills
 
 echo "Starting Agent Dotfiles Synchronization..."
 
 # 1. Install/update community skills (if requested with --upstream flag)
 if [ "$1" = "--upstream" ]; then
     echo "Cleaning existing skills..."
-    rm -rf ~/.claude/skills ~/.gemini/antigravity/skills ~/.agents/skills
+    rm -rf "${AGENT_DIRS[@]}"
     echo "Installing community skills from upstream-sources.txt..."
     FAILED=0
     while IFS= read -r line || [ -n "$line" ]; do
@@ -53,12 +59,6 @@ fi
 
 # 2. Overlay custom skills on top of all agent skill directories
 echo "Overlaying custom skills..."
-CUSTOM_DIR=~/dot-agents/custom-skills
-AGENT_DIRS=(
-    ~/.claude/skills
-    ~/.gemini/antigravity/skills
-    ~/.agents/skills
-)
 
 for dir in "${AGENT_DIRS[@]}"; do
     if [ -d "$dir" ]; then
