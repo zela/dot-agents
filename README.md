@@ -81,6 +81,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | ---------------------- | ---------------------------------------------------------------------- |
 | `system-design-mentor` | Staff-level engineering mentor for Frontend and Backend system design. |
 | `markdown-new`         | Convert public web pages into clean Markdown via markdown.new.         |
+| `third-opinion`        | Consult an alternative AI model via CLI (Copilot or Claude Code).      |
 
 ## Workflows
 
