@@ -13,10 +13,19 @@ AGENT_DIRS=(
 )
 CUSTOM_DIR=~/dot-agents/custom-skills
 
+UPSTREAM=false
+SYMLINK=false
+for arg in "$@"; do
+    case "$arg" in
+        --upstream) UPSTREAM=true ;;
+        --symlink)  SYMLINK=true ;;
+    esac
+done
+
 echo "Starting Agent Dotfiles Synchronization..."
 
 # 1. Install/update community skills (if requested with --upstream flag)
-if [ "$1" = "--upstream" ]; then
+if [ "$UPSTREAM" = true ]; then
     echo "Cleaning existing skills..."
     rm -rf "${AGENT_DIRS[@]}"
     echo "Installing community skills from upstream-sources.txt..."
@@ -58,16 +67,31 @@ if [ "$1" = "--upstream" ]; then
 fi
 
 # 2. Overlay custom skills on top of all agent skill directories
-echo "Overlaying custom skills..."
-
-for dir in "${AGENT_DIRS[@]}"; do
-    if [ -d "$dir" ]; then
-        rsync -a "$CUSTOM_DIR/" "$dir/"
-        echo "  ✓ $dir"
-    else
-        echo "  ⚠ $dir not found, skipping"
-    fi
-done
+if [ "$SYMLINK" = true ]; then
+    echo "Symlinking custom skills..."
+    for dir in "${AGENT_DIRS[@]}"; do
+        if [ -d "$dir" ]; then
+            for file in "$CUSTOM_DIR"/*; do
+                name=$(basename "$file")
+                rm -f "$dir/$name"
+                ln -sfn "$file" "$dir/$name"
+            done
+            echo "  ✓ $dir"
+        else
+            echo "  ⚠ $dir not found, skipping"
+        fi
+    done
+else
+    echo "Overlaying custom skills..."
+    for dir in "${AGENT_DIRS[@]}"; do
+        if [ -d "$dir" ]; then
+            rsync -a "$CUSTOM_DIR/" "$dir/"
+            echo "  ✓ $dir"
+        else
+            echo "  ⚠ $dir not found, skipping"
+        fi
+    done
+fi
 
 # 3. Global Workflows
 echo "Linking Global Workflows..."
@@ -79,5 +103,7 @@ echo ""
 echo "✅ Agent dotfiles synchronized!"
 echo ""
 echo "Usage:"
-echo "  ./bootstrap.sh              # Overlay custom skills only"
+echo "  ./bootstrap.sh              # Overlay custom skills only (rsync copy)"
+echo "  ./bootstrap.sh --symlink    # Overlay via symlinks (live-editable)"
 echo "  ./bootstrap.sh --upstream   # Also install/update community skills"
+echo "  ./bootstrap.sh --upstream --symlink  # Both"
