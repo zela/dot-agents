@@ -9,10 +9,13 @@ dot-agents/
 ├── bootstrap.sh             # Install upstream + overlay custom skills + link workflows
 ├── upstream-sources.txt     # Git-tracked list of community skill repos
 ├── custom-skills/           # Personal skills (always override community)
+│   ├── beautiful-mermaid/
+│   ├── markdown-new/
 │   ├── system-design-mentor/
-│   └── markdown-new/
+│   └── third-opinion/
 └── shared-workflows/        # Global rules and workflow definitions
-    └── antigravity-global-rules.md
+    ├── antigravity-global-rules.md
+    └── model_evaluation.md
 ```
 
 Community skills are managed by the [`skills` CLI](https://www.npmjs.com/package/skills). This repo only tracks **your own** custom skills, workflows, and the list of upstream sources.
@@ -81,6 +84,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | ---------------------- | ---------------------------------------------------------------------- |
 | `system-design-mentor` | Staff-level engineering mentor for Frontend and Backend system design. |
 | `markdown-new`         | Convert public web pages into clean Markdown via markdown.new.         |
+| `beautiful-mermaid`    | Create, style, and render beautiful Mermaid diagrams.                  |
 | `third-opinion`        | Consult an alternative AI model via CLI (Copilot or Claude Code).      |
 
 ## Workflows
@@ -88,3 +92,4 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | Workflow                   | Description                                                                                |
 | -------------------------- | ------------------------------------------------------------------------------------------ |
 | `antigravity-global-rules` | Global operating principles: safety boundaries, planning discipline, and coding standards. |
+| `model_evaluation`         | Framework to evaluate and compare new or existing models for codebase tasks.               |
