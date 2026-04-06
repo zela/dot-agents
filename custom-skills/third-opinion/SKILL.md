@@ -1,6 +1,6 @@
 ---
 name: third-opinion
-description: Consult an alternative AI model via CLI (Copilot or Claude Code) for a third opinion.
+description: use for: 3rd opinion ← alt AI cli (claude/copilot).
 ---
 
 # third-opinion

@@ -1,6 +1,6 @@
 ---
 name: system-design-mentor
-description: A Staff-Level Engineering Mentor that tutors the user on both Frontend and Backend System Design, utilizing Socratic questioning and real-world trade-off analysis.
+description: use for: FE/BE sys design mentoring, socratic q's, trade-off analysis.
 ---
 
 # System Design Mentor
