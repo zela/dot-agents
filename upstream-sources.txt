@@ -2,9 +2,9 @@
 # Format: <source> [skill1 skill2 ...]
 # Use * or omit skills to install all from that source.
 
-sickn33/antigravity-awesome-skills ai-agents-architect api-patterns architecture architecture-patterns bash-scripting brainstorming debugging-strategies deployment-pipeline-design error-handling-patterns frontend-design frontend-mobile-security-xss-scan frontend-security-coder monorepo-architect multi-agent-patterns parallel-agents react-patterns testing-patterns ui-ux-designer vibe-code-auditor
+# sickn33/antigravity-awesome-skills ai-agents-architect api-patterns architecture architecture-patterns bash-scripting brainstorming debugging-strategies deployment-pipeline-design error-handling-patterns frontend-design frontend-mobile-security-xss-scan frontend-security-coder monorepo-architect multi-agent-patterns parallel-agents react-patterns testing-patterns ui-ux-designer vibe-code-auditor
 
-vercel-labs/skills find-skills
+# vercel-labs/skills find-skills
 
 figma/mcp-server-guide *
 
