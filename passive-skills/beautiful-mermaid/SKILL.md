@@ -1,15 +1,6 @@
 ---
 name: beautiful-mermaid
-description: >
-  Create, style, and render beautiful Mermaid diagrams using the beautiful-mermaid
-  TypeScript library — a zero-dependency renderer with 15 built-in themes (Tokyo Night,
-  Catppuccin, Nord, Dracula, GitHub, Solarized, and more) that outputs SVG or ASCII.
-  Use this skill whenever the user wants to render Mermaid diagrams in code (not just
-  write diagram syntax), integrate Mermaid into a React or Node app, apply custom
-  themes or colors to diagrams, create XY charts with interactive tooltips, or needs
-  help with beautiful-mermaid library installation, API usage, or configuration.
-  Also trigger when the user wants flowcharts, sequence diagrams, ER diagrams, state
-  diagrams, or class diagrams rendered programmatically with styling.
+description: use for: prog render mermaid svg/ascii ← beautiful-mermaid pkg. triggers: react/node impl, themes, charts, flow/ER/sequence diags.
 ---
 
 # beautiful-mermaid Skill
@@ -54,16 +45,17 @@ const ascii: string = renderMermaidASCII(diagramText, asciiOptions?)
 
 Generate correct Mermaid syntax for any of these — the library handles rendering:
 
-| Type | Keyword |
-|------|---------|
-| Flowchart | `graph TD` / `graph LR` / `graph BT` / `graph RL` |
-| State diagram | `stateDiagram-v2` |
-| Sequence diagram | `sequenceDiagram` |
-| Class diagram | `classDiagram` |
-| ER diagram | `erDiagram` |
-| XY chart (bar/line) | `xychart-beta` |
+| Type                | Keyword                                           |
+| ------------------- | ------------------------------------------------- |
+| Flowchart           | `graph TD` / `graph LR` / `graph BT` / `graph RL` |
+| State diagram       | `stateDiagram-v2`                                 |
+| Sequence diagram    | `sequenceDiagram`                                 |
+| Class diagram       | `classDiagram`                                    |
+| ER diagram          | `erDiagram`                                       |
+| XY chart (bar/line) | `xychart-beta`                                    |
 
 ### Flowchart directions
+
 `TD` = top-down, `LR` = left-right, `BT` = bottom-up, `RL` = right-left
 
 ---
@@ -73,30 +65,30 @@ Generate correct Mermaid syntax for any of these — the library handles renderi
 Use a built-in theme by importing `THEMES` and passing it as options:
 
 ```typescript
-import { renderMermaidSVG, THEMES } from 'beautiful-mermaid'
+import { renderMermaidSVG, THEMES } from "beautiful-mermaid";
 
-const svg = renderMermaidSVG(diagram, THEMES['tokyo-night'])
+const svg = renderMermaidSVG(diagram, THEMES["tokyo-night"]);
 ```
 
 ### All 15 built-in themes
 
-| Theme key | Variant |
-|-----------|---------|
-| `zinc-light` | Light |
-| `zinc-dark` | Dark |
-| `tokyo-night` | Dark |
-| `tokyo-night-storm` | Dark |
-| `tokyo-night-light` | Light |
-| `catppuccin-mocha` | Dark |
-| `catppuccin-latte` | Light |
-| `nord` | Dark |
-| `nord-light` | Light |
-| `dracula` | Dark |
-| `github-light` | Light |
-| `github-dark` | Dark |
-| `solarized-light` | Light |
-| `solarized-dark` | Dark |
-| `one-dark` | Dark |
+| Theme key           | Variant |
+| ------------------- | ------- |
+| `zinc-light`        | Light   |
+| `zinc-dark`         | Dark    |
+| `tokyo-night`       | Dark    |
+| `tokyo-night-storm` | Dark    |
+| `tokyo-night-light` | Light   |
+| `catppuccin-mocha`  | Dark    |
+| `catppuccin-latte`  | Light   |
+| `nord`              | Dark    |
+| `nord-light`        | Light   |
+| `dracula`           | Dark    |
+| `github-light`      | Light   |
+| `github-dark`       | Dark    |
+| `solarized-light`   | Light   |
+| `solarized-dark`    | Dark    |
+| `one-dark`          | Dark    |
 
 ### Custom colors (two-color minimum)
 
@@ -104,29 +96,30 @@ Only `bg` and `fg` are required — all other colors are auto-derived:
 
 ```typescript
 renderMermaidSVG(diagram, {
-  bg: '#1e1e2e',
-  fg: '#cdd6f4',
+  bg: "#1e1e2e",
+  fg: "#cdd6f4",
   // Optional enrichments:
-  accent: '#89b4fa',
-  muted: '#6c7086',
-  surface: '#313244',
-  border: '#45475a',
-  line: '#89b4fa',
-})
+  accent: "#89b4fa",
+  muted: "#6c7086",
+  surface: "#313244",
+  border: "#45475a",
+  line: "#89b4fa",
+});
 ```
 
 ### Live theme switching (CSS variables)
 
 ```typescript
-const svgElement = document.querySelector('svg')
-svgElement.style.setProperty('--bg', '#282a36')
-svgElement.style.setProperty('--fg', '#f8f8f2')
+const svgElement = document.querySelector("svg");
+svgElement.style.setProperty("--bg", "#282a36");
+svgElement.style.setProperty("--fg", "#f8f8f2");
 // Updates immediately — no re-render needed
 ```
 
 Pass CSS variable strings to keep this working:
+
 ```typescript
-renderMermaidSVG(diagram, { bg: 'var(--background)', fg: 'var(--foreground)' })
+renderMermaidSVG(diagram, { bg: "var(--background)", fg: "var(--foreground)" });
 ```
 
 ---
@@ -159,36 +152,38 @@ function MermaidDiagram({ code, theme = 'tokyo-night' }: {
 ```
 
 For CSS variable-based theming (theme switches without re-rendering):
+
 ```typescript
 renderMermaidSVG(code, {
-  bg: 'var(--background)',
-  fg: 'var(--foreground)',
+  bg: "var(--background)",
+  fg: "var(--foreground)",
   transparent: true,
-})
+});
 ```
 
 ---
 
 ## Render Options Reference
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `bg` | `string` | `#FFFFFF` | Background color or CSS variable |
-| `fg` | `string` | `#27272A` | Foreground/text color |
-| `font` | `string` | `Inter` | Font family |
-| `padding` | `number` | `40` | Canvas padding (px) |
-| `nodeSpacing` | `number` | `24` | Horizontal sibling spacing |
-| `layerSpacing` | `number` | `40` | Vertical layer spacing |
-| `componentSpacing` | `number` | `24` | Disconnected component spacing |
-| `transparent` | `boolean` | `false` | Transparent background |
-| `interactive` | `boolean` | `false` | XY chart hover tooltips |
-| `thoroughness` | `number` | `3` | Crossing minimization (1–7) |
+| Option             | Type      | Default   | Description                      |
+| ------------------ | --------- | --------- | -------------------------------- |
+| `bg`               | `string`  | `#FFFFFF` | Background color or CSS variable |
+| `fg`               | `string`  | `#27272A` | Foreground/text color            |
+| `font`             | `string`  | `Inter`   | Font family                      |
+| `padding`          | `number`  | `40`      | Canvas padding (px)              |
+| `nodeSpacing`      | `number`  | `24`      | Horizontal sibling spacing       |
+| `layerSpacing`     | `number`  | `40`      | Vertical layer spacing           |
+| `componentSpacing` | `number`  | `24`      | Disconnected component spacing   |
+| `transparent`      | `boolean` | `false`   | Transparent background           |
+| `interactive`      | `boolean` | `false`   | XY chart hover tooltips          |
+| `thoroughness`     | `number`  | `3`       | Crossing minimization (1–7)      |
 
 ---
 
 ## Diagram Syntax Examples
 
 ### Flowchart
+
 ```
 graph LR
   A[Client] --> B[API Gateway]
@@ -199,6 +194,7 @@ graph LR
 ```
 
 ### Edge styling
+
 ```
 graph TD
   A --> B --> C --> D
@@ -207,6 +203,7 @@ graph TD
 ```
 
 ### State diagram
+
 ```
 stateDiagram-v2
   [*] --> Draft
@@ -217,6 +214,7 @@ stateDiagram-v2
 ```
 
 ### Sequence diagram
+
 ```
 sequenceDiagram
   User->>Frontend: click submit
@@ -228,6 +226,7 @@ sequenceDiagram
 ```
 
 ### ER diagram
+
 ```
 erDiagram
   USER ||--o{ ORDER : places
@@ -241,6 +240,7 @@ erDiagram
 ```
 
 ### XY chart (bar)
+
 ```
 xychart-beta
     title "Monthly Revenue"
@@ -250,6 +250,7 @@ xychart-beta
 ```
 
 ### XY chart (combined bar + line trend)
+
 ```
 xychart-beta
     title "Sales with Trend"
@@ -260,6 +261,7 @@ xychart-beta
 ```
 
 ### XY chart (horizontal)
+
 ```
 xychart-beta horizontal
     title "Top Languages"
@@ -268,8 +270,9 @@ xychart-beta horizontal
 ```
 
 Enable interactive tooltips on XY charts:
+
 ```typescript
-renderMermaidSVG(diagram, { ...THEMES['catppuccin-mocha'], interactive: true })
+renderMermaidSVG(diagram, { ...THEMES["catppuccin-mocha"], interactive: true });
 ```
 
 ---
@@ -277,16 +280,16 @@ renderMermaidSVG(diagram, { ...THEMES['catppuccin-mocha'], interactive: true })
 ## ASCII / Terminal Rendering
 
 ```typescript
-import { renderMermaidASCII } from 'beautiful-mermaid'
+import { renderMermaidASCII } from "beautiful-mermaid";
 
 // Unicode box-drawing (default)
-const unicode = renderMermaidASCII(`graph LR; A --> B --> C`)
+const unicode = renderMermaidASCII(`graph LR; A --> B --> C`);
 
 // Pure ASCII (no Unicode)
-const ascii = renderMermaidASCII(`graph LR; A --> B --> C`, { useAscii: true })
+const ascii = renderMermaidASCII(`graph LR; A --> B --> C`, { useAscii: true });
 
 // With ANSI colors for terminal
-const colored = renderMermaidASCII(diagram, { colorMode: 'truecolor' })
+const colored = renderMermaidASCII(diagram, { colorMode: "truecolor" });
 ```
 
 ASCII options: `useAscii`, `paddingX`, `paddingY`, `boxBorderPadding`,
@@ -299,12 +302,12 @@ ASCII options: `useAscii`, `paddingX`, `paddingY`, `boxBorderPadding`,
 Use any VS Code theme from the Shiki library:
 
 ```typescript
-import { getSingletonHighlighter } from 'shiki'
-import { renderMermaidSVG, fromShikiTheme } from 'beautiful-mermaid'
+import { getSingletonHighlighter } from "shiki";
+import { renderMermaidSVG, fromShikiTheme } from "beautiful-mermaid";
 
-const highlighter = await getSingletonHighlighter({ themes: ['vitesse-dark'] })
-const colors = fromShikiTheme(highlighter.getTheme('vitesse-dark'))
-const svg = renderMermaidSVG(diagram, colors)
+const highlighter = await getSingletonHighlighter({ themes: ["vitesse-dark"] });
+const colors = fromShikiTheme(highlighter.getTheme("vitesse-dark"));
+const svg = renderMermaidSVG(diagram, colors);
 ```
 
 ---
@@ -312,25 +315,28 @@ const svg = renderMermaidSVG(diagram, colors)
 ## Common Patterns
 
 **Dark/light mode toggle:**
+
 ```typescript
-const theme = isDark ? THEMES['tokyo-night'] : THEMES['github-light']
-renderMermaidSVG(diagram, theme)
+const theme = isDark ? THEMES["tokyo-night"] : THEMES["github-light"];
+renderMermaidSVG(diagram, theme);
 ```
 
 **Node.js / CLI output:**
-```typescript
-import { renderMermaidSVG } from 'beautiful-mermaid'
-import { writeFileSync } from 'fs'
 
-const svg = renderMermaidSVG(diagram, THEMES['catppuccin-mocha'])
-writeFileSync('diagram.svg', svg)
+```typescript
+import { renderMermaidSVG } from "beautiful-mermaid";
+import { writeFileSync } from "fs";
+
+const svg = renderMermaidSVG(diagram, THEMES["catppuccin-mocha"]);
+writeFileSync("diagram.svg", svg);
 ```
 
 **Async server (Next.js RSC, etc.):**
-```typescript
-import { renderMermaidSVGAsync } from 'beautiful-mermaid'
 
-const svg = await renderMermaidSVGAsync(diagram, THEMES['nord'])
+```typescript
+import { renderMermaidSVGAsync } from "beautiful-mermaid";
+
+const svg = await renderMermaidSVGAsync(diagram, THEMES["nord"]);
 ```
 
 See `references/api.md` for complete type definitions and the full AsciiTheme interface.
