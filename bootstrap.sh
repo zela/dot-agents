@@ -67,30 +67,44 @@ if [ "$UPSTREAM" = true ]; then
 fi
 
 # 2. Overlay custom skills on top of all agent skill directories
+#    .custom-skills.prev tracks previously installed names so removals propagate.
+MANIFEST=~/dot-agents/.custom-skills.prev
+
+# Build current custom skill name list
+CURRENT_NAMES=()
+for file in "$CUSTOM_DIR"/*; do
+    [ -e "$file" ] && CURRENT_NAMES+=("$(basename "$file")")
+done
+
+for dir in "${AGENT_DIRS[@]}"; do
+    [ -d "$dir" ] || { echo "  ⚠ $dir not found, skipping"; continue; }
+
+    # Remove previously installed custom skills that no longer exist
+    if [ -f "$MANIFEST" ]; then
+        while IFS= read -r old_name; do
+            [ -e "$CUSTOM_DIR/$old_name" ] || rm -rf "$dir/$old_name"
+        done < "$MANIFEST"
+    fi
+
+    # Install current custom skills
+    for name in "${CURRENT_NAMES[@]}"; do
+        if [ "$SYMLINK" = true ]; then
+            rm -f "$dir/$name"
+            ln -sfn "$CUSTOM_DIR/$name" "$dir/$name"
+        else
+            cp -a "$CUSTOM_DIR/$name" "$dir/$name"
+        fi
+    done
+    echo "  ✓ $dir"
+done
+
+# Update manifest
+printf '%s\n' "${CURRENT_NAMES[@]}" > "$MANIFEST"
+
 if [ "$SYMLINK" = true ]; then
-    echo "Symlinking custom skills..."
-    for dir in "${AGENT_DIRS[@]}"; do
-        if [ -d "$dir" ]; then
-            for file in "$CUSTOM_DIR"/*; do
-                name=$(basename "$file")
-                rm -f "$dir/$name"
-                ln -sfn "$file" "$dir/$name"
-            done
-            echo "  ✓ $dir"
-        else
-            echo "  ⚠ $dir not found, skipping"
-        fi
-    done
+    echo "Custom skills symlinked."
 else
-    echo "Overlaying custom skills..."
-    for dir in "${AGENT_DIRS[@]}"; do
-        if [ -d "$dir" ]; then
-            rsync -a "$CUSTOM_DIR/" "$dir/"
-            echo "  ✓ $dir"
-        else
-            echo "  ⚠ $dir not found, skipping"
-        fi
-    done
+    echo "Custom skills copied."
 fi
 
 # 3. Global Workflows
