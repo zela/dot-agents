@@ -1,9 +1,7 @@
-# AGENTS.md — Token-Efficient Agent Language (TEAL) v2
+# AGENTS.md — Token-Efficient Agent Language (TEAL)
 
-Reduce agent reasoning tokens 40-60%. Apply in thinking blocks, tool descriptions, internal narration.
+Reduce agent reasoning tokens. Apply in thinking blocks, tool descriptions, internal narration.
 User-facing output stays natural unless user opts in.
-
----
 
 ## 1. Telegraphic Grammar
 
@@ -34,8 +32,6 @@ Prefer imperative mood. Use noun chains: "user auth token refresh logic" not "th
 ❌ "I need to check whether the database connection pool is exhausted"
 ✓  "chk db pool exhausted?"
 ```
-
----
 
 ## 2. Abbreviations
 
@@ -87,7 +83,7 @@ Prefer imperative mood. Use noun chains: "user auth token refresh logic" not "th
 | grep | search code   | diff | compare          |
 | inst | install       | cfg! | configure (verb) |
 
-> **Collision fixes from v1:** `dep` = dependency only (use `depr` for deprecated). `val` = value only (use `vld` for validate). `cfg` = noun; `cfg!` = verb.
+`dep` = dependency only (use `depr` for deprecated). `val` = value only (use `vld` for validate). `cfg` = noun; `cfg!` = verb.
 
 ### Status
 
@@ -109,9 +105,7 @@ Prefer imperative mood. Use noun chains: "user auth token refresh logic" not "th
 | br    | branch       | r/w/x | read/write/exec |
 | chmod | permissions  | ln    | symlink         |
 | tmp   | temporary    | bak   | backup          |
-| gz    | compressed   |       |                 |
-
----
+| gz    | compressed   | stg   | staging         |
 
 ## 3. Symbols
 
@@ -130,8 +124,6 @@ Prefer imperative mood. Use noun chains: "user auth token refresh logic" not "th
 | ~       | roughly           | ~500ms latency                  |
 | :=      | set to            | timeout := 30s                  |
 | ++ / -- | improve / degrade | perf++ after cache              |
-
----
 
 ## 4. Reasoning Patterns
 
@@ -173,8 +165,6 @@ file exists?
 - old: sync fetch, blocks main
 + new: async fetch, non-blocking
 ```
-
----
 
 ## 5. Thinking Block Templates
 
@@ -231,8 +221,6 @@ risk: [what could go wrong]
 fallback: [plan B]
 ```
 
----
-
 ## 6. Toki Pona Principle
 
 One word per concept. Collapse synonyms:
@@ -248,8 +236,6 @@ One word per concept. Collapse synonyms:
 | big / sm   | large,substantial / small,minor,trivial           |
 | odd        | weird, strange, unexpected, anomalous             |
 | bad / good | incorrect,invalid / correct,valid,proper          |
-
----
 
 ## 7. Context Management
 
@@ -274,8 +260,6 @@ FE=frontend BE=backend GW=gateway Q=queue
 "FE req → GW routes → BE process → Q async"
 ```
 
----
-
 ## 8. Tool Call Compression
 
 ```
@@ -291,8 +275,6 @@ FE=frontend BE=backend GW=gateway Q=queue
 
 ✓  "grep similar pattern in repo"
 ```
-
----
 
 ## 9. Agent-to-Agent Protocol
 
@@ -320,8 +302,6 @@ wip mg feat/payments→main. conflicts @[2]:42. need review.
 
 Keep handoff msgs to one line when possible. Include validation (tsc/tst/lint status) so receiving agent doesn't re-check.
 
----
-
 ## 10. TEAL Response Mode
 
 When user opts in (e.g., "use TEAL" or "respond compressed"), apply TEAL to output too:
@@ -336,8 +316,6 @@ Agent: chk ci logs → bld fails @ step 3 → dep resolution err
 
 Toggle off: "normal mode" or "verbose please"
 
----
-
 ## 11. When NOT to Compress
 
 - User-facing output (unless opted in)
@@ -346,8 +324,6 @@ Toggle off: "normal mode" or "verbose please"
 - Ambiguous situations — nuance matters
 - Security ops — spell out what gets rm'd/modified
 - Teaching/explaining — user needs to learn, not just see result
-
----
 
 ## Quick Ref
 
