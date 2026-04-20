@@ -115,8 +115,13 @@ ln -sfn ~/dot-agents/shared-workflows ~/.agent/workflows
 
 # 4. Global Configurations
 echo "Linking Global Configurations..."
+
+# 4.1 Gemini
 mkdir -p ~/.gemini
 ln -sfn ~/dot-agents/GEMINI.md ~/.gemini/GEMINI.md
+
+# 4.2 Claude
+ln -sfn ~/dot-agents/CLAUDE.md ~/.claude/CLAUDE.md
 
 echo ""
 echo "✅ Agent dotfiles synchronized!"
