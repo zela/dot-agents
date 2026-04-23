@@ -3,6 +3,7 @@
 # dependencies = [
 #     "anthropic>=0.40",
 #     "google-genai>=1.0",
+#     "python-dotenv>=1.0",
 # ]
 # ///
 """
@@ -19,6 +20,7 @@ Usage:
 """
 
 import argparse
+import concurrent.futures
 import json
 import os
 import sys
@@ -26,8 +28,14 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+# Load .env from the same directory as this script
+load_dotenv(Path(__file__).parent / ".env")
+
 TEAL_PATH = Path.home() / "dot-agents" / "TEAL.md"
 PROMPTS_PATH = Path(__file__).parent / "teal-benchmark-prompts.json"
+
 
 CLAUDE_MODELS = ["claude-sonnet-4-6", "claude-opus-4-6"]
 GEMINI_MODELS = ["gemini-3.1-pro", "gemini-3-flash"]
@@ -46,7 +54,9 @@ class RunResult:
     total_tokens: int = 0
     latency_s: float = 0.0
     response_preview: str = ""
-
+    full_response: str = ""
+    judge_score: str = ""  # "baseline", "teal", or "tie"
+    judge_reasoning: str = ""
 
 @dataclass
 class BenchmarkResults:
@@ -72,15 +82,24 @@ def run_claude(model: str, system: str, prompt: str) -> RunResult:
     import anthropic
 
     client = anthropic.Anthropic()
-    t0 = time.monotonic()
-    response = client.messages.create(
-        model=model,
-        max_tokens=4096,
-        temperature=0,
-        system=system,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    latency = time.monotonic() - t0
+    
+    for attempt in range(5):
+        try:
+            t0 = time.monotonic()
+            response = client.messages.create(
+                model=model,
+                max_tokens=4096,
+                temperature=0,
+                system=system,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            latency = time.monotonic() - t0
+            break
+        except anthropic.RateLimitError as e:
+            if attempt == 4:
+                raise
+            time.sleep(10)
+
 
     usage = response.usage
     output_tokens = usage.output_tokens
@@ -91,10 +110,12 @@ def run_claude(model: str, system: str, prompt: str) -> RunResult:
     thinking_tokens = 0
 
     preview = ""
+    full_text = ""
     for block in response.content:
         if block.type == "text":
-            preview = block.text[:200]
-            break
+            full_text += block.text
+            if not preview:
+                preview = block.text[:200]
 
     return RunResult(
         category="",
@@ -106,6 +127,7 @@ def run_claude(model: str, system: str, prompt: str) -> RunResult:
         total_tokens=input_tokens + output_tokens,
         latency_s=latency,
         response_preview=preview,
+        full_response=full_text,
     )
 
 
@@ -115,19 +137,32 @@ def run_claude(model: str, system: str, prompt: str) -> RunResult:
 def run_gemini(model: str, system: str, prompt: str) -> RunResult:
     from google import genai
     from google.genai import types
+    from google.genai.errors import APIError
 
     client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
-    t0 = time.monotonic()
-    response = client.models.generate_content(
-        model=model,
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            system_instruction=system,
-            temperature=0,
-            max_output_tokens=4096,
-        ),
-    )
-    latency = time.monotonic() - t0
+    
+    for attempt in range(10):
+        try:
+            t0 = time.monotonic()
+            response = client.models.generate_content(
+                model=model,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    system_instruction=system,
+                    temperature=0,
+                    max_output_tokens=4096,
+                ),
+            )
+            latency = time.monotonic() - t0
+            break
+        except APIError as e:
+            if e.code == 429 and attempt < 9:
+                import re
+                match = re.search(r"retry in ([\d\.]+)s", str(e))
+                delay = float(match.group(1)) + 1 if match else 15
+                time.sleep(delay)
+            else:
+                raise
 
     meta = response.usage_metadata
     input_tokens = meta.prompt_token_count or 0
@@ -135,7 +170,9 @@ def run_gemini(model: str, system: str, prompt: str) -> RunResult:
     thinking_tokens = getattr(meta, "thoughts_token_count", 0) or 0
 
     preview = ""
+    full_text = ""
     if response.text:
+        full_text = response.text
         preview = response.text[:200]
 
     return RunResult(
@@ -148,7 +185,55 @@ def run_gemini(model: str, system: str, prompt: str) -> RunResult:
         total_tokens=input_tokens + output_tokens + thinking_tokens,
         latency_s=latency,
         response_preview=preview,
+        full_response=full_text,
     )
+
+
+# ── Judge ──────────────────────────────────────────────────────────
+
+
+def evaluate_with_judge(prompt: str, baseline_text: str, teal_text: str, judge_model: str = "claude-sonnet-4-6") -> tuple[str, str]:
+    import anthropic
+    client = anthropic.Anthropic()
+    
+    system_prompt = (
+        "You are an expert evaluator. Compare two AI responses to a prompt. "
+        "Evaluate them on Reasoning Quality (depth, logic, lack of filler) and Final Output Correctness/Helpfulness. "
+        "Output ONLY a JSON object with keys 'winner' (must be 'baseline', 'teal', or 'tie') and 'reasoning' (brief explanation)."
+    )
+    user_prompt = f"Prompt:\n{prompt}\n\nResponse Baseline:\n{baseline_text}\n\nResponse TEAL:\n{teal_text}"
+    
+    for attempt in range(5):
+        try:
+            response = client.messages.create(
+                model=judge_model,
+                max_tokens=1024,
+                temperature=0,
+                system=system_prompt,
+                messages=[{"role": "user", "content": user_prompt}],
+            )
+            
+            content = ""
+            for block in response.content:
+                if block.type == "text":
+                    content += block.text
+            
+            # Very naive JSON extraction
+            start = content.find("{")
+            end = content.rfind("}") + 1
+            if start >= 0 and end > start:
+                data = json.loads(content[start:end])
+                return data.get("winner", "tie"), data.get("reasoning", "")
+            return "tie", "Failed to parse JSON"
+            
+        except anthropic.RateLimitError:
+            if attempt == 4:
+                return "tie", "Rate limit"
+            time.sleep(10)
+        except Exception as e:
+            return "tie", f"Error: {e}"
+    
+    return "tie", "Failed"
 
 
 # ── Runner ─────────────────────────────────────────────────────────
@@ -159,6 +244,7 @@ def run_benchmark(
     prompts: list[dict],
     base_system: str,
     teal_instructions: str,
+    parallel: bool = False,
 ) -> BenchmarkResults:
     results = BenchmarkResults()
 
@@ -174,6 +260,7 @@ def run_benchmark(
 
     teal_system = f"{base_system}\n\n{teal_instructions}"
 
+    tasks = []
     for p in prompts:
         category = p["category"]
         prompt_text = p["prompt"]
@@ -193,23 +280,51 @@ def run_benchmark(
                 ("baseline", base_system),
                 ("teal", teal_system),
             ]:
-                label = f"  [{condition:8s}] {model:25s} | {category}"
-                print(label, end="", flush=True, file=sys.stderr)
+                tasks.append((run_fn, model, system, prompt_text, category, condition))
 
-                try:
-                    result = run_fn(model, system, prompt_text)
-                    result.category = category
-                    result.condition = condition
+    def worker(task_args):
+        run_fn, model, system, prompt_text, category, condition = task_args
+        try:
+            result = run_fn(model, system, prompt_text)
+            result.category = category
+            result.condition = condition
+            return result, None
+        except Exception as e:
+            return None, (category, condition, model, e)
+
+    if parallel:
+        print("Running tasks in parallel...", file=sys.stderr)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+            for result, err in executor.map(worker, tasks):
+                if result:
                     results.runs.append(result)
                     print(
-                        f" → {result.output_tokens:,} out, {result.thinking_tokens:,} think, {result.latency_s:.1f}s",
+                        f"  [{result.condition:8s}] {result.model:25s} | {result.category} "
+                        f"→ {result.output_tokens:,} out, {result.thinking_tokens:,} think, {result.latency_s:.1f}s",
                         file=sys.stderr,
                     )
-                except Exception as e:
-                    print(f" → ERROR: {e}", file=sys.stderr)
-
-                # Small delay to avoid rate limits
-                time.sleep(1)
+                else:
+                    cat, cond, mod, e = err
+                    print(f"  [{cond:8s}] {mod:25s} | {cat} → ERROR: {e}", file=sys.stderr)
+    else:
+        for task in tasks:
+            _, model, _, _, category, condition = task
+            label = f"  [{condition:8s}] {model:25s} | {category}"
+            print(label, end="", flush=True, file=sys.stderr)
+            
+            result, err = worker(task)
+            if result:
+                results.runs.append(result)
+                print(
+                    f" → {result.output_tokens:,} out, {result.thinking_tokens:,} think, {result.latency_s:.1f}s",
+                    file=sys.stderr,
+                )
+            else:
+                _, _, _, e = err
+                print(f" → ERROR: {e}", file=sys.stderr)
+            
+            # 15s delay to avoid Gemini free tier rate limit (15 RPM)
+            time.sleep(15)
 
     return results
 
@@ -289,6 +404,18 @@ def format_results(results: BenchmarkResults) -> str:
         "Net savings = output savings minus the additional input tokens from TEAL instructions.\n"
     )
 
+    if any(r.judge_score for r in results.runs):
+        lines.append("\n## Judge Evaluation (Baseline vs TEAL)\n")
+        lines.append("| Category | Model | Winner | Reasoning |")
+        lines.append("|---|---|---|---|")
+        for r in results.runs:
+            if r.condition == "teal" and r.judge_score:
+                # Truncate reasoning to avoid huge tables
+                reasoning = r.judge_reasoning.replace("\n", " ")
+                if len(reasoning) > 100:
+                    reasoning = reasoning[:97] + "..."
+                lines.append(f"| {r.category} | {r.model} | **{r.judge_score}** | {reasoning} |")
+
     return "\n".join(lines)
 
 
@@ -320,6 +447,16 @@ def main():
         default=BASELINE_SYSTEM,
         help="Base system prompt for baseline condition",
     )
+    parser.add_argument(
+        "--parallel",
+        action="store_true",
+        help="Run benchmarks in parallel (may hit rate limits on free tiers)",
+    )
+    parser.add_argument(
+        "--judge",
+        action="store_true",
+        help="Use an LLM-as-a-judge (claude-sonnet-4-6) to score Baseline vs TEAL quality",
+    )
     args = parser.parse_args()
 
     # Determine models
@@ -346,7 +483,40 @@ def main():
     print(f"  Total runs: {len(prompts) * len(models) * 2}", file=sys.stderr)
     print(file=sys.stderr)
 
-    results = run_benchmark(models, prompts, args.system_prompt, teal)
+    results = run_benchmark(models, prompts, args.system_prompt, teal, parallel=args.parallel)
+
+    if args.judge:
+        print("\nRunning Judge Evaluation (Baseline vs TEAL)...", file=sys.stderr)
+        
+        # Group runs by category and model
+        pairs = {}
+        for r in results.runs:
+            key = (r.category, r.model)
+            if key not in pairs:
+                pairs[key] = {}
+            pairs[key][r.condition] = r
+
+        for (category, model), runs in pairs.items():
+            if "baseline" in runs and "teal" in runs:
+                baseline_run = runs["baseline"]
+                teal_run = runs["teal"]
+                
+                print(f"  Judging {model} | {category}...", end="", flush=True, file=sys.stderr)
+                # Find original prompt text
+                prompt_text = next((p["prompt"] for p in prompts if p["category"] == category), "")
+                
+                winner, reason = evaluate_with_judge(
+                    prompt=prompt_text,
+                    baseline_text=baseline_run.full_response,
+                    teal_text=teal_run.full_response,
+                    judge_model="claude-sonnet-4-6",
+                )
+                
+                teal_run.judge_score = winner
+                teal_run.judge_reasoning = reason
+                print(f" → Winner: {winner}", file=sys.stderr)
+
+
     output = format_results(results)
 
     if args.output:

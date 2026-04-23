@@ -6,7 +6,7 @@
 
 # vercel-labs/skills find-skills
 
-figma/mcp-server-guide *
+# figma/mcp-server-guide *
 
 https://github.com/kepano/obsidian-skills defuddle obsidian-markdown
 
@@ -17,3 +17,5 @@ https://github.com/kepano/obsidian-skills defuddle obsidian-markdown
 # cloudai-x/threejs-skills *
 
 # emalorenzo/three-agent-skills three-best-practices
+
+hardikpandya/stop-slop stop-slop
