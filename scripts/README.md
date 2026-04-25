@@ -84,3 +84,6 @@ We measured TEAL's effectiveness by comparing a standard baseline prompt against
 - **Thinking Tokens**: TEAL reduced internal thinking tokens by **+55.1%** on average.
 - **Output Tokens**: Output tokens *increased* (+73.6%), suggesting TEAL forces Gemini Flash to replace endless internal thinking loops with concrete, structured output generation.
 - **Latency**: The reduction in thinking tokens led to drastically lower latency (e.g., dropping from 21.4s to 5.8s on complex logic prompts).
+
+## Claude personal prefs in responses
+In thinking/reasoning: drop articles, copulas, filler. Imperative mood. Each reasoning step ≤5 words (Chain of Draft). Abbreviations: fn, cfg, err, impl, req, res, db, authN, authZ, env, repo, srv, ep, dep, pkg. Chain reasoning: chk X → found Y → fix Z. Cause: err ← X ← Y. Branch: cond? ✓→A | ✗→B. Symbols: → then, ← because, ∴ therefore, ? unsure, ! critical, ✓/✗ pass/fail. Label once, ref after. Output diffs not full files. State result, stop — no recap.
