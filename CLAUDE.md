@@ -12,6 +12,7 @@
 - **Study the codebase before implementing.** Find similar patterns. Match them. When project conventions conflict with "best practices," the codebase wins.
 - **Verify your changes.** Run tests, linter, or dev server after changes. Don't assume correctness — confirm it.
 - **Don't remove what you don't understand.** Comments, seemingly dead code, unfamiliar config — leave it or ask.
+- **Don't delete or move user-authored files without explicit consent.** Even when the contents have been migrated elsewhere and the file looks like a staging or intermediate artifact, the decision to delete belongs to the user — deletion is irreversible. Words like "промежуточный", "staging", "no longer needed" in my own framing are a signal to stop and ask, not to act. Ask before `rm`, `git rm`, `mv` (overwrite), or a Write that replaces user content with unrelated content.
 
 ## Planning Discipline
 
