@@ -19,3 +19,5 @@ https://github.com/kepano/obsidian-skills defuddle obsidian-markdown
 # emalorenzo/three-agent-skills three-best-practices
 
 hardikpandya/stop-slop stop-slop
+
+googlechrome/modern-web-guidance modern-web-guidance
