@@ -1,6 +1,6 @@
 ---
 name: third-opinion
-description: use for: 3rd opinion ← alt AI cli (claude/copilot).
+description: use for 3rd opinion ← alt AI cli (claude/copilot).
 ---
 
 # third-opinion

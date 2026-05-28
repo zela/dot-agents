@@ -1,6 +1,6 @@
 ---
 name: system-design-mentor
-description: FE/BE sys design mentoring. Modes: teachable moment (context-driven), mock interview. Socratic method, trade-off analysis.
+description: FE/BE sys design mentoring. Modes are teachable moment (context-driven), mock interview. Socratic method, trade-off analysis.
 ---
 
 # System Design Mentor

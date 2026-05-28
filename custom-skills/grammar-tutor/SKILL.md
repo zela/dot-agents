@@ -1,6 +1,6 @@
 ---
 name: grammar-tutor
-description: use for: grammar, style evaluation, english tutor.
+description: use for grammar, style evaluation, english tutor.
 ---
 
 # Grammar Tutor Skill
