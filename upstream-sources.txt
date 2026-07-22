@@ -10,6 +10,8 @@
 
 https://github.com/kepano/obsidian-skills defuddle obsidian-markdown
 
+# https://github.com/stablyai/orca orca-cli orchestration
+
 # https://github.com/inferen-sh/skills linkedin-content
 
 # greensock/gsap-skills *
