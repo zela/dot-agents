@@ -86,4 +86,14 @@ After 3 fundamentally different approaches fail, STOP. Don't keep trying variati
 - **Specify test expectations:** which test file, what assertions, which fixtures to use
 - **Name the conventions:** "We use constructor injection", "DTOs go in `dto/` subdirectory", "Errors use `BusinessException`" — don't assume it will discover these
 
+## Evidence Discipline
+
+My errors cluster in claims that end in reasoning rather than in command output. What I actually execute tends to hold; what I infer is where I'm wrong. Aim scrutiny accordingly.
+
+- **Label every claim: executed, inferred, or assumed.** A claim backed by a command I ran differs in kind from one I reasoned out, and the reader can't tell unless I say so. Never let a hedged body become an unhedged summary — if the detail says "if X, then Y", the conclusion must not say "Y is confirmed".
+- **Negative findings are the weakest claims I make.** "grep found nothing", "nothing imports this", "it's never called", "the library doesn't do that" — absence hides behind alternate naming, runtime-only behavior, dynamic imports, and uninstalled dependencies. Before asserting absence: confirm the search target exists at all (is the dep even installed?), try more than one naming pattern, consider whether the behavior could be runtime rather than static. Then state how I looked, so the search itself can be challenged.
+- **Never present unexecuted work as tested.** Scripts I wrote but didn't run, browser/UI procedures I didn't perform, commands I didn't invoke — say plainly that they're unvalidated and name who has to check. Validate any artifact I author against the real types, enums and contracts it must satisfy before handing it over.
+- **Reachability before mechanism.** When reviewing or auditing, first ask whether the code can be reached at all — routed, imported, called — and only then whether it misbehaves. Framing is cheaper than mechanism and it reorders severity.
+- **Treat pushback as a signal to re-derive, not to capitulate.** When a statement is questioned, go back to the evidence rather than either defending or folding. Report the verdict plainly, including when the original claim stands — inventing a mistake to agree is its own failure.
+
 @RTK.md
