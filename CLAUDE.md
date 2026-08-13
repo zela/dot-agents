@@ -28,6 +28,8 @@ The ladder runs _after_ you understand the problem, not instead of it — read t
 
 **Never simplify away:** input validation at trust boundaries, error handling that prevents data loss, security, accessibility, or anything explicitly requested. Deletion over addition, boring over clever — but "write less" is never a reason to drop a guard.
 
+**Only what was asked.** Unrequested extras — fallback ladders, extra abstraction layers, committed fixtures, speculative guards — are scope creep even when they look prudent. If one seems warranted, name it in a line and leave it unbuilt.
+
 **Bug fix = root cause, not symptom.** A report names a symptom. Grep every caller of the function you're about to touch and fix the shared function once — one guard there is a smaller diff than one per caller, and patching only the path the ticket names leaves a sibling caller still broken.
 
 <sub>Ladder adapted from [ponytail](https://github.com/DietrichGebert/ponytail) (MIT). Its "never stall, ship the lazy version" rule is deliberately omitted — **Stop when confused** above wins.</sub>
@@ -75,7 +77,7 @@ A long *session* is fine; a long *context* is the tax — every turn re-reads th
 
 ## Technical Artifacts Persistence
 
-Always persist technical artifacts inside the relevant project repo, not in ephemeral plan files or only in the conversation. Plan files under `~/.claude/plans/` disappear between sessions.
+Always persist technical artifacts inside the relevant project repo, not in ephemeral plan files or only in the conversation. Plan files under `~/.claude/plans/` disappear between sessions, and an approved ExitPlanMode plan is not a deliverable either — write it into the repo.
 
 For any of the following, create or update a file under `docs/` in the project root before or alongside implementation:
 
@@ -87,7 +89,9 @@ For any of the following, create or update a file under `docs/` in the project r
 
 Commit the `docs/` folder alongside the code it describes.
 
-## Writing Markdown
+## Writing
+
+**Be terse.** MR descriptions, commit bodies, comments, plan docs, edits to this file — as short as complete allows. Don't restate the diff; say why. No hedging, no filler adjectives. Plain words first, depth only if asked.
 
 **Never hard-wrap paragraphs.** One paragraph = one line, however long. No manual line breaks at 80/100/120 columns, no reflowing prose to a fixed width. I resize my editor window constantly, and hard-wrapped text breaks in the wrong places every time — soft wrap handles it correctly at any width. This applies to every `.md` file: docs, reports, plans, READMEs, and commit message bodies.
 
