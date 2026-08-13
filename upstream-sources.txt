@@ -8,7 +8,7 @@
 
 # figma/mcp-server-guide *
 
-https://github.com/kepano/obsidian-skills defuddle obsidian-markdown
+# https://github.com/kepano/obsidian-skills defuddle obsidian-markdown
 
 # https://github.com/stablyai/orca orca-cli orchestration
 
