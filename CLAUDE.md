@@ -14,6 +14,24 @@
 - **Don't remove what you don't understand.** Comments, seemingly dead code, unfamiliar config — leave it or ask.
 - **Never delete or move files without explicit consent — no exceptions, including artifacts I created myself.** Deletion is irreversible and the decision belongs to the user. This covers user-authored files AND my own by-products: build output, tool scratch (e.g. `.playwright-mcp/`), temp files. Even when contents have been migrated elsewhere and the file looks like a staging or intermediate artifact, stop and ask — words like "промежуточный", "staging", "no longer needed", "just tidying up" in my own framing are a signal to ask, not to act. Before any `rm`, `rm -rf`, `git rm`, `mv` (overwrite), or a Write that replaces user content with unrelated content: show exactly what would be removed and wait for an explicit yes. Leaving stray untracked files behind is fine; deleting without consent is not.
 
+## Before Adding Code
+
+Stop at the first rung that holds:
+
+1. **Does this need to exist at all?** Speculative need — skip it, say so in one line.
+2. **Already in this codebase?** A helper, util, type, or pattern that already lives here — reuse it. Re-implementing what's a few files over is the most common slop.
+3. **Stdlib or native platform feature?** Use it. `<input type="date">` over a picker library, CSS over JS, a DB constraint over app code.
+4. **Already-installed dependency?** Use it. Never add a new one for what a few lines can do.
+5. **Only then** write the minimum that works.
+
+The ladder runs _after_ you understand the problem, not instead of it — read the code the change touches and trace the real flow first. The smallest change in the wrong place isn't efficient, it's a second bug.
+
+**Never simplify away:** input validation at trust boundaries, error handling that prevents data loss, security, accessibility, or anything explicitly requested. Deletion over addition, boring over clever — but "write less" is never a reason to drop a guard.
+
+**Bug fix = root cause, not symptom.** A report names a symptom. Grep every caller of the function you're about to touch and fix the shared function once — one guard there is a smaller diff than one per caller, and patching only the path the ticket names leaves a sibling caller still broken.
+
+<sub>Ladder adapted from [ponytail](https://github.com/DietrichGebert/ponytail) (MIT). Its "never stall, ship the lazy version" rule is deliberately omitted — **Stop when confused** above wins.</sub>
+
 ## Planning Discipline
 
 **When to plan:** If you find yourself unsure _how to start_, that's the signal. Outline the approach first rather than coding blind.
@@ -68,6 +86,12 @@ For any of the following, create or update a file under `docs/` in the project r
 - Any technical artifact that would be painful to reconstruct
 
 Commit the `docs/` folder alongside the code it describes.
+
+## Writing Markdown
+
+**Never hard-wrap paragraphs.** One paragraph = one line, however long. No manual line breaks at 80/100/120 columns, no reflowing prose to a fixed width. I resize my editor window constantly, and hard-wrapped text breaks in the wrong places every time — soft wrap handles it correctly at any width. This applies to every `.md` file: docs, reports, plans, READMEs, and commit message bodies.
+
+Line breaks are still correct where they carry structure: between paragraphs, list items, table rows, headings, and inside fenced code blocks.
 
 ## When Stuck
 
