@@ -109,20 +109,58 @@ else
     echo "Custom skills copied."
 fi
 
-# 3. Global Workflows
+# 3. Custom subagents (Claude Code only — no antigravity/copilot equivalent)
+#    Flat .md files. .custom-agents.prev tracks them so removals propagate.
+#    ~/.claude/agents is NOT wiped by --upstream: hand-written agents there survive.
+SUBAGENT_SRC=~/dot-agents/custom-agents
+SUBAGENT_DEST=~/.claude/agents
+SUBAGENT_MANIFEST=~/dot-agents/.custom-agents.prev
+
+if [ -d "$SUBAGENT_SRC" ]; then
+    echo "Installing custom subagents..."
+    mkdir -p "$SUBAGENT_DEST"
+
+    SUBAGENT_NAMES=()
+    for file in "$SUBAGENT_SRC"/*.md; do
+        [ -e "$file" ] && SUBAGENT_NAMES+=("$(basename "$file")")
+    done
+
+    # Remove previously installed subagents that no longer exist
+    if [ -f "$SUBAGENT_MANIFEST" ]; then
+        while IFS= read -r old_name; do
+            [ -n "$old_name" ] && [ ! -e "$SUBAGENT_SRC/$old_name" ] && rm -f "$SUBAGENT_DEST/$old_name"
+        done < "$SUBAGENT_MANIFEST"
+    fi
+
+    # Clear first: copying onto a symlink left by a prior --symlink run would
+    # write through it into the repo source.
+    for name in "${SUBAGENT_NAMES[@]}"; do
+        rm -f "$SUBAGENT_DEST/$name"
+        if [ "$SYMLINK" = true ]; then
+            ln -sfn "$SUBAGENT_SRC/$name" "$SUBAGENT_DEST/$name"
+        else
+            cp -a "$SUBAGENT_SRC/$name" "$SUBAGENT_DEST/$name"
+        fi
+    done
+
+    printf '%s\n' "${SUBAGENT_NAMES[@]}" > "$SUBAGENT_MANIFEST"
+    echo "  ✓ $SUBAGENT_DEST (${#SUBAGENT_NAMES[@]})"
+fi
+
+# 4. Global Workflows
 echo "Linking Global Workflows..."
 mkdir -p ~/.agent
 rm -rf ~/.agent/workflows
 ln -sfn ~/dot-agents/shared-workflows ~/.agent/workflows
 
-# 4. Global Configurations
+# 5. Global Configurations
 echo "Linking Global Configurations..."
 
-# 4.1 Gemini
+# 5.1 Gemini
 mkdir -p ~/.gemini
 ln -sfn ~/dot-agents/GEMINI.md ~/.gemini/GEMINI.md
 
-# 4.2 Claude
+# 5.2 Claude
 ln -sfn ~/dot-agents/CLAUDE.md ~/.claude/CLAUDE.md
 
 echo ""
