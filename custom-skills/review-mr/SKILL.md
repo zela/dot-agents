@@ -21,7 +21,17 @@ the user pastes from.
 ## Step 2 — Review
 
 Invoke the `code-review` skill against the target branch (pass through any
-requested effort level). Its verified findings feed Step 3.
+requested effort level).
+
+Then re-check its output before it becomes an MR comment. Send each candidate
+finding to its own `verifier` subagent in parallel (general subagent if this
+host has no `verifier`), giving it only the bare claim and `file:line` — never
+`code-review`'s reasoning, never the other findings. Discard anything that
+comes back DOES-NOT-REPRODUCE; those are Step 3's "Checked, not an issue"
+material, not comments. Surviving findings feed Step 3.
+
+A wrong finding costs more here than in a local review: it goes to a colleague
+under your name.
 
 ## Step 3 — Draft comments
 
