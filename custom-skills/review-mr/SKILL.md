@@ -1,13 +1,13 @@
 ---
 name: review-mr
-description: Review the current GitLab MR branch against its target (default main) and save the findings as ready-to-paste MR comments in docs/ plus a posting script. Use when the user asks to review an MR / merge request / mr/NNN branch, or wants review findings formatted as GitLab comments.
+description: Review the current GitLab MR branch against its target (default main) and save the findings as ready-to-paste MR comments in docs/. Use when the user asks to review an MR / merge request / mr/NNN branch, or wants review findings formatted as GitLab comments.
 ---
 
 # review-mr
 
 Wraps the `code-review` skill with GitLab MR context and comment persistence.
-Never post to GitLab directly — the deliverable is files in the repo; the user
-posts manually or runs the generated script with their own token.
+Never post to GitLab directly — the deliverable is a file in the repo, which
+the user pastes from.
 
 ## Step 1 — MR context
 
@@ -15,8 +15,6 @@ posts manually or runs the generated script with their own token.
 - Target branch: `main` unless stated otherwise.
 - Capture diff refs: `BASE_SHA` = `git merge-base <target> HEAD`,
   `HEAD_SHA` = `git rev-parse HEAD`.
-- Project path: from `git remote get-url origin`, strip host and `.git`,
-  URL-encode `/` as `%2F`.
 - If the working tree is dirty, warn: comments anchor to `HEAD_SHA`;
   uncommitted fixes aren't reflected, and pushing later invalidates anchors.
 
@@ -55,18 +53,12 @@ Anchor rules:
 
 ## Step 4 — Persist
 
-Write two files (leave uncommitted; never run the script):
+Write file (leave uncommitted):
 
-1. `docs/mr-<IID>-review-comments.md` — branch, IID, diff refs, then the
-   comment blocks. This is what the user pastes from.
-2. `scripts/post-mr-<IID>-comments.sh` — copy
-   [scripts/post-mr-comments-template.sh](scripts/post-mr-comments-template.sh),
-   fill `MR_IID`/`PROJECT`/`BASE_SHA`/`HEAD_SHA`, append one
-   `post_new`/`post_old`/`post_note` call per comment, `chmod +x`. The
-   template has the API helpers and a `diff_refs` rebase guard.
+`docs/mr-<IID>-review-comments.md` — branch, IID, diff refs, then the
+comment blocks. This is what the user pastes from.
 
 ## Step 5 — Report
 
-Finding counts by severity, the two file paths, how to post
-(`GITLAB_TOKEN=... ./scripts/post-mr-<IID>-comments.sh`). Remind: pushing new
+Finding counts by severity, the file path. Remind: pushing new
 commits changes `HEAD_SHA` — post first, or regenerate after.
