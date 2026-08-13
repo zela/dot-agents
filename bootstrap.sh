@@ -86,10 +86,12 @@ for dir in "${AGENT_DIRS[@]}"; do
         done < "$MANIFEST"
     fi
 
-    # Install current custom skills
+    # Install current custom skills.
+    # Clear the destination first — `cp -a src dst` nests when dst already
+    # exists (dst/name/name), and `rm -f` cannot remove a dir left by a copy run.
     for name in "${CURRENT_NAMES[@]}"; do
+        rm -rf "$dir/$name"
         if [ "$SYMLINK" = true ]; then
-            rm -f "$dir/$name"
             ln -sfn "$CUSTOM_DIR/$name" "$dir/$name"
         else
             cp -a "$CUSTOM_DIR/$name" "$dir/$name"
