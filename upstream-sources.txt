@@ -23,3 +23,5 @@
 hardikpandya/stop-slop stop-slop
 
 googlechrome/modern-web-guidance modern-web-guidance
+
+tt-a1i/archify archify
