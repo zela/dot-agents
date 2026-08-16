@@ -1,80 +1,83 @@
 ---
 name: ship-session
 description: >-
-  Close out a completed build session from a multi-session plan: verify its
-  acceptance checks actually pass, optionally run a review pass, convert the
-  session doc from forward-plan to as-built reference, tick its box and update
-  counts in the overview index, capture findings/decisions, and commit. Use when
-  the user wants to "ship / finish / close out / wrap up a session", "mark a
-  session done", "convert the plan to a reference", or finalize a session's work.
-  Companion to multi-session-plan, which creates the plan this skill closes out.
+  Close out a finished build session in a docs/-based plan: confirm the gates are
+  green, convert the session doc from forward-plan to as-built reference, keep the
+  index short and truthful, move raw evidence out, commit. Use when the user wants
+  to "ship / finish / close out / wrap up a session", "mark a session done",
+  "convert the plan to a reference", or finalize a session's work. This is the DOC
+  ritual only — it does not review code; that is /code-review. Companion to
+  multi-session-plan.
 ---
 
 # Ship a Session
 
 ## What this does
 
-The closing ritual for one build session in a `docs/`-based multi-session plan (the kind `multi-session-plan` produces). It performs the **mechanical and verification half** of "convert plan → as-built reference": confirm the work actually passes its acceptance checks, turn the forward-looking session doc into a grounded record of what shipped, update the index so status stays truthful, capture anything learned, and commit.
+The closing ritual for one build session in a `docs/`-based plan. It is a **documentation** job with one gate in front of it: confirm the work passes its acceptance checks, then turn the forward-looking plan into a grounded record of what shipped, keep the index truthful, and commit.
 
-The point is to keep the plan **self-maintaining**. The overview index is the project's memory across sessions — if it drifts from reality, the next session re-derives context from zero. This skill is what makes the loop compound instead of leak.
+The point is to keep the plan **self-maintaining**. The index is the project's memory across sessions — if it drifts from reality, the next session re-derives context from zero.
+
+**Scope discipline:** this skill is deliberately small. It does **not** review code — reviewing a diff, triaging findings and fixing them is separate work with its own judgement load, and `/code-review` already does it. If the session wants a review, that is a separate invocation before this one. A heavy ritual is a ritual nobody invokes.
 
 ## The boundary — read this first
 
-This skill does the mechanical and verification work. It explicitly does **not**:
+- **Don't make product, composition, or architecture decisions.** Those belong to the human. If closing the session surfaces such a choice, stop and ask.
+- **Don't flip the status marker on unverified work.** "Done" is a claim, not a proof. Mark it only after the acceptance checks actually pass **in this run** — never on the basis of "it should pass."
+- **Don't expand the job.** Bugs, cleanups and refactors noticed while converting get *reported*, not fixed. The diff this produces should be docs plus a status marker.
 
-- **Make product, composition, or architecture decisions.** Those belong to the human. If closing the session surfaces such a choice, stop and ask.
-- **Auto-apply review findings.** Surface them and let the user decide what's worth fixing ("fix what makes sense"). Apply only what the user greenlights, or only obvious mechanical nits if the user has pre-authorized that.
-- **Flip the status box on unverified work.** "Done" is a claim, not a proof. Tick `☑` only after the acceptance checks actually pass in this run — never on the basis of "it should pass."
-
-When you hit one of those edges, hand back to the user rather than pushing through. This is the deliberate human-in-the-loop checkpoint; do not optimize it away.
+When you hit one of those edges, hand back rather than push through. That checkpoint is the point; do not optimize it away.
 
 ## Steps
 
-### 1. Verify acceptance
+### 1. Confirm before you tick
 
-Open the session doc and find its **Acceptance / verification** section. Run the project's real quality gates — discover them, don't assume (check `AGENTS.md` / `CLAUDE.md` / `package.json` scripts / `Makefile`). A typical set is build + typecheck, lint, test, format-check. Run each and confirm green. If any acceptance criterion is subjective (visual composition, editorial voice, "reads well"), you cannot self-grade it — flag it for the user.
+Open the session doc, find its acceptance / verification section, and run the project's real quality gates — **discover them, don't assume**: check `CLAUDE.md` / `AGENTS.md` / `package.json` scripts / `Makefile`. Typically build + typecheck + lint + test.
 
-If a gate fails: stop. Report the failure with output. Do not proceed to flip the box.
+If a gate fails, stop and report the failure with its output. Do not proceed.
 
-### 2. Review pass (maker ≠ checker)
+If a criterion is subjective (visual composition, editorial voice, "reads well") or needs a surface you can't reach (a browser, production data), you cannot self-grade it. Say so plainly and name who has to check — an unverifiable criterion is not a passed one.
 
-Run a review on the session's diff — the project's review skill/subagent if one exists (e.g. `/code-review`, a `code-reviewer` or domain reviewer subagent), otherwise a focused review of the changed files. Use a *different* agent than the one that wrote the code where possible; the author is too generous grading its own work.
+### 2. Convert the plan — never append to it
 
-Present findings grouped by severity. The user triages. Apply only what they approve. Re-run gates after any fix.
+Rewrite the session doc **in place**, from forward plan into as-built reference, preserving its section structure:
 
-### 3. Convert plan → as-built reference
+- Future → past tense: "will extract" → "extracts". "Files to create" → the real files, with paths.
+- Planned specifics → what actually shipped: real function and module names, the approach taken, test counts.
+- Record **deviations from the plan** and **gotchas hit**. These are the highest-value lines in the doc — a later session learns from them, and they are the first thing lost if you rush.
 
-Rewrite the session doc from a **forward plan** into an **as-built reference**, preserving its section structure (don't reinvent the headings):
+**The failure mode this step exists to prevent is the append.** Stacking `## As-built — session 1`, `## As-built — session 2` under a design section still written in the future tense is how a 120-line plan becomes an unreadable 300-line one, with the reader left to work out which half is true. Fold each session into the section whose design it realises. If the plan already carries stacked as-built sections from earlier sessions, folding them in is part of this step, not a separate cleanup.
 
-- Future → past tense: "will extract" → "extracts"; "Files to create" → the real files that now exist, with paths.
-- Replace planned specifics with what actually shipped — real function/module names, the approach taken, test counts.
-- Record **deviations from the plan** and **gotchas encountered** explicitly. These are the highest-value lines in the doc; a later session learns from them.
-- Keep it scannable and executable as a description of current reality — enough to understand the subsystem without re-reading all the code, not a duplicate of it.
+**If the plan opens with a head block / summary** (a five-line "problem, fix, decision, status, left" preamble or similar), that is the *first* thing to update — it is the part a human actually reads, and a stale one makes the whole doc untrustworthy.
 
-Honor the project's prose conventions (e.g. a "one line per paragraph, no hard wraps" rule if the repo has one).
+Honour the project's prose conventions (e.g. a "one paragraph per line, no hard wraps" rule).
 
-### 4. Update the index
+### 3. Update the index
 
 In the overview doc (`00-overview.md` or equivalent):
 
-- Flip the session's status box `☐`/`◐` → `☑` (legend: not started · in progress · done).
-- Add the commit hash + a one-line milestone result in the Notes column.
-- Update any **aggregate counts** the index tracks (total tests, generated pages, data-cohort numbers) so they stay accurate.
+- **Read the index's own status legend and use its markers.** Projects differ — some use `☐`/`◐`/`☑`, others `·`/`▶`/`◧`/`✓`. Never impose a vocabulary the file doesn't use.
+- Keep the row **short** — one line: status + link + why the plan exists. An index is for scanning, and detail belongs in the plan (its head block, if it has one). If a row has already grown into a paragraph, this is the moment to cut it back, not to extend it.
+- Update any aggregate counts the index tracks (test totals, page counts, cohort numbers) so they stay accurate.
 
-### 5. Capture findings & decisions
+### 4. Move raw evidence out
 
-If the session produced genuine investigations (a data-quality dig, a perf finding, a reconciliation), write or extend a `findings-*.md`. If it settled a trade-off, append to the **decisions log (ADR-lite)** with rationale and a "revisit if…" trigger — so it isn't re-litigated later. This is the loop's memory; skipping it is how knowledge evaporates between sessions.
+Sweep dumps, hand-classifications, gate output, measurement tables: these belong in `docs/evidence/` (or wherever the project already puts them), not inline. The plan states the verdict in a sentence and links the file. Conversion can absorb a session log; it cannot absorb a 30 KB measurement.
 
-### 6. Commit
+**Use length as a trigger, never as a cap.** A converted plan past ~150 lines is the signal to ask *which tier* the excess belongs to — raw evidence that should be in its own file, or a design section that was appended to rather than converted. Do not respond by compressing the prose: a budget on wordcount buys denser prose, not clearer docs, and dense-but-short is the more common failure of the two.
 
-Commit per the repo's conventions — check first, don't assume:
+If the session settled a trade-off, record it where the project keeps decisions — with the rationale and a "revisit if…" trigger, so it isn't re-litigated later.
 
-- **Branch policy:** some repos want a feature branch; others (solo, session-sized history) commit straight to the default branch. Check project memory / recent history before branching.
-- **Message style:** match the existing log (conventional commits, session tags like `feat: session N — …`). If the repo separates docs commits from feature commits, follow that.
-- Include any required trailer (e.g. a `Co-Authored-By` line) the repo uses.
+### 5. Commit
 
-Then report what shipped: gates status, what the review surfaced and what was fixed, the commit, and anything left for the user (subjective acceptance items, deferred findings).
+Check the repo's conventions first, don't assume:
 
-## Adapting to scale
+- **Branch policy** — some repos want a feature branch; others (solo, session-sized history) commit straight to the default branch. Check project memory and recent history before branching.
+- **Message style** — match the existing log. Follow any docs-vs-feature commit separation the repo keeps, and include any required trailer.
+- **Approval** — if the project or user memory requires explicit per-commit approval, ask rather than assume this skill grants it.
 
-A small 3-session plan may have no separate review skill, no findings docs, and no ADR log — then steps 2 and 5 collapse to "eyeball the diff" and "note anything surprising in the session doc." The non-negotiable core is always: **verify before you tick, convert the doc to reflect reality, keep the index truthful, commit.** Everything else scales with the project's ceremony.
+Then report: gates status, what was converted, the commit, and anything left for the user — subjective acceptance items especially.
+
+## The core, if you remember nothing else
+
+**Verify before you tick. Convert rather than append. Keep the index short and truthful. Commit.** Everything else scales with the project's ceremony — a small plan may have no evidence folder and no decision log, and then step 4 is just "note anything surprising."
