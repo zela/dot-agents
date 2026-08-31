@@ -101,6 +101,8 @@ Line breaks are still correct where they carry structure: between paragraphs, li
 
 After 3 fundamentally different approaches fail, STOP. Don't keep trying variations of a broken idea.
 
+**Same check failing twice on the same approach means the approach is wrong, not under-applied.** Change strategy before a third attempt — don't retry variations of a failing probe.
+
 1. State what you tried and the specific errors
 2. Question whether you're solving the right problem
 3. Ask the user
