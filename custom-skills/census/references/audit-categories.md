@@ -98,6 +98,7 @@ One monotonic id per finding (`001`, `002`, … assigned when it lands in the le
 - **Effort**: S (hours) / M (a day-ish) / L (multi-day) — for the *fix*, including tests.
 - **Risk**: what the fix could break; LOW/MED/HIGH + one line why.
 - **Confidence**: HIGH (read it, certain) / MED (strong signal, needs verification) / LOW (smell, needs investigation).
+- **Resolves-with** (optional; include whenever severity or confidence hinges on a fact not visible in the code): the single cheapest check that collapses the uncertainty — a command to run (`wrangler secret list`), a doc to read (a plan that may already scope it), or a one-line yes/no for the maintainer. Omit when the finding is already HIGH and self-contained.
 - **Fix sketch**: 1–3 sentences. Just enough to judge effort — not a plan.
 ```
 
