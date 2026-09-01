@@ -90,6 +90,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `census`                | Survey a whole codebase and maintain findings as a persistent, reconciled ledger under `docs/census/`. Host-agnostic; complements `code-review`. |
 | `complexity-optimizer`  | Find algorithmic complexity hotspots — nested loops, N+1 queries, avoidable O(n²) — and report or fix. |
 | `cross-engine-check`    | Observe a CSS/layout claim in Firefox, WebKit and Chromium instead of inferring it from spec knowledge. |
+| `decision-record`       | Capture a design/architecture decision as a terse ADR under `docs/adr/` — options, trade-off, what breaks if wrong. Closes the Design-phase gap; `census` reads it as by-design. |
 | `design-a-feature`      | Generate radically different UI/UX designs for one feature by varying the interaction pattern.      |
 | `design-an-interface`   | Generate radically different interface designs for one module ("design it twice").                 |
 | `grammar-tutor`         | Gentle English grammar and style tutor.                                                            |
