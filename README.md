@@ -97,6 +97,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `multi-session-plan`    | Break a large build into a sequenced roadmap of linked docs under `docs/`.                         |
 | `review-mr`             | Review the current GitLab MR branch and save findings as ready-to-paste MR comments.               |
 | `review-staged`         | Review the staged diff, stress-test findings, fix survivors, commit granularly.                    |
+| `run-state`             | Execute a long-horizon many-step run (bulk migration, backlog, long refactor) via an external state file, so context stays bounded and the session can be `/clear`'d and resumed. |
 | `ship-session`          | Close out a build session: verify acceptance, convert the plan to as-built, commit. No code review. |
 | `system-design-mentor`  | Staff-level engineering mentor for Frontend and Backend system design.                             |
 | `third-opinion`         | Consult an alternative AI model via CLI (Copilot or Claude Code).                                  |
