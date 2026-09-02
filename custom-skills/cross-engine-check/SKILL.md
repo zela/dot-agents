@@ -1,17 +1,17 @@
 ---
 name: cross-engine-check
-description: Observe a specific CSS or layout claim in Firefox, WebKit and Chromium instead of inferring it from spec knowledge. Use when a claim rests on how an engine renders or parses something — vendor prefixes, form control internals, focus rings, flex/grid edge cases, `-moz-`/`-webkit-` behaviour — or when a review says "this breaks in Firefox/Safari" and nobody ran it there.
+description: Observe a specific CSS or layout claim in Firefox, WebKit and Chromium instead of inferring it from spec knowledge. Use when a claim rests on how an engine renders or parses something (vendor prefixes, form control internals, focus rings, flex/grid edge cases, `-moz-`/`-webkit-` behavior), or when a review says "this breaks in Firefox/Safari" and nobody ran it there.
 ---
 
 Cross-engine claims are usually reasoned, not observed. That is the weakest kind of claim and this skill exists to convert one into the other. You are measuring, not arguing.
 
 ## 1. Make the claim testable
 
-Restate it as: **element** + **observable** + **engines** + **the difference that would confirm it**.
+Restate it as: **element** + **observable** + **engines** + **the difference that confirms it**.
 
 > "The focus ring is invisible in Firefox" → element: `.button:focus-visible`; observable: computed `outline-color` / `outline-style`; engines: firefox vs chromium; confirms if Firefox reports `outline-style: none` while Chromium reports a visible ring.
 
-If you cannot name the observable, say so and stop. "Looks broken" is not testable — ask what should be measured.
+If you cannot name the observable, say so and stop. "Looks broken" is not testable. Ask what to measure.
 
 ## 2. Build the smallest repro that still exercises the claim
 
@@ -73,13 +73,13 @@ Computed values beat screenshots. They say *what* differs, survive font-renderin
 A table of engine → observed value, the exact command you ran, and a verdict:
 
 - **OBSERVED** — the difference is real, with the numbers.
-- **NOT OBSERVED** — all engines agree. Say so plainly; a killed cross-engine claim is a good outcome.
+- **NOT OBSERVED** — all engines agree. Say so plainly. A killed cross-engine claim is a good outcome.
 - **DIFFERENT CAUSE** — something does differ, but not for the reason claimed. Give the measurement, not a new theory.
 
-Then: is the difference *visible to a user*? A 0.5px sub-pixel delta and a dropped focus ring are both "a difference"; only one is a bug. State which this is.
+Then: is the difference *visible to a user*? A 0.5px sub-pixel delta and a dropped focus ring are both "a difference". Only one is a bug. State which this is.
 
-Never report an engine you did not launch. If WebKit would not install, the answer for WebKit is "not run", not an inference from Safari's release notes.
+Never report an engine you did not launch. If WebKit does not install, the answer for WebKit is "not run", not an inference from Safari's release notes.
 
 ## Cleanup
 
-Leave the scratch files. Say where they are so the check can be re-run — deleting them makes the result unreproducible, and deletion is the user's call.
+Leave the scratch files. Say where they are so you can run the check again. If you delete them, the result is unreproducible, and deletion is the user's call.

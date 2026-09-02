@@ -6,17 +6,16 @@ description: Review the current GitLab MR branch against its target (default mai
 # review-mr
 
 Wraps the `code-review` skill with GitLab MR context and comment persistence.
-Never post to GitLab directly — the deliverable is a file in the repo, which
+Never post to GitLab directly. The deliverable is a file in the repo, which
 the user pastes from.
 
 ## Step 1 — MR context
 
-- Branch `mr/NNN` → MR IID `NNN`; otherwise ask (it's the `!NNN` in the MR URL).
+- Branch `mr/NNN` → MR IID `NNN`. Otherwise ask (it is the `!NNN` in the MR URL).
 - Target branch: `main` unless stated otherwise.
 - Capture diff refs: `BASE_SHA` = `git merge-base <target> HEAD`,
   `HEAD_SHA` = `git rev-parse HEAD`.
-- If the working tree is dirty, warn: comments anchor to `HEAD_SHA`;
-  uncommitted fixes aren't reflected, and pushing later invalidates anchors.
+- If the working tree is dirty, warn: comments anchor to `HEAD_SHA`. Uncommitted fixes are not reflected, and pushing later invalidates anchors.
 
 ## Step 2 — Review
 
@@ -25,9 +24,8 @@ requested effort level).
 
 Then re-check its output before it becomes an MR comment. Send each candidate
 finding to its own `verifier` subagent in parallel (general subagent if this
-host has no `verifier`), giving it only the bare claim and `file:line` — never
-`code-review`'s reasoning, never the other findings. Discard anything that
-comes back DOES-NOT-REPRODUCE; those are Step 3's "Checked, not an issue"
+host has no `verifier`). Give it only the bare claim and `file:line`. Do not give it `code-review`'s reasoning or the other findings. Discard anything that
+comes back DOES-NOT-REPRODUCE. Those are Step 3's "Checked, not an issue"
 material, not comments. Surviving findings feed Step 3.
 
 A wrong finding costs more here than in a local review: it goes to a colleague
@@ -40,7 +38,7 @@ One block per finding, most severe first (bugs before cleanup):
 ```markdown
 ## <N>. <emoji> `<file>:<line>` — <one-line title>
 
-**<Severity>:** <what's wrong + the concrete evidence: quoted old vs new code,
+**<Severity>:** <what is wrong + the concrete evidence: quoted old vs new code,
 measured values, specificity math>
 
 **Fix:** <the concrete change>
@@ -49,17 +47,17 @@ measured values, specificity math>
 Emoji: 🐛 bug / ⚠️ risky behavior / 🎨 style & token reuse / 🧹 cleanup.
 
 Optionally end with a **"Checked, not an issue"** section for refuted
-candidates a human reviewer would likely also flag — saves re-litigating them
+candidates a human reviewer is also likely to flag. This saves re-litigating them
 in the MR.
 
-Verify every line anchor against the file (`sed -n '<line>p'`) before
-finalizing — the review pipeline sometimes reports a nearby symbol's line, and
+Make sure that every line anchor matches the file (`sed -n '<line>p'`) before
+finalizing. The review pipeline sometimes reports a nearby symbol's line, and
 a mispositioned GitLab discussion is worse than an unpositioned one.
 
 Anchor rules:
 - Added/changed line → `new_path` + `new_line`.
 - Deleted code → `old_path` + `old_line`.
-- File not in the diff (e.g. dead dep in `package.json`) → general note.
+- File not in the diff (for example, a dead dep in `package.json`) → general note.
 
 ## Step 4 — Persist
 
@@ -71,4 +69,4 @@ comment blocks. This is what the user pastes from.
 ## Step 5 — Report
 
 Finding counts by severity, the file path. Remind: pushing new
-commits changes `HEAD_SHA` — post first, or regenerate after.
+commits changes `HEAD_SHA`. Post first, or regenerate after.

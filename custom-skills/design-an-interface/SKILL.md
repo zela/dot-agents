@@ -1,11 +1,11 @@
 ---
 name: design-an-interface
-description: Generate multiple radically different interface designs for a module. Use when user wants to design an API, explore interface options, compare module shapes, or mentions "design it twice".
+description: Generate multiple radically different interface designs for a module. Use when the user wants to design an API, explore interface options, compare module shapes, or mentions "design it twice".
 ---
 
 # Design an Interface
 
-Based on "Design It Twice" from *A Philosophy of Software Design* by John Ousterhout: your first idea is unlikely to be the best. Generate multiple radically different interface designs for the same module, then compare. The **module's responsibilities** are the stable anchor — what it must do stays fixed across all variants; only the shape of the interface changes.
+Based on "Design It Twice" from *A Philosophy of Software Design* by John Ousterhout: your first idea is unlikely to be the best. Generate multiple radically different interface designs for the same module, then compare. The **module's responsibilities** are the stable anchor. What it must do stays fixed across all variants. Only the shape of the interface changes.
 
 ## Workflow
 
@@ -17,7 +17,7 @@ Before designing, understand:
 - [ ] Who are the callers? (other modules, external users, tests)
 - [ ] What are the key operations?
 - [ ] Any constraints? (performance, compatibility, existing patterns)
-- [ ] What should be hidden inside vs exposed?
+- [ ] What stays hidden inside, and what is exposed?
 
 Ask: "What does this module need to do? Who will use it?"
 
@@ -25,10 +25,10 @@ Ask: "What does this module need to do? Who will use it?"
 
 Produce 3+ radically different designs. Enforce divergence by assigning a different constraint to each:
 
-- **Design 1 — Minimal surface**: Minimize method count — aim for 1-3 methods max. What's the smallest interface that does the job?
+- **Design 1 — Minimal surface**: Minimize method count. Aim for 1-3 methods at most. What is the smallest interface that does the job?
 - **Design 2 — Maximum flexibility**: Support as many use cases as possible. Expose more, assume less.
 - **Design 3 — Optimized for the common case**: Make the most frequent usage path as simple as possible, even at the cost of edge cases.
-- **Design 4 — Pattern borrowed from [paradigm/library]**: Take inspiration from a well-known interface shape (e.g. streams, builders, middlewares, repositories). Assign based on context.
+- **Design 4 — Pattern borrowed from [paradigm/library]**: Take inspiration from a well-known interface shape (for example, streams, builders, middlewares, or repositories). Assign based on context.
 
 For each design, produce:
 
@@ -39,7 +39,7 @@ For each design, produce:
 
 ### 3. Present Designs
 
-Present designs one at a time so the caller can form an impression before seeing the next. Don't front-load comparison.
+Present designs one at a time so the caller can form an impression before seeing the next. Do not front-load comparison.
 
 ### 4. Compare Designs
 
@@ -51,7 +51,7 @@ After presenting all designs, compare on these criteria (discuss in prose, not t
 - **Depth**: Small interface hiding significant complexity = deep module (good). Large interface with thin implementation = shallow module (avoid)
 - **Ease of correct use vs ease of misuse**: How hard is it to call this wrong?
 
-Highlight where designs diverge most — those are the real design decisions.
+Highlight where designs diverge most. Those are the real design decisions.
 
 ### 5. Synthesize
 
@@ -66,12 +66,12 @@ The best design often combines elements from multiple options. Ask:
 The primary reference. Key principles directly used in comparison:
 - *Deep modules*: the best modules have small interfaces and large implementations
 - *General-purpose interfaces*: slightly general-purpose tends to age better than slightly special-purpose
-- *Information hiding*: complexity that callers don't need to know should stay inside
-- *Design it twice*: the first design is rarely the best; contrast forces better decisions
+- *Information hiding*: complexity that callers do not need to know stays inside
+- *Design it twice*: the first design is rarely the best. Contrast forces better decisions
 
 ## Anti-Patterns
 
-- Don't let designs converge — if two designs feel similar, push one further
-- Don't skip the usage example — the value is in imagining the caller using the interface, not just the signature
-- Don't implement — this is purely about interface shape
-- Don't evaluate based on implementation effort
+- Do not let designs converge. If two designs feel similar, push one further.
+- Do not skip the usage example. The value is in imagining the caller using the interface, not in the signature alone.
+- Do not implement. This step is purely about interface shape.
+- Do not evaluate based on implementation effort

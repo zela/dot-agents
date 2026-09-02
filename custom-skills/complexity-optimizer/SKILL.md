@@ -1,13 +1,13 @@
 ---
 name: complexity-optimizer
-description: Find algorithmic complexity hotspots in a codebase — nested loops, repeated scans, N+1 queries, render-time recomputation, avoidable O(n²) — and either report them or implement safe fixes. Use when the user asks to audit/scan/profile for performance, find hotspots, reduce complexity (e.g. "O(n²) → O(n log n)"), or eliminate N+1 queries. Do NOT use for general code review or refactoring — see code-review or simplify for those.
+description: Find algorithmic complexity hotspots in a codebase (nested loops, repeated scans, N+1 queries, render-time recomputation, avoidable O(n²)) and either report them or implement safe fixes. Use when the user asks to audit/scan/profile for performance, find hotspots, reduce complexity (for example "O(n²) → O(n log n)"), or eliminate N+1 queries. Do NOT use for general code review or refactoring. See code-review or simplify for those.
 ---
 
 # Complexity Optimizer
 
 ## Default: report-only, no edits
 
-When the user asks to **analyze, scan, audit, review, or report** — produce the report. Do not modify files.
+When the user asks to **analyze, scan, audit, review, or report**, produce the report. Do not modify files.
 
 Only edit when the user asks to **implement, fix, optimize, apply, refactor, or change**.
 
@@ -23,12 +23,12 @@ Only edit when the user asks to **implement, fix, optimize, apply, refactor, or 
 
 3. **Report.** For each finding: `file:line`, current pattern, estimated current complexity, proposed change, complexity after, risk, and what test/benchmark proves correctness.
 
-4. **If implementing:** confirm tests exist (or add them) covering edge cases — empty input, duplicates, ordering, nulls, mutation side effects. Make the smallest change. Run tests + lint/build. Report before/after complexity and residual risk.
+4. **If implementing:** make sure that tests exist (or add them) that cover edge cases — empty input, duplicates, ordering, nulls, mutation side effects. Make the smallest change. Run tests + lint/build. Report before/after complexity and residual risk.
 
 ## Safety checklist before editing
 
-- Input sizes large enough for complexity to matter? (Don't optimize 10-element loops.)
-- Does the change preserve **output ordering, object identity, and mutation semantics** callers may rely on?
+- Input sizes large enough for complexity to matter? (Do not optimize 10-element loops.)
+- Does the change preserve **output ordering, object identity, and mutation semantics** that callers can rely on?
 - For DB batching: does it preserve **auth, tenant, soft-delete, pagination, filters**?
 - For caches: is there a valid invalidation strategy?
 
@@ -43,7 +43,7 @@ Only edit when the user asks to **implement, fix, optimize, apply, refactor, or 
 
 ## What not to do
 
-- Don't replace clear linear code with complex structures for tiny inputs or cold paths.
-- Don't change public ordering unless tests prove it's irrelevant.
-- Don't add a cache without an invalidation strategy.
-- Don't trade O(n) for O(n log n) unless it unlocks a larger win.
+- Do not replace clear linear code with complex structures for tiny inputs or cold paths.
+- Do not change public ordering unless tests prove it is irrelevant.
+- Do not add a cache without an invalidation strategy.
+- Do not trade O(n) for O(n log n) unless it unlocks a larger win.

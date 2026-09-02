@@ -1,6 +1,7 @@
 census
 complexity-optimizer
 cross-engine-check
+decision-record
 design-a-feature
 design-an-interface
 grammar-tutor
@@ -8,6 +9,8 @@ grill-me
 multi-session-plan
 review-mr
 review-staged
+run-state
 ship-session
+simple-english
 system-design-mentor
 third-opinion
