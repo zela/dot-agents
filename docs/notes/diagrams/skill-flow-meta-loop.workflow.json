@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "The Meta-Loop: Tuning the Harness",
+    "output": "docs/notes/diagrams/skill-flow-meta-loop.html",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "backend": {
+          "label": "Config skill"
+        },
+        "database": {
+          "label": "Durable config file"
+        },
+        "cloud": {
+          "label": "The product loop"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "setup",
+      "label": "Config skills"
+    },
+    {
+      "id": "config",
+      "label": "Durable config"
+    },
+    {
+      "id": "product",
+      "label": "Product loop"
+    }
+  ],
+  "mainPath": [
+    "car",
+    "cfg",
+    "spine",
+    "rcm"
+  ],
+  "nodes": [
+    {
+      "id": "car",
+      "lane": "setup",
+      "col": 1,
+      "width": 210,
+      "type": "backend",
+      "label": "claude-automation-recommender",
+      "sublabel": "what setup should this repo have"
+    },
+    {
+      "id": "cmi",
+      "lane": "setup",
+      "col": 3,
+      "width": 170,
+      "type": "backend",
+      "label": "claude-md-improver",
+      "sublabel": "audit and repair drift"
+    },
+    {
+      "id": "cfg",
+      "lane": "config",
+      "col": 1,
+      "width": 190,
+      "type": "database",
+      "label": "CLAUDE.md",
+      "sublabel": "hooks, skills, agents"
+    },
+    {
+      "id": "spine",
+      "lane": "product",
+      "col": 1,
+      "width": 190,
+      "type": "cloud",
+      "label": "the 6-phase spine",
+      "sublabel": "Understand through Ship"
+    },
+    {
+      "id": "rcm",
+      "lane": "product",
+      "col": 3,
+      "width": 150,
+      "type": "backend",
+      "label": "revise-claude-md",
+      "sublabel": "the loop-closer"
+    }
+  ],
+  "edges": [
+    {
+      "from": "car",
+      "to": "cfg",
+      "label": "sets up",
+      "fromSide": "left",
+      "toSide": "left",
+      "via": [
+        [
+          80,
+          119
+        ],
+        [
+          80,
+          243
+        ]
+      ]
+    },
+    {
+      "from": "cmi",
+      "to": "cfg",
+      "label": "maintains",
+      "variant": "emphasis",
+      "route": "drop",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "cfg",
+      "to": "spine",
+      "label": "shapes every phase",
+      "variant": "emphasis",
+      "route": "drop",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "spine",
+      "to": "rcm",
+      "label": "at session close",
+      "variant": "dashed",
+      "role": "branch",
+      "labelDy": -20
+    },
+    {
+      "from": "rcm",
+      "to": "cfg",
+      "label": "writes learnings",
+      "variant": "dashed",
+      "role": "return",
+      "fromSide": "top",
+      "toSide": "right",
+      "via": [
+        [
+          430,
+          243
+        ]
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "Same thesis, different target",
+      "items": [
+        "The spine develops the product; this loop develops the setup",
+        "CLAUDE.md is durable state, so learnings outlive the session"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Read as a loop",
+      "items": [
+        "The config shapes how every phase of the spine behaves",
+        "The spine surfaces where the config is wrong or thin"
+      ]
+    }
+  ]
+}

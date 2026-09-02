@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "The Six-Phase Skill Spine",
+    "output": "docs/notes/diagrams/skill-flow-spine.html",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "backend": { "label": "Custom skill" },
+        "database": { "label": "Durable state under docs/" },
+        "external": { "label": "Platform built-in" }
+      }
+    },
+    "views": [
+      { "id": "spine", "label": "The main spine", "focus": ["sdm", "dsg", "msp", "rs", "rst", "ship"], "note": "One driver per phase, Understand through Ship." },
+      { "id": "backbone", "label": "Document backbone", "focus": ["adr", "plandocs", "cen", "asbuilt"], "note": "Every phase that matters writes durable state under docs/." },
+      { "id": "loops", "label": "The stateful loops", "focus": ["rst", "rs", "ship", "msp"], "note": "Review re-opens a build unit; Ship hands the baton back to Plan." }
+    ]
+  },
+  "lanes": [
+    { "id": "understand", "label": "1 · Understand" },
+    { "id": "design", "label": "2 · Design" },
+    { "id": "plan", "label": "3 · Plan" },
+    { "id": "build", "label": "4 · Build / Execute" },
+    { "id": "review", "label": "5 · Review" },
+    { "id": "ship", "label": "6 · Ship" }
+  ],
+  "mainPath": ["sdm", "dsg", "msp", "rs", "rst", "ship"],
+  "nodes": [
+    { "id": "sdm", "lane": "understand", "col": 1, "width": 180, "type": "backend", "label": "system-design-mentor", "sublabel": "trade-off space" },
+    { "id": "grill", "lane": "understand", "col": 3, "width": 180, "type": "backend", "label": "grill-me", "sublabel": "resolve every branch" },
+
+    { "id": "dsg", "lane": "design", "col": 1, "width": 180, "type": "backend", "label": "design-a-feature", "sublabel": "design-an-interface" },
+    { "id": "adr", "lane": "design", "col": 3, "width": 180, "type": "database", "label": "docs/adr/", "sublabel": "decision-record" },
+
+    { "id": "msp", "lane": "plan", "col": 1, "width": 180, "type": "backend", "label": "multi-session-plan", "sublabel": "sequence the build" },
+    { "id": "plandocs", "lane": "plan", "col": 3, "width": 180, "type": "database", "label": "docs/<plan>/", "sublabel": "index, sessions, roadmap" },
+
+    { "id": "rs", "lane": "build", "col": 1, "width": 180, "type": "backend", "label": "run-state", "sublabel": "external state file" },
+    { "id": "run", "lane": "build", "col": 3, "width": 180, "type": "external", "label": "/run", "sublabel": "exercise the built thing" },
+
+    { "id": "rst", "lane": "review", "col": 1, "width": 180, "type": "backend", "label": "review-staged", "sublabel": "review-mr" },
+    { "id": "cen", "lane": "review", "col": 3, "width": 180, "type": "database", "label": "docs/census/", "sublabel": "census, reconciled" },
+
+    { "id": "ship", "lane": "ship", "col": 1, "width": 180, "type": "backend", "label": "ship-session", "sublabel": "confirm the gates" },
+    { "id": "asbuilt", "lane": "ship", "col": 3, "width": 180, "type": "database", "label": "as-built plan doc", "sublabel": "trimmed index, commit" }
+  ],
+  "edges": [
+    { "from": "sdm", "to": "grill" },
+    { "from": "sdm", "to": "dsg", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" },
+
+    { "from": "dsg", "to": "adr" },
+    { "from": "dsg", "to": "msp", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" },
+
+    { "from": "msp", "to": "plandocs" },
+    { "from": "msp", "to": "rs", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" },
+
+    { "from": "rs", "to": "run" },
+    { "from": "rs", "to": "rst", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" },
+
+    { "from": "rst", "to": "cen" },
+    { "from": "rst", "to": "ship", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" },
+
+    { "from": "ship", "to": "asbuilt" },
+
+    { "from": "rst", "to": "rs", "label": "re-open", "variant": "dashed", "role": "return", "route": "return-left", "fromSide": "left", "toSide": "left" },
+    { "from": "ship", "to": "msp", "label": "next session", "variant": "dashed", "role": "return", "route": "return-left", "fromSide": "left", "toSide": "left", "channelX": 62, "labelDy": -24 }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Durable state, not chat", "items": ["Each phase reads what the last phase wrote under docs/", "Any session can /clear and resume cold", "The document tree is the reconciled state; the chat is scratch"] },
+    { "dot": "emerald", "title": "Companions and built-ins", "items": ["third-opinion cross-checks a plan against another model", "archify and beautiful-mermaid render the chosen shape", "complexity-optimizer fixes hotspots; /code-review, /simplify and /security-review gate the diff; verifier re-checks a claim cold"] },
+    { "dot": "amber", "title": "Loops make it a system", "items": ["Review re-opens a build unit instead of ending the run", "Ship hands the baton back to Plan for the next session", "census reconciles itself: verify done, refresh drifted, retire dead"] }
+  ]
+}
