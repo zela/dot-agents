@@ -161,7 +161,12 @@ mkdir -p ~/.gemini
 ln -sfn ~/dot-agents/GEMINI.md ~/.gemini/GEMINI.md
 
 # 5.2 Claude
+mkdir -p ~/.claude
 ln -sfn ~/dot-agents/CLAUDE.md ~/.claude/CLAUDE.md
+
+# 5.3 Codex
+mkdir -p ~/.codex
+ln -sfn ~/dot-agents/AGENTS.md ~/.codex/AGENTS.md
 
 echo ""
 echo "✅ Agent dotfiles synchronized!"

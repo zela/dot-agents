@@ -65,8 +65,8 @@
       "col": 1,
       "width": 190,
       "type": "database",
-      "label": "CLAUDE.md",
-      "sublabel": "hooks, skills, agents"
+      "label": "AGENTS.md",
+      "sublabel": "host additions and tooling"
     },
     {
       "id": "spine",
@@ -152,8 +152,8 @@
       "dot": "violet",
       "title": "Same thesis, different target",
       "items": [
-        "The spine develops the product; this loop develops the setup",
-        "CLAUDE.md is durable state, so learnings outlive the session"
+        "The spine develops the product. This loop develops the setup",
+        "AGENTS.md is durable shared state, and host files add local behavior"
       ]
     },
     {

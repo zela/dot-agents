@@ -6,7 +6,9 @@ Personal AI agent configuration — skills, workflows, and rules — synchronize
 
 ```
 dot-agents/
-├── bootstrap.sh             # Install upstream + overlay custom skills + link workflows
+├── AGENTS.md                # Canonical host-neutral working policy
+├── CLAUDE.md                # Claude Code imports and additions
+├── bootstrap.sh             # Install skills and link global configuration
 ├── upstream-sources.txt     # Git-tracked list of community skill repos
 ├── custom-skills/           # Personal skills (deployed; always override community)
 │   ├── complexity-optimizer/
@@ -31,14 +33,26 @@ Community skills are managed by the [`skills` CLI](https://www.npmjs.com/package
 2. `bootstrap.sh --upstream` iterates over that list and installs each via `pnpm dlx skills add`.
 3. Custom skills from `custom-skills/` are `rsync`'d on top, so your overrides always win.
 4. Workflows in `shared-workflows/` are symlinked to `~/.agent/workflows/`.
+5. The bootstrap script links the Claude Code, Codex, and Gemini instruction files to their global locations.
 
 ### Supported agents
 
 | Agent                | Global skills path              |
 | -------------------- | ------------------------------- |
 | Claude Code          | `~/.claude/skills/`             |
+| Codex                | `~/.agents/skills/`             |
 | Antigravity (Gemini) | `~/.gemini/antigravity/skills/` |
 | GitHub Copilot       | `~/.agents/skills/`             |
+
+### Global instructions
+
+| Agent       | Installed path          | Repository source |
+| ----------- | ----------------------- | ----------------- |
+| Claude Code | `~/.claude/CLAUDE.md`  | `CLAUDE.md`       |
+| Codex       | `~/.codex/AGENTS.md`    | `AGENTS.md`       |
+| Gemini      | `~/.gemini/GEMINI.md`   | `GEMINI.md`       |
+
+`AGENTS.md` is the canonical host-neutral policy. `CLAUDE.md` imports it and adds Claude Code instructions. Put portable changes in `AGENTS.md`.
 
 ## Setup on a new machine
 
@@ -116,7 +130,7 @@ Present in the repo but **not** installed by `bootstrap.sh` (which only overlays
 
 ## Custom agents
 
-Subagent definitions, deployed to `~/.claude/agents/`. **Claude Code only** — antigravity and copilot have no equivalent, so anything that must work everywhere belongs in a skill instead. Hand-written agents already in `~/.claude/agents/` are left alone; `--upstream` does not wipe that directory.
+The bootstrap script deploys these subagent definitions to `~/.claude/agents/` for Claude Code. Codex supports subagents, but Claude Code agent files need adaptation. Put portable behavior in a skill. The `--upstream` option keeps hand-written agents in `~/.claude/agents/`.
 
 | Agent      | Description                                                                                        |
 | ---------- | ---------------------------------------------------------------------------------------------------- |

@@ -85,11 +85,11 @@ And one native skill is *cross-cutting* rather than a phase — it enforces the 
 
 ## The meta-loop: tuning the harness the flow runs in
 
-The spine develops the *product*. A second, smaller loop develops the *setup the product is built with* — and it obeys the same thesis: the project's Claude config (`CLAUDE.md` at the repo root, plus its hooks, skills, and agents) is durable state, so learnings persist there instead of evaporating with the session.
+The spine develops the *product*. A second, smaller loop develops the agent setup. The shared working policy lives in `AGENTS.md`. `CLAUDE.md` imports it and adds Claude Code instructions.
 
 ```mermaid
 flowchart LR
-  car[claude-automation-recommender] --> cfg[("CLAUDE.md + hooks / skills / agents")]
+  car[claude-automation-recommender] --> cfg[("AGENTS.md + host additions / hooks / skills / agents")]
   cmi[claude-md-improver] --> cfg
   cfg --> spine(["the 6-phase spine"])
   spine -. at session close .-> rcm[revise-claude-md]
@@ -104,7 +104,9 @@ These are plugin skills (not custom skills, not platform built-ins), so they car
 - **`/claude-md-management:claude-md-improver`** — audits every `CLAUDE.md` against a quality bar and applies targeted fixes. Config *maintenance*, for when the memory has drifted from how the project actually works.
 - **`/claude-md-management:revise-claude-md`** — at session close, writes what this session taught back into `CLAUDE.md`. It's the loop-closer, and the config-side twin of `ship-session`: one converts the session into as-built product docs, the other converts it into a sharper harness for the next run.
 
-Read as a loop: the config shapes how every phase of the spine behaves; the spine surfaces where the config is wrong or thin; `revise-claude-md` folds that back in. `CLAUDE.md` is the root-level counterpart to `docs/` — same durable-and-reconciled discipline, pointed at the harness instead of the product.
+Read as a loop: the configuration shapes each phase. The spine shows gaps in the configuration. `revise-claude-md` writes Claude Code lessons to `CLAUDE.md`.
+
+Move host-neutral lessons from `CLAUDE.md` to `AGENTS.md`. Keep only Claude Code instructions in `CLAUDE.md`.
 
 ## The document backbone
 

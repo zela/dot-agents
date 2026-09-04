@@ -12,7 +12,7 @@ The core move — externalize state, keep the prompt small, re-derive from the f
 
 - **`census`** keeps a *reconciled ledger* under `docs/census/` and re-takes the count across sessions (verify done / refresh drifted / retire dead). That's SKILL.state's mutable-state-over-history thesis applied to review findings — the paper is close to a formal writeup of what census does operationally.
 - **`multi-session-plan`** / **`ship-session`** — docs updated in place across sessions, not a growing log.
-- **CLAUDE.md → Context Hygiene** — `/clear` at task boundaries, `/compact` at phase transitions, one session per ticket. The manual version of a bounded prompt.
+- **AGENTS.md → Context Hygiene** — `/clear` at task boundaries, `/compact` at phase transitions, one session per ticket. `CLAUDE.md` imports this policy.
 
 So the paper's value to us is mostly **validation**: the direction these skills already point is the one with the theory behind it. The strongest single takeaway is the noise-robustness result — it's the concrete argument for pushing *more* workflow skills toward "write state to a file, re-read the file" instead of trusting conversation memory.
 
