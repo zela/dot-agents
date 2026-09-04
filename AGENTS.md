@@ -3,6 +3,7 @@
 ## Instruction Priority
 
 - The user's explicit instructions take precedence over this file and applicable skills.
+- A host-specific instruction file that imports this file overrides it where the two conflict.
 - If instructions conflict, name the conflict and follow the higher-priority instruction.
 - If ambiguity can materially change the result, ask before you act.
 - Otherwise, state material assumptions and continue with reversible work.
@@ -15,13 +16,16 @@
 
 ## Build Right
 
-- Study the relevant code before you implement a change. Find similar code and follow established project conventions.
+- Study the relevant code before you implement a change. Find similar code and follow established project conventions. If a project convention conflicts with a general best practice, the project convention wins.
 - Make the smallest change that solves the complete problem.
 - Make sure that changes work. Run the relevant tests, lint command, build, or application.
-- Do not remove comments, unfamiliar configuration, or apparently unused code until you understand its purpose.
-- Treat an explicit request to delete or move named items as consent for those items.
-- Otherwise, get approval before you delete tracked files, delete user-authored files, remove directories recursively, or overwrite a destination.
-- You can remove temporary or generated artifacts that you created during the current task. Resolve the exact target before removal.
+- Do not remove comments, unfamiliar configuration, or apparently unused code until you understand its purpose. If you are not sure, leave it or ask.
+- Do not stage, commit, or push a change unless the user asks. Leave your edits in the working tree, so that the user can review the diff and adjust it before it enters a commit.
+- Do not delete or move a file without explicit consent. This rule has no exceptions. It includes artifacts that you created: build output, tool scratch directories, and temporary files.
+- Treat an explicit request to delete or move named items as consent for those items only.
+- Before you run `rm`, `rm -rf`, `git rm`, an overwriting `mv`, or a write that replaces user content with unrelated content, show exactly what you will remove and wait for an explicit yes.
+- Words such as "staging", "intermediate", "no longer needed", or "just tidying up" in your own reasoning are a signal to ask, not to act.
+- Stray untracked files are acceptable. Deletion without consent is not.
 
 ## Before You Add Code
 
@@ -41,13 +45,13 @@ Do only the requested work. Do not add fallback systems, abstraction layers, fix
 
 For a defect, find the cause before you patch the symptom. Inspect relevant callers and fix the lowest safe shared layer.
 
-<sub>This list is adapted from [ponytail](https://github.com/DietrichGebert/ponytail) (MIT).</sub>
+<sub>This list is adapted from [ponytail](https://github.com/DietrichGebert/ponytail) (MIT). Its "never stall, ship the lazy version" rule is deliberately omitted. The Instruction Priority rules win.</sub>
 
 ## Planning
 
-If the task is ambiguous, cross-cutting, difficult to reverse, or requires a design choice, plan first.
+If the task is ambiguous, cross-cutting, difficult to reverse, or requires a design choice, plan first. If you are not sure how to start, that is the signal to plan. A task that touches more than two or three files in different areas is cross-cutting.
 
-If the host has a planning mode, use it. Codex uses `/plan`. Claude Code uses Plan Mode.
+If the host has a planning mode, use it.
 
 Skip a formal plan for these tasks:
 
@@ -63,37 +67,38 @@ A plan does not grant permission for destructive actions, external messages, dep
 
 ## Before You Run Commands
 
-- Before you run a project-specific command, find the actual command in the applicable `AGENTS.md`, project documentation, manifest, or build file.
+- Before you run a project-specific command, find the actual command in the project's instruction file for your host, project documentation, manifest, or build file.
 - Do not guess script names such as `check`, `build`, or `test`.
 - You do not need to research standard read-only commands before you use them.
 
 ## Context Hygiene
 
-Keep one chat for one coherent unit of work.
+A long session is acceptable. A long context is the cost: each turn reads the full transcript again, and idle gaps force expensive cache re-creation. Keep the working context small.
 
-If the client supports `/compact` and earlier detail is no longer useful, suggest it after a long tool-heavy phase.
-
-If the client supports `/clear`, suggest it only at a true task boundary. The user decides whether to clear the chat.
-
-If context management materially helps the next task, mention it. Do not add routine advice to every final response.
+- Keep one chat for one coherent unit of work. Do not let a context span days. Idle IDE activity re-bills a stale conversation.
+- If the client supports `/clear`, suggest it at a true task boundary, when the next task needs only the files and not the conversation. The user decides whether to clear the chat. Never clear the chat yourself.
+- If the client supports `/compact` and earlier detail is no longer useful, suggest it after a long tool-heavy phase.
+- If a trivial follow-up triggers a large multi-call turn, say so. The context carries weight the task does not need. That is the moment to compact or clear.
+- If context management materially helps the next task, mention it. Do not add routine advice to every final response.
 
 ## Technical Artifacts
 
-If the user requests an artifact, keep it in the relevant repository. Do the same for workflow requirements and multi-session work.
+Persist technical artifacts in the relevant repository, not in ephemeral plan files or only in the conversation. Plan files outside the repository disappear between sessions, and an approved plan is not a deliverable.
 
-Suitable artifacts include these items:
+Before or alongside implementation, create or update a repository document for each of these items:
 
 - System design documents.
-- Multi-session implementation plans.
+- Implementation plans, including multi-session plans.
 - Architecture decision records.
 - Data-flow descriptions and diagrams.
 - State files for long procedural work.
+- Any technical artifact that would be painful to reconstruct.
 
 Use the project's existing documentation structure. If the project has no stronger convention, use `docs/`.
 
 Do not create a repository document for an incidental chat plan.
 
-Do not commit artifacts unless the user requests a commit or an applicable workflow requires one.
+When you commit code, commit the documents that describe it in the same change.
 
 ## Writing
 
@@ -101,7 +106,7 @@ Do not commit artifacts unless the user requests a commit or an applicable workf
 - Explain why a change exists. Do not restate the diff.
 - Use plain words. Remove filler and empty hedging.
 - State material uncertainty precisely.
-- Do not hard-wrap Markdown paragraphs. Let the editor apply soft wrapping.
+- Do not hard-wrap Markdown paragraphs. One paragraph is one line. Let the editor apply soft wrapping. This applies to every `.md` file and to commit message bodies.
 - Keep line breaks that define paragraphs, list items, table rows, headings, and code blocks.
 
 ## When Work Fails
