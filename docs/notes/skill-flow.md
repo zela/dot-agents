@@ -2,6 +2,8 @@
 
 These skills aren't a loose bag of tools — they trace one development lifecycle, and they're wired together by a single idea: **durable state lives in `docs/`, not in the conversation.** Each phase reads the artifacts the previous phase wrote and leaves its own behind, so any session can `/clear` and resume cold. That's [SKILL.state](skill-state-and-the-ledger-pattern.md) generalized past one skill to the whole kit — the document tree is the bounded, reconciled state; the chat is scratch.
 
+The HTML renders in [diagrams/](diagrams/) predate the additions from [mattpocock/skills](mattpocock-skills-eval.md). The Mermaid below is current.
+
 ## The spine
 
 ```mermaid
@@ -10,12 +12,16 @@ flowchart LR
     sdm[system-design-mentor]
     grill[grill-me]
     t3[third-opinion]
+    tq[to-questionnaire†]
+    ho[handoff†]
   end
   subgraph D[2 · Design]
     daf[design-a-feature]
     dai[design-an-interface]
     viz[archify · beautiful-mermaid]
     dr["decision-record → docs/adr/"]
+    proto[prototype]
+    dm["domain-modeling → CONTEXT.md"]
   end
   subgraph P[3 · Plan]
     msp[multi-session-plan]
@@ -24,6 +30,8 @@ flowchart LR
     rs[run-state]
     co[complexity-optimizer]
     apprun[run*]
+    tdd[tdd†]
+    dbg[diagnosing-bugs]
   end
   subgraph R[5 · Review]
     cr[code-review*]
@@ -45,24 +53,24 @@ flowchart LR
   cen -. reconcile across sessions .-> cen
 
   classDef doc fill:#e8f0fe,stroke:#4285f4,color:#111;
-  class msp,rs,cen,ship,dr doc;
+  class msp,rs,cen,ship,dr,dm doc;
 ```
 
-<sub>`*` = platform built-ins the kit composes with, not custom skills. Dotted edges are the loops that make the kit stateful rather than one-shot.</sub>
+<sub>`*` = platform built-ins the kit composes with, not custom skills. `†` = community skills installed as-is from `upstream-sources.txt` (mattpocock/skills). Dotted edges are the loops that make the kit stateful rather than one-shot.</sub>
 
 ## Phase by phase
 
 **1 · Understand — is this the right problem, and do I actually get it?**
-`system-design-mentor` teaches the trade-off space; `grill-me` interrogates a plan until every branch is resolved; `third-opinion` cross-checks against another model. Output is comprehension — not yet a doc, but the input to one.
+`system-design-mentor` teaches the trade-off space; `grill-me` interrogates a plan until every branch is resolved; `third-opinion` cross-checks against another model. Output is comprehension — not yet a doc, but the input to one. `to-questionnaire`† turns a decision someone else holds the facts for into a questionnaire; `handoff`† carries the thread to another harness or directory.
 
 **2 · Design — what shapes could this take?**
-`design-a-feature` / `design-an-interface` hold the task stable and vary the interaction/module shape, so you choose from real alternatives instead of the first idea. `archify` / `beautiful-mermaid` render the chosen shape. This is where a *decision* gets made — and `decision-record` captures it as an ADR under `docs/adr/`, so the choice (and what would prove it wrong) outlives the chat.
+`design-a-feature` / `design-an-interface` hold the task stable and vary the interaction/module shape, so you choose from real alternatives instead of the first idea. `archify` / `beautiful-mermaid` render the chosen shape. This is where a *decision* gets made — and `decision-record` captures it as an ADR under `docs/adr/`, so the choice (and what would prove it wrong) outlives the chat. `prototype` is the runnable half of the design step: N variants on one route, or a single-file state-machine demo, when the question cannot be settled on paper. `domain-modeling` keeps the words honest as decisions land, writing the glossary to `CONTEXT.md`.
 
 **3 · Plan — sequence it.**
 `multi-session-plan` turns the chosen design into linked docs under `docs/`: an index, one doc per session, a deferred-work roadmap. This is the first durable state the build will read back.
 
 **4 · Build / Execute — do the work with context held flat.**
-`run-state` executes a long homogeneous run (migration, backlog, mechanical refactor) against an external state file, so context stays bounded and the session can be `/clear`'d mid-run. `complexity-optimizer` fixes perf hotspots inline. Both read the plan doc; run-state writes its own state file. `/run` (native) launches the real app to confirm a change works when *run* — the one step that exercises the built thing, not just the tests.
+`run-state` executes a long homogeneous run (migration, backlog, mechanical refactor) against an external state file, so context stays bounded and the session can be `/clear`'d mid-run. `complexity-optimizer` fixes perf hotspots inline. `tdd`† drives each slice red-green at pre-agreed seams. `diagnosing-bugs` is the loop for a hard bug: a red feedback loop first, then minimise, hypothesise, instrument, and fix with a regression test. Both read the plan doc; run-state writes its own state file. `/run` (native) launches the real app to confirm a change works when *run* — the one step that exercises the built thing, not just the tests.
 
 **5 · Review — is it safe, and what standing debt remains?**
 Two altitudes. **Diff-scoped:** `code-review` gates a change on correctness and quality, `/simplify` (native) does the quality-only pass without the gate, `/security-review` (native) adds the security lens the custom kit otherwise lacks, `review-staged` triages what's staged, `review-mr` formats findings as MR comments, `cross-engine-check` verifies a CSS claim across engines, `verifier` re-checks a single claim cold. **Repo-scoped:** `census` surveys the whole standing codebase and keeps a reconciled ledger under `docs/census/` — the one review artifact that persists and gets re-taken across sessions.
@@ -104,6 +112,8 @@ These are plugin skills (not custom skills, not platform built-ins), so they car
 - **`/claude-md-management:claude-md-improver`** — audits every `CLAUDE.md` against a quality bar and applies targeted fixes. Config *maintenance*, for when the memory has drifted from how the project actually works.
 - **`/claude-md-management:revise-claude-md`** — at session close, writes what this session taught back into `CLAUDE.md`. It's the loop-closer, and the config-side twin of `ship-session`: one converts the session into as-built product docs, the other converts it into a sharper harness for the next run.
 
+- **`writing-for-agents`**† — the reference for writing the skills and steering files themselves: context pointers, the two loads (context and cognitive), leading words, no-ops, and the user-invoked versus model-invoked trade. Read it before editing anything in `custom-skills/` or `AGENTS.md`.
+
 Read as a loop: the configuration shapes each phase. The spine shows gaps in the configuration. `revise-claude-md` writes Claude Code lessons to `CLAUDE.md`.
 
 Move host-neutral lessons from `CLAUDE.md` to `AGENTS.md`. Keep only Claude Code instructions in `CLAUDE.md`.
@@ -119,6 +129,7 @@ The reason the kit survives a `/clear` is that every phase that matters writes t
 | `census` | whole repo + `docs/adr/` | `docs/census/` reconciled ledger |
 | `ship-session` | plan doc | as-built plan doc + commit |
 | `decision-record` | design fork | `docs/adr/` ADR |
+| `domain-modeling` | conversation | `CONTEXT.md` glossary |
 
 Read top to bottom, that's a single stateful pipeline: decide → plan → execute → survey → close, each step reconciled against a file rather than reconstructed from history. The loops — census reconciling itself, review re-opening a build unit, ship handing back to plan — are what make it a *system* instead of a checklist.
 

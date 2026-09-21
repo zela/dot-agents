@@ -20,6 +20,8 @@ dot-agents/
 │   └── markdown-new/
 ├── custom-agents/           # Subagent definitions → ~/.claude/agents/ (Claude Code only)
 │   └── verifier.md
+├── hooks/                   # Claude Code hooks, wired from ~/.claude/settings.json
+│   └── block-dangerous-git.sh
 └── shared-workflows/        # Global rules and workflow definitions
     ├── antigravity-global-rules.md
     └── model_evaluation.md
@@ -106,17 +108,44 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `cross-engine-check`    | Observe a CSS/layout claim in Firefox, WebKit and Chromium instead of inferring it from spec knowledge. |
 | `decision-record`       | Capture a design/architecture decision as a terse ADR under `docs/adr/` — options, trade-off, what breaks if wrong. Closes the Design-phase gap; `census` reads it as by-design. |
 | `design-a-feature`      | Generate radically different UI/UX designs for one feature by varying the interaction pattern.      |
-| `design-an-interface`   | Generate radically different interface designs for one module ("design it twice").                 |
+| `design-an-interface`   | Generate radically different interface designs for one module ("design it twice"). Carries the deep-module vocabulary, the dependency categories, and subagent-per-variant. |
+| `diagnosing-bugs`       | Disciplined loop for hard bugs: a red feedback loop first, minimise, 3–5 falsifiable hypotheses, tagged instrumentation, regression test at a correct seam. Vendored from mattpocock/skills. |
+| `domain-modeling`       | Build the project's glossary in `CONTEXT.md`: challenge fuzzy terms, stress-test with scenarios, record the canonical word. Decisions go to `decision-record`. Vendored from mattpocock/skills. |
 | `grammar-tutor`         | Gentle English grammar and style tutor.                                                            |
-| `grill-me`              | Interview the user relentlessly about a plan until shared understanding is reached.                |
-| `multi-session-plan`    | Break a large build into a sequenced roadmap of linked docs under `docs/`.                         |
-| `review-mr`             | Review the current GitLab MR branch and save findings as ready-to-paste MR comments.               |
+| `grill-me`              | Interview the user relentlessly about a plan: a design tree worked in rounds, facts fetched by the agent, decisions left to the user, done when the frontier is empty. |
+| `multi-session-plan`    | Break a large build into a sequenced roadmap of linked docs under `docs/`. Expand–contract for wide refactors; the roadmap holds the fog. |
+| `prototype`             | Throwaway code that answers one design question: N structurally different UI variants on one route, or a single-file HTML state-machine demo. Vendored from mattpocock/skills. |
+| `resolving-merge-conflicts` | Resolve an in-progress merge or rebase hunk by hunk, by intent traced to each side's primary source. Never `--abort`; waits for a yes before the final commit. |
+| `review-mr`             | Review the current GitLab MR branch and save findings as ready-to-paste MR comments. Adds a Spec axis against the MR description and an MR-description template on request. |
 | `review-staged`         | Review the staged diff, stress-test findings, fix survivors, commit granularly.                    |
 | `run-state`             | Execute a long-horizon many-step run (bulk migration, backlog, long refactor) via an external state file, so context stays bounded and the session can be `/clear`'d and resumed. |
 | `ship-session`          | Close out a build session: verify acceptance, convert the plan to as-built, commit. No code review. |
 | `simple-english`        | Rewrite technical docs/runbooks/SKILL.md with ASD-STE100 (Simplified Technical English) discipline. Vendored (MIT); scoped to technical writing so it doesn't collide with `stop-slop`. |
 | `system-design-mentor`  | Staff-level engineering mentor for Frontend and Backend system design.                             |
 | `third-opinion`         | Consult an alternative AI model via CLI (Copilot or Claude Code).                                  |
+
+Skills only ever typed by hand (`census`, `review-mr`, `review-staged`, `run-state`, `ship-session`) carry `disable-model-invocation: true` and an `agents/openai.yaml` policy, so their descriptions cost no context on any host.
+
+## Adopted community skills
+
+Installed unchanged from [mattpocock/skills](https://github.com/mattpocock/skills) through `upstream-sources.txt`; see [the evaluation](docs/notes/mattpocock-skills-eval.md) for what was taken, harvested, and skipped.
+
+| Skill                | Description                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| `tdd`                | Red-green loop at pre-agreed seams; three test anti-patterns; mock only at system boundaries.     |
+| `research`           | Background agent, primary sources only, cited markdown saved in the repo.                         |
+| `to-questionnaire`   | Turn a decision someone else holds the facts for into a questionnaire; grills the send, not the subject. |
+| `handoff`            | Compact the conversation into a portable file for another harness, directory, or colleague.      |
+| `writing-for-agents` | How to write skills and steering files: context pointers, the two loads, leading words, no-ops. |
+| `teach`              | Multi-session learning workspace: mission, HTML lessons, reference sheets, learning records.     |
+
+## Hooks
+
+`hooks/block-dangerous-git.sh` is a Claude Code `PreToolUse` hook on `Bash`. It blocks force pushes, `reset --hard`, `clean -f`, `branch -D`, `checkout .`, `restore .`, and `stash drop|clear` before they run, so the git rules in `AGENTS.md` are binding rather than advisory. Plain `git push` stays allowed, because `AGENTS.md` permits a push the user asked for. It is wired from `~/.claude/settings.json` (not tracked here) as the first hook under the `Bash` matcher:
+
+```json
+{ "type": "command", "command": "\"$HOME\"/dot-agents/hooks/block-dangerous-git.sh" }
+```
 
 ## Passive skills
 
