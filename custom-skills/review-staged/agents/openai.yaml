@@ -1,0 +1,5 @@
+interface:
+  display_name: "Review Staged"
+  short_description: "Review, verify, and fix the staged diff"
+policy:
+  allow_implicit_invocation: false

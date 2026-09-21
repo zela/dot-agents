@@ -1,0 +1,5 @@
+interface:
+  display_name: "Review MR"
+  short_description: "Review a GitLab MR into paste-ready comments"
+policy:
+  allow_implicit_invocation: false

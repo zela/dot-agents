@@ -1,5 +1,6 @@
 ---
 name: ship-session
+disable-model-invocation: true
 description: >-
   Close out a finished build session in a docs/-based plan: confirm the gates, convert the session doc from forward-plan to as-built reference, keep the index short and truthful, move raw evidence out, commit.
 ---

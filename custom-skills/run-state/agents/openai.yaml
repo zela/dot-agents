@@ -1,0 +1,5 @@
+interface:
+  display_name: "Run State"
+  short_description: "Run a long procedure from a state file"
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Census"
+  short_description: "Survey the repo into a reconciled ledger"
+policy:
+  allow_implicit_invocation: false

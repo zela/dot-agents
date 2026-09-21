@@ -1,0 +1,5 @@
+interface:
+  display_name: "Ship Session"
+  short_description: "Close out a build session"
+policy:
+  allow_implicit_invocation: false

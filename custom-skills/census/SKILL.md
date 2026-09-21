@@ -1,5 +1,6 @@
 ---
 name: census
+disable-model-invocation: true
 description: >-
   Review a whole codebase as a senior advisor and maintain the findings as a persistent, reconciled ledger under docs/census/. The ledger is git-host-agnostic. Use to take stock of standing risk and debt across an entire repo (not a diff): bugs, security, performance, test gaps, tech debt, DX. Reconcile re-takes the census across sessions: verify done, refresh drifted, retire dead. Complements code-review (which gates a diff). Census surveys the standing codebase.
 ---
