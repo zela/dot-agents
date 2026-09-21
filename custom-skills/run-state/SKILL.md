@@ -1,5 +1,6 @@
 ---
 name: run-state
+disable-model-invocation: true
 description: >-
   Execute a long-horizon, many-step procedural task (bulk migration, backlog processing, a long mechanical refactor, a runbook) by keeping all durable progress in an external state file instead of the conversation history. Context then stays bounded, any step can be re-read cold, and the session can be /clear'd and resumed without losing the thread. Use when a repetitive multi-step run keeps ballooning context or spans sessions. Not for one-shot changes (just do them) or forward planning (see multi-session-plan).
 ---
@@ -17,6 +18,8 @@ The payoff: you can `/clear` between batches (or resume next session) and pick u
 - **run-state executes**. It is the engine that chews through a long, homogeneous worklist while holding context flat. Often you plan with `multi-session-plan`, then execute one heavy session with run-state.
 
 Use it when the work has all three properties: Many similar steps (dozens to hundreds of call sites, files, records, backlog items). Mechanical enough that scrollback is dead weight. Long enough that context poison or a mid-run `/clear` is a real risk.
+
+The migrate batches of an expand–contract refactor (see `multi-session-plan`) are the archetypal run: one unit per call-site batch, the project's gates green after each, the old form still in place until the contract step.
 
 Do not use it for a one-shot edit (the ladder says just do it), for genuinely novel per-step reasoning where history *is* the value, or to write a plan (that is `multi-session-plan`).
 

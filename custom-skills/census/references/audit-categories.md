@@ -62,6 +62,10 @@ Not a percentage — *which untested code is dangerous*.
 - God modules: files an order of magnitude larger than the median that everything touches; double-digit-parameter functions.
 - Inconsistent patterns: three ways of doing data fetching / error handling / styling in one repo — name the winner (usually the most recently converged-on) and plan the consolidation.
 - Abstraction mismatches: premature abstraction with one implementation, or a missing one where the same change always touches N files in lockstep.
+- Shallow modules: an interface nearly as complex as its implementation — pass-through wrappers, layers that only delegate, pure functions extracted for testability while the real bugs hide in how they are called. Apply the deletion test: if deleting the module makes complexity vanish, it was a pass-through; if complexity reappears across N callers, it earned its keep.
+- Missing locality: understanding one concept means bouncing across many small modules. The candidate fix is deepening — one interface, one place to test. Recommend `design-an-interface` for the deepened shape, and use its vocabulary (module, interface, depth, seam, adapter) in the finding.
+- Hypothetical seams: a port or interface with a single adapter. One adapter is indirection; two (production + test) justify the seam.
+- Weight by churn: `git log` hot spots first. Deepening pays off where change keeps landing, so a shallow module nobody touches is a LOW-severity row.
 
 ## 6. Dependencies & migrations
 
@@ -104,4 +108,4 @@ One monotonic id per finding (`001`, `002`, … assigned when it lands in the le
 
 ---
 
-<sub>Adapted from the audit playbook in [shadcn/improve](https://github.com/shadcn/improve) (MIT), condensed and retargeted for a host-agnostic ledger.</sub>
+<sub>Adapted from the audit playbook in [shadcn/improve](https://github.com/shadcn/improve) (MIT), condensed and retargeted for a host-agnostic ledger. The module-depth items in category 5 are the lens of `improve-codebase-architecture` in [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), pointed at the ledger instead of a temp HTML report.</sub>

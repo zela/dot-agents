@@ -1,11 +1,14 @@
 ---
 name: review-staged
+disable-model-invocation: true
 description: Review the staged diff, stress-test each finding against the source or a live system, fix only the survivors, then commit granularly. Use when the user asks to review staged changes, review `git diff --staged`, check what is staged before you commit, or mentions "review-staged".
 ---
 
 1. Invoke the `code-review` skill. Target the staged paths explicitly (`git diff --staged --name-only`). Never target "the current diff", which can pull in unstaged work. Pass through any requested effort level. If a file is partly staged, discard findings that land on unstaged hunks. They are not what you are about to commit. Where `code-review` is unavailable, list candidates directly.
 
    Its output is candidates, not conclusions.
+
+   If a plan session doc under `docs/`, or an issue or spec the user names, covers this change, run one Spec subagent as well. Give it the staged diff and the acceptance criteria, and ask for requirements that are missing, behaviour that was not asked for, and requirements that look implemented but wrong, each quoting the criterion. Report these under their own heading in step 6. Do not rerank them against the code findings.
 2. Verify EACH finding in its own subagent, launched in parallel. Use the `verifier` subagent if this host has one, otherwise a general subagent. Either way give it only the bare claim and where to look. Never give it the reasoning that produced it or the other findings:
 
    > Independently verify this claim against the actual source: "<claim>", at `<file:line>`. You have no prior context and must assume nothing. Report REPRODUCES or DOES-NOT-REPRODUCE with `file:line` evidence, plus how the site is reached and how large a change the claim implies. Default to DOES-NOT-REPRODUCE if the evidence is ambiguous.
@@ -24,6 +27,7 @@ description: Review the staged diff, stress-test each finding against the source
    - Fixed
    - Refuted (with the verifier's evidence)
    - True but not worth it (with the reason)
+   - Spec gaps (only when a spec existed)
 
    Then propose the commits.
 

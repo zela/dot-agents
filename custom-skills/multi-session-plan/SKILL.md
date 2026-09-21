@@ -65,10 +65,13 @@ Break the work into sessions of roughly one working block each. For every sessio
 - **Map true dependencies, not a default chain.** Draw the dependency graph (see overview template). Identify independent tracks (for example, a UI track on fixtures running parallel to a data track) and the single join session where they merge.
 - **Flag oversized sessions** (for example, "port three complex components + assemble page") and note a split (2a/2b) rather than pretending it fits.
 - **Name the cross-cutting risks** that span sessions — data gaps, full-cohort/whole-dataset requirements that break partial-run dev modes, volume/perf limits, statistical caveats — and put each in the risks register pointing at the session that handles it.
+- **Wide refactors are the exception to vertical slicing.** A wide refactor is one mechanical change (rename a column, retype a shared symbol) whose blast radius fans across the whole codebase, so no single session can land green. Sequence it as **expand–contract**: an *expand* session adds the new form beside the old, so nothing breaks; *migrate* sessions move the call sites over in batches sized by blast radius (per package, per directory), each green because the old form still exists; a *contract* session deletes the old form once no caller remains. When even the batches cannot stay green alone, keep the sequence on an integration branch and promise green only at a final integrate-and-verify session. The migrate sessions are the archetypal `run-state` run.
 
 ### 5. Write the docs
 
 Use the templates. Write `00-overview.md` and `architecture.md` first (and `data-model.md` if needed), then one session doc per session, then the roadmap. Every session doc gets all seven sections — an empty "Out-of-scope" is a smell that scope is not pinned.
+
+The roadmap holds the fog: stages you can see coming but cannot yet specify. The test for whether an item is a session or a roadmap entry is not whether you can answer it now but whether you can **state its question precisely** now. A precise question is a session, even if it is blocked. A vague one stays in the roadmap until an earlier session sharpens it. Do not pre-slice the fog into session-sized pieces; one roadmap entry can become several sessions, or none.
 
 Keep each doc **scannable but executable**: enough that a fresh session can act without re-discovery, not so much that it duplicates the codebase. Link liberally between docs (overview ↔ sessions ↔ data-model). Reference real file paths found in step 1.
 
@@ -85,3 +88,7 @@ This skill also edits existing plans. When a session completes, **tick its box i
 ## Adapting to scale
 
 Match the ceremony to the project. A 3-session feature does not need a risks register or a data-model doc — an overview with a status table plus three session docs is plenty. A multi-stage greenfield build wants the full set. Start with the overview + session docs. Add architecture / data-model / roadmap / risks only when they are carrying weight. When in doubt, fewer docs that stay current beat a thorough set that goes stale.
+
+---
+
+<sub>Expand–contract and the "fog or session" test are harvested from `to-tickets` and `wayfinder` in [mattpocock/skills](https://github.com/mattpocock/skills) (MIT). See [the evaluation](../../docs/notes/mattpocock-skills-eval.md).</sub>
