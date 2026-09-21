@@ -17,6 +17,7 @@
 ## Build Right
 
 - Study the relevant code before you implement a change. Find similar code and follow established project conventions. If a project convention conflicts with a general best practice, the project convention wins.
+- If the repo has a `CONTEXT.md` glossary, use its terms in names, docs, and prose. Do not drift to the synonyms it lists under Avoid. If the term you need is missing, say so instead of inventing one.
 - Make the smallest change that solves the complete problem.
 - Make sure that changes work. Run the relevant tests, lint command, build, or application.
 - Do not remove comments, unfamiliar configuration, or apparently unused code until you understand its purpose. If you are not sure, leave it or ask.
@@ -76,6 +77,12 @@ A plan does not grant permission for destructive actions, external messages, dep
 A long session is acceptable. A long context is the cost: each turn reads the full transcript again, and idle gaps force expensive cache re-creation. Keep the working context small.
 
 - Keep one chat for one coherent unit of work. Do not let a context span days. Idle IDE activity re-bills a stale conversation.
+- A phase is a chunk of work: the grilling, the implementation, the QA. At the boundary between two phases, suggest the first option that applies, in this order. Mid-phase there is no decision: continue, or split the rest into subagents.
+  1. Continue, if the next phase needs this one as a primary source (an implementation wants the grilling verbatim, not a summary) or enough sharp context remains.
+  2. `/clear`, if nothing in this session matters to what comes next. The cheapest move. The old session stays resumable.
+  3. A handoff file (the `handoff` skill), only when something travels: a new harness, a new directory, a colleague, or a side task forked mid-phase.
+  4. A subagent, if the task is scoped tightly enough to run without steering. Automated review is the standard case.
+  5. `/compact`, otherwise, with an instruction that names what the next phase needs. It is the default, not the first reach: every move except Continue turns a primary source into a lossy summary.
 - If the client supports `/clear`, suggest it at a true task boundary, when the next task needs only the files and not the conversation. The user decides whether to clear the chat. Never clear the chat yourself.
 - If the client supports `/compact` and earlier detail is no longer useful, suggest it after a long tool-heavy phase.
 - If a trivial follow-up triggers a large multi-call turn, say so. The context carries weight the task does not need. That is the moment to compact or clear.
@@ -106,6 +113,7 @@ When you commit code, commit the documents that describe it in the same change.
 - Explain why a change exists. Do not restate the diff.
 - Use plain words. Remove filler and empty hedging.
 - State material uncertainty precisely.
+- Em-dashes are permitted in prose. For technical text that a reader follows exactly (docs, runbooks, `SKILL.md`, agent instructions, error messages), apply the `simple-english` discipline: short sentences, one instruction per sentence, the relation named instead of a dash.
 - Do not hard-wrap Markdown paragraphs. One paragraph is one line. Let the editor apply soft wrapping. This applies to every `.md` file and to commit message bodies.
 - Keep line breaks that define paragraphs, list items, table rows, headings, and code blocks.
 
