@@ -56,6 +56,8 @@ Community skills are managed by the [`skills` CLI](https://www.npmjs.com/package
 
 `AGENTS.md` is the canonical host-neutral policy. `CLAUDE.md` imports it and adds Claude Code instructions. Put portable changes in `AGENTS.md`.
 
+Comment density defaults to human-team standards. A project opts into denser context comments by putting the line `Agent-maintained codebase.` in its own instruction file. The rule is in the Comments section of `AGENTS.md`.
+
 ## Setup on a new machine
 
 ```bash

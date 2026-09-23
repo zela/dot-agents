@@ -48,6 +48,14 @@ For a defect, find the cause before you patch the symptom. Inspect relevant call
 
 <sub>This list is adapted from [ponytail](https://github.com/DietrichGebert/ponytail) (MIT). Its "never stall, ship the lazy version" rule is deliberately omitted. The Instruction Priority rules win.</sub>
 
+## Comments
+
+- A comment explains why, an invariant, or a constraint that the code cannot show. It does not restate the code.
+- Do not put change rationale in a comment. It belongs in the commit message or the PR description.
+- Match the comment density of the surrounding file. A diff must not read as more commented than the code around it.
+- Do not add section banners, docstrings on trivial functions, or notes addressed to the person reading the chat.
+- A codebase is agent-maintained only if its instruction file contains the line `Agent-maintained codebase.` In that codebase the density rule is replaced by this one: also comment each assumption the code relies on but does not check, each coupling to code in another file, and the file or ADR that records the decision behind a non-obvious shape. One or two sentences per comment. The other rules still apply.
+
 ## Planning
 
 If the task is ambiguous, cross-cutting, difficult to reverse, or requires a design choice, plan first. If you are not sure how to start, that is the signal to plan. A task that touches more than two or three files in different areas is cross-cutting.
