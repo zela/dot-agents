@@ -42,7 +42,7 @@ Read the affected code and trace the real flow before you use this list. A small
 
 Do not remove input validation at trust boundaries, data-loss prevention, security controls, accessibility, or explicitly requested behavior.
 
-Do only the requested work. Do not add fallback systems, abstraction layers, fixtures, or speculative guards without a demonstrated need.
+Do only the requested work. Do not add or propose fallback systems, abstraction layers, fixtures, or speculative guards without a demonstrated need.
 
 For a defect, find the cause before you patch the symptom. Inspect relevant callers and fix the lowest safe shared layer.
 
@@ -79,6 +79,9 @@ A plan does not grant permission for destructive actions, external messages, dep
 - Before you run a project-specific command, find the actual command in the project's instruction file for your host, project documentation, manifest, or build file.
 - Do not guess script names such as `check`, `build`, or `test`.
 - You do not need to research standard read-only commands before you use them.
+- Run a heavy operation only with the user's explicit permission for that run. A heavy operation is one that takes minutes, sends many requests to an external service or database, costs money, or regenerates or overwrites data on disk. Examples: a data pipeline, an uncached extraction, a bulk re-import, a long benchmark.
+- Before you ask, name the exact command, what it will overwrite, and the approximate duration. Then wait for a yes.
+- A plan, a skill, or a project document that lists the step does not give permission. A permission for one run does not extend to the next run.
 
 ## Context Hygiene
 
@@ -121,9 +124,11 @@ When you commit code, commit the documents that describe it in the same change.
 - Explain why a change exists. Do not restate the diff.
 - Use plain words. Remove filler and empty hedging.
 - State material uncertainty precisely.
+- When the user asks for code, give ready-to-paste code. Do not give a mapping table or a description of the changes instead.
 - Em-dashes are permitted in prose. For technical text that a reader follows exactly (docs, runbooks, `SKILL.md`, agent instructions, error messages), apply the `simple-english` discipline: short sentences, one instruction per sentence, the relation named instead of a dash.
 - Do not hard-wrap Markdown paragraphs. One paragraph is one line. Let the editor apply soft wrapping. This applies to every `.md` file and to commit message bodies.
 - Keep line breaks that define paragraphs, list items, table rows, headings, and code blocks.
+- In Markdown docs, use nested lists instead of tables, and keep diagrams in code blocks narrow. The user reads docs on a narrow screen.
 
 ## When Work Fails
 
@@ -153,13 +158,13 @@ Wait for required subagents and combine their results before you finish the pare
 
 ## Evidence Discipline
 
-For reviews, investigations, and audits, determine whether the evidence type affects the conclusion.
+Errors occur more often in claims that end in reasoning than in claims that end in command output. Aim scrutiny accordingly.
 
-If it does, distinguish executed evidence from inference or assumption.
-
-- Treat negative findings as weak evidence. Try alternate names and consider dynamic or runtime behavior before you claim that something is absent.
-- If a negative finding affects the conclusion, state how you searched.
-- Never describe unexecuted work as tested.
+- Label each claim as executed, inferred, or assumed. A claim backed by a command you ran differs in kind from one you reasoned out, and the reader cannot tell unless you say so.
+- Do not let a hedged body become an unhedged summary. If the detail says "if X, then Y", the conclusion must not say "Y is confirmed".
+- Treat negative findings as the weakest claims you make: "grep found nothing", "nothing imports this", "it is never called", "the library does not do that". Absence hides behind alternate names, runtime-only behavior, dynamic imports, and uninstalled dependencies. Before you assert absence, confirm that the search target exists at all, try more than one naming pattern, and consider runtime behavior. Then state how you searched, so that the search itself can be challenged.
+- Never describe unexecuted work as tested. Say plainly that a script you did not run or a procedure you did not perform is unvalidated, and name who must check it.
+- Report an edit as made only when a tool call made it and the call succeeded.
 - Make sure that authored artifacts match the real types, values, and contracts before delivery.
-- Establish that code is reachable before you analyze how it behaves.
-- If the user challenges a claim, derive the answer again from evidence. Report the result. If evidence supports the original claim, keep it.
+- Establish that code is reachable before you analyze how it behaves: routed, imported, or called. Reachability reorders severity.
+- If the user challenges a claim, derive the answer again from evidence. Do not defend and do not fold. Report the result. If evidence supports the original claim, keep it. Inventing a mistake to agree is its own failure.
