@@ -2,7 +2,7 @@
 
 These skills aren't a loose bag of tools — they trace one development lifecycle, and they're wired together by a single idea: **durable state lives in `docs/`, not in the conversation.** Each phase reads the artifacts the previous phase wrote and leaves its own behind, so any session can `/clear` and resume cold. That's [SKILL.state](skill-state-and-the-ledger-pattern.md) generalized past one skill to the whole kit — the document tree is the bounded, reconciled state; the chat is scratch.
 
-The HTML renders in [diagrams/](diagrams/) predate the additions from [mattpocock/skills](mattpocock-skills-eval.md). The Mermaid below is current.
+The HTML renders live in [diagrams/](diagrams/). The spine render includes the additions from [mattpocock/skills](mattpocock-skills-eval.md); the meta-loop render predates `writing-for-agents`†.
 
 ## The spine
 

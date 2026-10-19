@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "diagram_type": "workflow",
   "meta": {
     "title": "The Six-Phase Skill Spine",
@@ -9,68 +9,75 @@
       "mode": "auto",
       "entries": {
         "backend": { "label": "Custom skill" },
-        "database": { "label": "Durable state under docs/" },
-        "external": { "label": "Platform built-in" }
+        "cloud": { "label": "Community skill (†)" },
+        "external": { "label": "Platform built-in (*)" },
+        "database": { "label": "Durable state file" }
       }
     },
     "views": [
       { "id": "spine", "label": "The main spine", "focus": ["sdm", "dsg", "msp", "rs", "rst", "ship"], "note": "One driver per phase, Understand through Ship." },
-      { "id": "backbone", "label": "Document backbone", "focus": ["adr", "plandocs", "cen", "asbuilt"], "note": "Every phase that matters writes durable state under docs/." },
-      { "id": "loops", "label": "The stateful loops", "focus": ["rst", "rs", "ship", "msp"], "note": "Review re-opens a build unit; Ship hands the baton back to Plan." }
+      { "id": "backbone", "label": "Document backbone", "focus": ["adr", "ctx", "plandocs", "statefile", "cen", "asbuilt"], "note": "Every phase that matters writes durable state, so any session can /clear and resume cold." },
+      { "id": "loops", "label": "The stateful loops", "focus": ["rst", "rs", "ship", "msp"], "note": "Review re-opens a build unit; Ship hands the baton back to Plan." },
+      { "id": "companions", "label": "Phase companions", "focus": ["grill", "t3", "comm", "proto", "tdd", "dbg", "run", "gate", "census"], "note": "Peers the driver reaches for inside a phase, not steps in a sequence." }
     ]
   },
   "lanes": [
-    { "id": "understand", "label": "1 · Understand" },
-    { "id": "design", "label": "2 · Design" },
-    { "id": "plan", "label": "3 · Plan" },
-    { "id": "build", "label": "4 · Build / Execute" },
-    { "id": "review", "label": "5 · Review" },
-    { "id": "ship", "label": "6 · Ship" }
+    { "id": "understand", "label": "Understand" },
+    { "id": "design", "label": "Design" },
+    { "id": "plan", "label": "Plan" },
+    { "id": "build", "label": "Build / Execute" },
+    { "id": "review", "label": "Review" },
+    { "id": "ship", "label": "Ship" }
   ],
   "mainPath": ["sdm", "dsg", "msp", "rs", "rst", "ship"],
   "nodes": [
-    { "id": "sdm", "lane": "understand", "col": 1, "width": 180, "type": "backend", "label": "system-design-mentor", "sublabel": "trade-off space" },
-    { "id": "grill", "lane": "understand", "col": 3, "width": 180, "type": "backend", "label": "grill-me", "sublabel": "resolve every branch" },
+    { "id": "sdm", "lane": "understand", "col": 0, "width": 170, "type": "backend", "label": "system-design-mentor", "sublabel": "trade-off space" },
+    { "id": "grill", "lane": "understand", "col": 1, "width": 152, "type": "backend", "label": "grill-me", "sublabel": "resolve every branch" },
+    { "id": "t3", "lane": "understand", "col": 2, "width": 152, "type": "backend", "label": "third-opinion", "sublabel": "another model's read" },
+    { "id": "comm", "lane": "understand", "col": 3, "width": 152, "type": "cloud", "label": "to-questionnaire", "sublabel": "handoff" },
 
-    { "id": "dsg", "lane": "design", "col": 1, "width": 180, "type": "backend", "label": "design-a-feature", "sublabel": "design-an-interface" },
-    { "id": "adr", "lane": "design", "col": 3, "width": 180, "type": "database", "label": "docs/adr/", "sublabel": "decision-record" },
+    { "id": "dsg", "lane": "design", "col": 0, "width": 170, "type": "backend", "label": "design-a-feature", "sublabel": "design-an-interface" },
+    { "id": "adr", "lane": "design", "col": 1, "width": 152, "type": "database", "label": "docs/adr/", "sublabel": "decision-record" },
+    { "id": "proto", "lane": "design", "col": 2, "width": 152, "type": "backend", "label": "prototype", "sublabel": "settle it by running it" },
+    { "id": "ctx", "lane": "design", "col": 3, "width": 152, "type": "database", "label": "CONTEXT.md", "sublabel": "domain-modeling" },
 
-    { "id": "msp", "lane": "plan", "col": 1, "width": 180, "type": "backend", "label": "multi-session-plan", "sublabel": "sequence the build" },
-    { "id": "plandocs", "lane": "plan", "col": 3, "width": 180, "type": "database", "label": "docs/<plan>/", "sublabel": "index, sessions, roadmap" },
+    { "id": "msp", "lane": "plan", "col": 0, "width": 170, "type": "backend", "label": "multi-session-plan", "sublabel": "sequence the build" },
+    { "id": "plandocs", "lane": "plan", "col": 1, "width": 152, "type": "database", "label": "docs/<plan>/", "sublabel": "index, sessions, roadmap" },
 
-    { "id": "rs", "lane": "build", "col": 1, "width": 180, "type": "backend", "label": "run-state", "sublabel": "external state file" },
-    { "id": "run", "lane": "build", "col": 3, "width": 180, "type": "external", "label": "/run", "sublabel": "exercise the built thing" },
+    { "id": "rs", "lane": "build", "col": 0, "width": 170, "type": "backend", "label": "run-state", "sublabel": "long homogeneous run" },
+    { "id": "statefile", "lane": "build", "col": 1, "width": 152, "type": "database", "label": "run-state file", "sublabel": "ledger of units" },
+    { "id": "tdd", "lane": "build", "col": 2, "width": 152, "type": "cloud", "label": "tdd", "sublabel": "red-green at seams" },
+    { "id": "dbg", "lane": "build", "col": 3, "width": 152, "type": "backend", "label": "diagnosing-bugs", "sublabel": "complexity-optimizer" },
+    { "id": "run", "lane": "build", "col": 4, "width": 152, "type": "external", "label": "/run", "sublabel": "exercise the built thing" },
 
-    { "id": "rst", "lane": "review", "col": 1, "width": 180, "type": "backend", "label": "review-staged", "sublabel": "review-mr" },
-    { "id": "cen", "lane": "review", "col": 3, "width": 180, "type": "database", "label": "docs/census/", "sublabel": "census, reconciled" },
+    { "id": "rst", "lane": "review", "col": 0, "width": 170, "type": "backend", "label": "review-staged", "sublabel": "review-mr" },
+    { "id": "gate", "lane": "review", "col": 1, "width": 152, "type": "external", "label": "/code-review", "sublabel": "/simplify · /security-review" },
+    { "id": "census", "lane": "review", "col": 2, "width": 152, "type": "backend", "label": "census", "sublabel": "repo-scoped standing debt" },
+    { "id": "cen", "lane": "review", "col": 3, "width": 152, "type": "database", "label": "docs/census/", "sublabel": "reconciled ledger" },
 
-    { "id": "ship", "lane": "ship", "col": 1, "width": 180, "type": "backend", "label": "ship-session", "sublabel": "confirm the gates" },
-    { "id": "asbuilt", "lane": "ship", "col": 3, "width": 180, "type": "database", "label": "as-built plan doc", "sublabel": "trimmed index, commit" }
+    { "id": "ship", "lane": "ship", "col": 0, "width": 170, "type": "backend", "label": "ship-session", "sublabel": "confirm the gates" },
+    { "id": "asbuilt", "lane": "ship", "col": 1, "width": 152, "type": "database", "label": "as-built plan doc", "sublabel": "trimmed index, commit" }
   ],
   "edges": [
-    { "from": "sdm", "to": "grill" },
-    { "from": "sdm", "to": "dsg", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" },
+    { "from": "sdm", "to": "dsg", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+    { "from": "dsg", "to": "msp", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+    { "from": "msp", "to": "rs", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+    { "from": "rs", "to": "rst", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
+    { "from": "rst", "to": "ship", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" },
 
-    { "from": "dsg", "to": "adr" },
-    { "from": "dsg", "to": "msp", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" },
+    { "from": "dsg", "to": "adr", "label": "records" },
+    { "from": "msp", "to": "plandocs", "label": "writes" },
+    { "from": "rs", "to": "statefile", "label": "writes" },
+    { "from": "rst", "to": "gate", "label": "wraps" },
+    { "from": "census", "to": "cen", "label": "writes" },
+    { "from": "ship", "to": "asbuilt", "label": "converts" },
 
-    { "from": "msp", "to": "plandocs" },
-    { "from": "msp", "to": "rs", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" },
-
-    { "from": "rs", "to": "run" },
-    { "from": "rs", "to": "rst", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" },
-
-    { "from": "rst", "to": "cen" },
-    { "from": "rst", "to": "ship", "variant": "emphasis", "route": "drop", "fromSide": "bottom", "toSide": "top" },
-
-    { "from": "ship", "to": "asbuilt" },
-
-    { "from": "rst", "to": "rs", "label": "re-open", "variant": "dashed", "role": "return", "route": "return-left", "fromSide": "left", "toSide": "left" },
-    { "from": "ship", "to": "msp", "label": "next session", "variant": "dashed", "role": "return", "route": "return-left", "fromSide": "left", "toSide": "left", "channelX": 62, "labelDy": -24 }
+    { "from": "rst", "to": "rs", "label": "re-open", "variant": "dashed", "role": "return", "fromSide": "left", "toSide": "left", "channelX": 38 },
+    { "from": "ship", "to": "msp", "label": "next session", "variant": "dashed", "role": "return", "fromSide": "left", "toSide": "left" }
   ],
   "cards": [
-    { "dot": "cyan", "title": "Durable state, not chat", "items": ["Each phase reads what the last phase wrote under docs/", "Any session can /clear and resume cold", "The document tree is the reconciled state; the chat is scratch"] },
-    { "dot": "emerald", "title": "Companions and built-ins", "items": ["third-opinion cross-checks a plan against another model", "archify and beautiful-mermaid render the chosen shape", "complexity-optimizer fixes hotspots; /code-review, /simplify and /security-review gate the diff; verifier re-checks a claim cold"] },
-    { "dot": "amber", "title": "Loops make it a system", "items": ["Review re-opens a build unit instead of ending the run", "Ship hands the baton back to Plan for the next session", "census reconciles itself: verify done, refresh drifted, retire dead"] }
+    { "dot": "cyan", "title": "Durable state, not chat", "items": ["Each phase reads what the last phase wrote", "Any session can /clear and resume cold", "census reads docs/adr/ to tell by-design from debt"] },
+    { "dot": "amber", "title": "Loops make it a system", "items": ["Review re-opens a build unit instead of ending the run", "Ship hands the baton back to Plan for the next session", "census reconciles itself: verify done, refresh drifted, retire dead"] },
+    { "dot": "emerald", "title": "Off the spine", "items": ["archify and beautiful-mermaid render the chosen shape", "verifier* and cross-engine-check re-check one claim cold", "/goal pins any phase's exit gate so the session cannot stop short"] }
   ]
 }
