@@ -7,7 +7,7 @@ description: >-
 
 # Run-state
 
-Drive a long procedural loop where the enemy is **context**, not difficulty. Instead of appending every step to the conversation. That history grows quadratically and starts to poison itself around step 30. You keep one **external state file** as the single source of truth. Each step reads the spec + the state + the latest result, does the next unit, writes a small **patch** to the state file, and discards the reasoning. Progress lives in the file, so the context never has to.
+Drive a long procedural loop where the enemy is **context**, not difficulty. An appended conversation history grows quadratically and starts to poison itself around step 30. So instead of appending every step to the conversation, you keep one **external state file** as the single source of truth. Each step reads the spec + the state + the latest result, does the next unit, writes a small **patch** to the state file, and discards the reasoning. Progress lives in the file, so the context never has to.
 
 The payoff: you can `/clear` between batches (or resume next session) and pick up cold from the file alone, with no accuracy cliff as the run gets long.
 
