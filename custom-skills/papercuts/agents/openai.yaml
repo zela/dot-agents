@@ -1,0 +1,5 @@
+interface:
+  display_name: "Papercuts"
+  short_description: "Triage the agent friction log into fixes"
+policy:
+  allow_implicit_invocation: false

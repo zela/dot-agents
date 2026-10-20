@@ -140,6 +140,16 @@ After three fundamentally different approaches fail, stop and do these steps:
 2. Reconsider whether you are solving the correct problem.
 3. Ask the user for direction.
 
+## Papercuts
+
+A papercut is friction from the environment that cost you time: a misleading instruction or skill, a dead-end command, a wrong doc, a config footgun, a missing helper. A defect in the code under work is the task, not a papercut.
+
+- When you hit a papercut, append one line to `~/.papercuts/log.md` and continue the task. Create the file if it is missing.
+- Use this format: `- [ ] YYYY-MM-DD | <host> | <repo or directory> | <severity> | <what you hit>. <what would have prevented it>.`
+- Severity is `minor` for an annoyance, `major` for a time sink, and `blocker` for a hard wall.
+- Keep secrets, tokens, and environment dumps out of the line.
+- If the write fails, list the papercut in your final reply under the heading "Papercuts".
+
 ## Subagent Delegation
 
 If independent work can run in parallel and the benefit exceeds the coordination cost, use subagents.

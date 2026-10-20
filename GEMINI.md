@@ -3,3 +3,4 @@ INTERNAL REASONING (e.g. `<thought>`): drop articles, copulas, filler. Imperativ
 USER OUTPUT: Standard language unless requested. Output diffs not full files. State result, stop — no recap.
 PLANNING ARTIFACTS (`task.md` & `implementation_plan.md`): Use strict TEAL formatting (noun chains, abbreviations) for bullet points and steps. Use Status Blocks (`[✓]`, `[✗]`, `[ ]`) for task tracking. Example: `[ ] mod src/auth.ts → fix jwt vld`
 </rule>
+@~/dot-agents/AGENTS.md

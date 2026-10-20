@@ -102,9 +102,14 @@ flowchart LR
   cfg --> spine(["the 6-phase spine"])
   spine -. at session close .-> rcm[revise-claude-md]
   rcm -. writes learnings .-> cfg
+  spine -. friction .-> log[("~/.papercuts/log.md")]
+  log --> pc[papercuts]
+  pc -. fixes .-> cfg
   classDef doc fill:#e8f0fe,stroke:#4285f4,color:#111;
-  class cfg doc;
+  class cfg,log doc;
 ```
+
+`revise-claude-md` captures what the *user* taught in a session. The Papercuts rule in `AGENTS.md` captures what the *agent* tripped over: each session appends friction to `~/.papercuts/log.md`, and the hand-typed `papercuts` skill triages that log into fixes to the configuration. See [the papercuts evaluation](papercuts-eval.md).
 
 These are plugin skills (not custom skills, not platform built-ins), so they carry no `*`:
 

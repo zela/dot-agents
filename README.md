@@ -116,6 +116,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `grammar-tutor`         | Gentle English grammar and style tutor.                                                            |
 | `grill-me`              | Interview the user relentlessly about a plan: a design tree worked in rounds, facts fetched by the agent, decisions left to the user, done when the frontier is empty. |
 | `multi-session-plan`    | Break a large build into a sequenced roadmap of linked docs under `docs/`. Expand–contract for wide refactors; the roadmap holds the fog. |
+| `papercuts`             | Inspect the agent friction log at `~/.papercuts/log.md`: cluster papercuts into root-cause families, keep a dated note per family in `notes.md`, and fix the families you pick. Pairs with the Papercuts rule in `AGENTS.md`. |
 | `prototype`             | Throwaway code that answers one design question: N structurally different UI variants on one route, or a single-file HTML state-machine demo. Vendored from mattpocock/skills. |
 | `resolving-merge-conflicts` | Resolve an in-progress merge or rebase hunk by hunk, by intent traced to each side's primary source. Never `--abort`; waits for a yes before the final commit. |
 | `review-mr`             | Review the current GitLab MR branch and save findings as ready-to-paste MR comments. Adds a Spec axis against the MR description and an MR-description template on request. |
@@ -126,7 +127,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `system-design-mentor`  | Staff-level engineering mentor for Frontend and Backend system design.                             |
 | `third-opinion`         | Consult an alternative AI model via CLI (Copilot or Claude Code).                                  |
 
-Skills only ever typed by hand (`census`, `review-mr`, `review-staged`, `run-state`, `ship-session`) carry `disable-model-invocation: true` and an `agents/openai.yaml` policy, so their descriptions cost no context on any host.
+Skills only ever typed by hand (`census`, `papercuts`, `review-mr`, `review-staged`, `run-state`, `ship-session`) carry `disable-model-invocation: true` and an `agents/openai.yaml` policy, so their descriptions cost no context on any host.
 
 ## Adopted community skills
 
