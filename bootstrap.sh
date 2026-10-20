@@ -70,19 +70,22 @@ fi
 #    .custom-skills.prev tracks previously installed names so removals propagate.
 MANIFEST=~/dot-agents/.custom-skills.prev
 
-# Build current custom skill name list
+# Build current custom skill name list. Only a directory with a SKILL.md is a
+# skill: tools such as skill-creator leave workspaces next to the skill.
 CURRENT_NAMES=()
 for file in "$CUSTOM_DIR"/*; do
-    [ -e "$file" ] && CURRENT_NAMES+=("$(basename "$file")")
+    [ -f "$file/SKILL.md" ] && CURRENT_NAMES+=("$(basename "$file")")
 done
 
 for dir in "${AGENT_DIRS[@]}"; do
     [ -d "$dir" ] || { echo "  ⚠ $dir not found, skipping"; continue; }
 
-    # Remove previously installed custom skills that no longer exist
+    # Remove previously installed custom skills that are no longer skills.
+    # An empty name would make the target the whole skills directory.
     if [ -f "$MANIFEST" ]; then
         while IFS= read -r old_name; do
-            [ -e "$CUSTOM_DIR/$old_name" ] || rm -rf "$dir/$old_name"
+            [ -n "$old_name" ] || continue
+            [ -f "$CUSTOM_DIR/$old_name/SKILL.md" ] || rm -rf "$dir/$old_name"
         done < "$MANIFEST"
     fi
 
