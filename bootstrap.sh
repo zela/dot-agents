@@ -171,6 +171,39 @@ ln -sfn ~/dot-agents/CLAUDE.md ~/.claude/CLAUDE.md
 mkdir -p ~/.codex
 ln -sfn ~/dot-agents/AGENTS.md ~/.codex/AGENTS.md
 
+# 6. Claude Code git guard hook
+#    settings.json is not tracked and holds other tools' hooks, so merge into it.
+#    The guard goes first under the Bash matcher: a later hook such as rtk
+#    rewrites the command. An existing entry is left where it is.
+echo "Wiring git guard hook..."
+CLAUDE_SETTINGS=~/.claude/settings.json
+GUARD_CMD='"$HOME"/dot-agents/hooks/block-dangerous-git.sh'
+if command -v jq >/dev/null; then
+    [ -f "$CLAUDE_SETTINGS" ] || echo '{}' > "$CLAUDE_SETTINGS"
+    tmp=$(mktemp)
+    if jq -e --arg cmd "$GUARD_CMD" \
+        'any(.hooks.PreToolUse[]?.hooks[]?; .command == $cmd)' \
+        "$CLAUDE_SETTINGS" >/dev/null 2>&1; then
+        rm -f "$tmp"
+        echo "  ✓ already wired"
+    elif jq --arg cmd "$GUARD_CMD" '
+        {type: "command", command: $cmd} as $hook
+        | .hooks.PreToolUse //= []
+        | (.hooks.PreToolUse | map(.matcher == "Bash") | index(true)) as $i
+        | if $i then .hooks.PreToolUse[$i].hooks = [$hook] + (.hooks.PreToolUse[$i].hooks // [])
+          else .hooks.PreToolUse += [{matcher: "Bash", hooks: [$hook]}]
+          end' "$CLAUDE_SETTINGS" > "$tmp"; then
+        chmod 600 "$tmp"
+        mv "$tmp" "$CLAUDE_SETTINGS"
+        echo "  ✓ wired in $CLAUDE_SETTINGS (takes effect in a new session)"
+    else
+        rm -f "$tmp"
+        echo "  ✗ could not parse $CLAUDE_SETTINGS, hook not wired"
+    fi
+else
+    echo "  ⚠ jq not found, hook not wired. See README.md#hooks."
+fi
+
 echo ""
 echo "✅ Agent dotfiles synchronized!"
 echo ""

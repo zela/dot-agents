@@ -143,11 +143,21 @@ Installed unchanged from [mattpocock/skills](https://github.com/mattpocock/skill
 
 ## Hooks
 
-`hooks/block-dangerous-git.sh` is a Claude Code `PreToolUse` hook on `Bash`. It blocks force pushes, `reset --hard`, `clean -f`, `branch -D`, `checkout .`, `restore .`, and `stash drop|clear` before they run, so the git rules in `AGENTS.md` are binding rather than advisory. Plain `git push` stays allowed, because `AGENTS.md` permits a push the user asked for. It is wired from `~/.claude/settings.json` (not tracked here) as the first hook under the `Bash` matcher:
+`hooks/block-dangerous-git.sh` is a Claude Code `PreToolUse` hook on `Bash`. It makes the git rules in `AGENTS.md` binding rather than advisory:
+
+- It blocks force pushes, `clean -f`, `branch -D`, `checkout .`, `restore .`, and `stash drop|clear`. Claude must ask you to run them.
+- It asks your permission for `commit` and `reset --hard`. Claude Code before v2.1.211 can approve such a prompt silently in auto mode.
+- Plain `git push` stays allowed, because `AGENTS.md` permits a push the user asked for.
+- Git global options such as `-C dir` and `-c key=value` do not hide a command.
+- Quoted text such as a grep pattern or a commit message is not matched, unless it holds `$(…)` or a backtick, or the command can execute a string (a shell, `eval`, `ssh`, `xargs`, an interpreter, `rebase --exec`).
+
+The hook runs only if `~/.claude/settings.json` (not tracked here) wires it as the first hook under the `Bash` matcher. `bootstrap.sh` adds this entry with `jq` and keeps the other settings. If the entry is already there, it changes nothing:
 
 ```json
 { "type": "command", "command": "\"$HOME\"/dot-agents/hooks/block-dangerous-git.sh" }
 ```
+
+A change to the hook wiring takes effect in a new session.
 
 ## Passive skills
 
