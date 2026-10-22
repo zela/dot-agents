@@ -1,7 +1,6 @@
 ---
 name: decision-record
-description: >-
-  Capture an architectural or design decision as a terse ADR under docs/adr/: the choice that commits us, the trade-off accepted, what breaks if we are wrong, and the options rejected. Use at a design fork once a call is made, or to write down a decision already taken so it survives a /clear. Closes the one gap in the skill flow: every phase persists its state except Design, where a decision otherwise lives only in the chat. Not for planning the build (multi-session-plan) or surveying standing debt (census).
+description: 'Capture an architectural or design decision as a terse ADR under docs/adr/: the choice that commits us, the trade-off accepted, what breaks if we are wrong, and the options rejected. Use at a design fork once a call is made, or to write down a decision already taken so it survives a /clear. Closes the one gap in the skill flow: every phase persists its state except Design, where a decision otherwise lives only in the chat. Not for planning the build (multi-session-plan) or surveying standing debt (census).'
 ---
 
 # Decision-record

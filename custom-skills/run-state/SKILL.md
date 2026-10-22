@@ -1,8 +1,7 @@
 ---
 name: run-state
 disable-model-invocation: true
-description: >-
-  Execute a long-horizon, many-step procedural task (bulk migration, backlog processing, a long mechanical refactor, a runbook) by keeping all durable progress in an external state file instead of the conversation history. Context then stays bounded, any step can be re-read cold, and the session can be /clear'd and resumed without losing the thread. Use when a repetitive multi-step run keeps ballooning context or spans sessions. Not for one-shot changes (just do them) or forward planning (see multi-session-plan).
+description: Execute a long-horizon, many-step procedural task (bulk migration, backlog processing, a long mechanical refactor, a runbook) by keeping all durable progress in an external state file instead of the conversation history. Context then stays bounded, any step can be re-read cold, and the session can be /clear'd and resumed without losing the thread. Use when a repetitive multi-step run keeps ballooning context or spans sessions. Not for one-shot changes (just do them) or forward planning (see multi-session-plan).
 ---
 
 # Run-state

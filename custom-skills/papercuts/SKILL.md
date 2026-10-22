@@ -1,8 +1,7 @@
 ---
 name: papercuts
 disable-model-invocation: true
-description: >-
-  Inspect the papercut log at ~/.papercuts/log.md: cluster open papercuts into root-cause families, verify each against the live state, keep a dated note per family, and fix the families the user picks.
+description: 'Inspect the papercut log at ~/.papercuts/log.md: cluster open papercuts into root-cause families, verify each against the live state, keep a dated note per family, and fix the families the user picks.'
 ---
 
 # Papercuts

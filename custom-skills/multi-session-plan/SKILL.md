@@ -1,7 +1,6 @@
 ---
 name: multi-session-plan
-description: >-
-  Create and maintain a multi-session implementation plan as linked markdown docs under a project's docs/ folder: an overview/index, one doc per build session, and a deferred-work roadmap. Use when the user wants to plan a build across sessions, break a large feature or greenfield project into a sequenced roadmap, turn a PRD/design/spec into a staged plan, or track progress across sessions, including "plan this out", "break this into steps", "make a roadmap". Also use to edit/extend an existing plan: add a session, re-sequence, or tick off completed work.
+description: 'Create and maintain a multi-session implementation plan as linked markdown docs under a project''s docs/ folder: an overview/index, one doc per build session, and a deferred-work roadmap. Use when the user wants to plan a build across sessions, break a large feature or greenfield project into a sequenced roadmap, turn a PRD/design/spec into a staged plan, or track progress across sessions, including "plan this out", "break this into steps", "make a roadmap". Also use to edit/extend an existing plan: add a session, re-sequence, or tick off completed work.'
 ---
 
 # Multi-Session Implementation Plan
