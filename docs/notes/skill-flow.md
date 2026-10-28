@@ -1,6 +1,6 @@
 # The flow the skills form
 
-These skills aren't a loose bag of tools — they trace one development lifecycle, and they're wired together by a single idea: **durable state lives in `docs/`, not in the conversation.** Each phase reads the artifacts the previous phase wrote and leaves its own behind, so any session can `/clear` and resume cold. That's [SKILL.state](skill-state-and-the-ledger-pattern.md) generalized past one skill to the whole kit — the document tree is the bounded, reconciled state; the chat is scratch.
+The skills trace one development lifecycle, tied together by one idea: **durable state lives in `docs/`, and the chat is scratch.** Each phase reads the artifacts the previous phase wrote and leaves its own behind, so you can `/clear` any session and resume cold. The kit generalizes [SKILL.state](skill-state-and-the-ledger-pattern.md) from one skill to the whole set, with the document tree as the bounded, reconciled state.
 
 The HTML renders live in [diagrams/](diagrams/). The spine render includes the additions from [mattpocock/skills](mattpocock-skills-eval.md); the meta-loop render predates `writing-for-agents`†.
 
@@ -30,6 +30,7 @@ flowchart LR
     rs[run-state]
     co[complexity-optimizer]
     apprun[run*]
+    craft[craft]
     tdd[tdd†]
     dbg[diagnosing-bugs]
   end
@@ -56,44 +57,44 @@ flowchart LR
   class msp,rs,cen,ship,dr,dm doc;
 ```
 
-<sub>`*` = platform built-ins the kit composes with, not custom skills. `†` = community skills installed as-is from `upstream-sources.txt` (mattpocock/skills). Dotted edges are the loops that make the kit stateful rather than one-shot.</sub>
+<sub>`*` marks platform built-ins the kit composes with. `†` marks community skills installed as-is from `upstream-sources.txt` (mattpocock/skills). Dotted edges mark the loops that carry state from one session to the next.</sub>
 
 ## Phase by phase
 
-**1 · Understand — is this the right problem, and do I actually get it?**
-`system-design-mentor` teaches the trade-off space; `grill-me` interrogates a plan until every branch is resolved; `third-opinion` cross-checks against another model. Output is comprehension — not yet a doc, but the input to one. `to-questionnaire`† turns a decision someone else holds the facts for into a questionnaire; `handoff`† carries the thread to another harness or directory.
+**1 · Understand: confirm the problem and your grasp of it.**
+`system-design-mentor` teaches the trade-off space. `grill-me` interrogates a plan until you resolve each branch, and `third-opinion` cross-checks it against another model. This phase produces comprehension, which feeds the first doc. `to-questionnaire`† turns a decision someone else holds the facts for into a questionnaire; `handoff`† carries the thread to another harness or directory.
 
-**2 · Design — what shapes could this take?**
-`design-a-feature` / `design-an-interface` hold the task stable and vary the interaction/module shape, so you choose from real alternatives instead of the first idea. `archify` / `beautiful-mermaid` render the chosen shape. This is where a *decision* gets made — and `decision-record` captures it as an ADR under `docs/adr/`, so the choice (and what would prove it wrong) outlives the chat. `prototype` is the runnable half of the design step: N variants on one route, or a single-file state-machine demo, when the question cannot be settled on paper. `domain-modeling` keeps the words honest as decisions land, writing the glossary to `CONTEXT.md`.
+**2 · Design: compare real alternatives.**
+`design-a-feature` and `design-an-interface` hold the task stable and vary the interaction or module shape, so you choose from real options instead of the first idea. `archify` and `beautiful-mermaid` render the chosen shape. You make the *decision* in this phase, and `decision-record` writes it as an ADR under `docs/adr/`, so the choice and what would prove it wrong outlive the chat. `prototype` covers the runnable half of design: N variants on one route, or a single-file state-machine demo, for a question you cannot settle on paper. As decisions land, `domain-modeling` keeps the terms consistent and writes the glossary to `CONTEXT.md`.
 
-**3 · Plan — sequence it.**
-`multi-session-plan` turns the chosen design into linked docs under `docs/`: an index, one doc per session, a deferred-work roadmap. This is the first durable state the build will read back.
+**3 · Plan: sequence the work.**
+`multi-session-plan` turns the chosen design into linked docs under `docs/`: an index, one doc per session, and a deferred-work roadmap. The build reads these back as its first durable state.
 
-**4 · Build / Execute — do the work with context held flat.**
-`run-state` executes a long homogeneous run (migration, backlog, mechanical refactor) against an external state file, so context stays bounded and the session can be `/clear`'d mid-run. `complexity-optimizer` fixes perf hotspots inline. `tdd`† drives each slice red-green at pre-agreed seams. `diagnosing-bugs` is the loop for a hard bug: a red feedback loop first, then minimise, hypothesise, instrument, and fix with a regression test. Both read the plan doc; run-state writes its own state file. `/run` (native) launches the real app to confirm a change works when *run* — the one step that exercises the built thing, not just the tests.
+**4 · Build / Execute: do the work with flat context.**
+`run-state` executes a long homogeneous run (migration, backlog, mechanical refactor) against an external state file, so context stays bounded and you can `/clear` mid-run. `complexity-optimizer` fixes perf hotspots inline. `craft` frames the slices with a Shape note before the first edit (data shape, parse at the boundary, edit or redesign, idempotency, single writer) and a Right note before done (no silenced checker, the empty-return test, CRAP and duplication scores on the changed files). `tdd`† drives each slice red-green at pre-agreed seams. `diagnosing-bugs` runs the loop for a hard bug: build a red feedback loop first, then minimise, hypothesise, instrument, and fix with a regression test. Both read the plan doc; run-state writes its own state file. `/run` (native) launches the real app to confirm a change works at runtime. Of all the Build steps, only `/run` exercises the built thing beyond its tests.
 
-**5 · Review — is it safe, and what standing debt remains?**
-Two altitudes. **Diff-scoped:** `code-review` gates a change on correctness and quality, `/simplify` (native) does the quality-only pass without the gate, `/security-review` (native) adds the security lens the custom kit otherwise lacks, `review-staged` triages what's staged, `review-mr` formats findings as MR comments, `cross-engine-check` verifies a CSS claim across engines, `verifier` re-checks a single claim cold. **Repo-scoped:** `census` surveys the whole standing codebase and keeps a reconciled ledger under `docs/census/` — the one review artifact that persists and gets re-taken across sessions.
+**5 · Review: check safety and standing debt.**
+Review works at two altitudes. **Diff-scoped:** `code-review` gates a change on correctness and quality. `/simplify` (native) does the quality-only pass without the gate, and `/security-review` (native) adds the security lens the custom kit lacks. `review-staged` triages staged changes; `review-mr` formats findings as MR comments. `cross-engine-check` verifies a CSS claim across engines, and `verifier` re-checks a single claim cold. **Repo-scoped:** `census` surveys the whole standing codebase and keeps a reconciled ledger under `docs/census/`. You re-take that ledger across sessions, which makes it the one review artifact that persists.
 
-**6 · Ship — close the session honestly.**
-`ship-session` verifies the acceptance gates, converts the plan doc from forward-plan to as-built reference, trims the index to the truth, and commits. It hands the baton back to Plan for the next session.
+**6 · Ship: verify and close the session.**
+`ship-session` verifies the acceptance gates, converts the plan doc from forward-plan to as-built reference, trims the index to match what shipped, and commits. The next session picks up at Plan.
 
 ## Native built-ins the kit composes with
 
-The custom skills don't replace Claude Code's own dev-flow commands — they wrap and sequence them. Four native skills slot straight into the phases (marked `*` in the spine):
+Claude Code ships its own dev-flow commands, and the custom skills wrap and sequence them. Four native skills slot into the phases (marked `*` in the spine):
 
-- **`/run`** (Build) — launches and drives the real app to confirm a change works when run, not just when tests pass. The custom kit is doc- and test-centric; this is the one step that exercises the built thing.
-- **`/code-review`** (Review) — the correctness-plus-quality gate on a diff. `review-staged` and `review-mr` are the host-specific, stateful wrappers around this job; `/code-review` is the bare gate.
-- **`/simplify`** (Review) — the quality-only pass: reuse, simplification, efficiency, altitude. It does not hunt for bugs — it's the cleanup half of `/code-review` on its own, for polish without the gate.
-- **`/security-review`** (Review) — a security lens on the pending diff. Nothing in the custom kit is security-specialized, so this sits next to `code-review` (correctness) and `census` (standing debt) to fill a real gap.
+- **`/run`** (Build) launches and drives the real app to confirm a change works at runtime. The custom kit is doc- and test-centric, and `/run` is the one step that exercises the built thing.
+- **`/code-review`** (Review) gates a diff on correctness and quality. `review-staged` and `review-mr` wrap the same job with host-specific, stateful handling; `/code-review` is the bare gate.
+- **`/simplify`** (Review) runs the quality-only pass: reuse, simplification, efficiency, altitude. It skips bug hunting. Reach for it as the cleanup half of `/code-review` when you want polish without the gate.
+- **`/security-review`** (Review) applies a security lens to the pending diff. No custom skill specializes in security, so this one sits next to `code-review` (correctness) and `census` (standing debt) to fill that gap.
 
-And one native skill is *cross-cutting* rather than a phase — it enforces the kit's whole thesis:
+One native skill cuts across phases instead of sitting in one:
 
-- **`/goal <condition>`** installs a session-scoped Stop hook that refuses to end the session until the condition holds, then auto-clears. Where the document backbone makes state *durable*, `/goal` makes an exit gate *binding*: any phase's acceptance criterion — "tests green", "reviewed", "verified" — can be pinned so the session can't quietly stop short of it. It's the runtime counterpart to the `docs/` ledger — the ledger records what's done, `/goal` refuses to stop until it is. Worked example: `/goal /verify` pins the session open until the work is verified, with the `verifier` agent (cold re-check of a single claim) the tool that makes the gate hold.
+- **`/goal <condition>`** installs a session-scoped Stop hook that blocks the session from ending until the condition holds, then clears itself. The `docs/` backbone makes state durable, and `/goal` makes an exit gate binding. You can pin any phase's acceptance criterion ("tests green", "reviewed", "verified") so the session cannot stop short of it. The ledger records what you finished; `/goal` keeps the session open until you finish it. Worked example: `/goal /verify` holds the session open until the agent verifies the work, and the `verifier` agent (a cold re-check of a single claim) runs the check the gate waits for.
 
 ## The meta-loop: tuning the harness the flow runs in
 
-The spine develops the *product*. A second, smaller loop develops the agent setup. The shared working policy lives in `AGENTS.md`. `CLAUDE.md` imports it and adds Claude Code instructions.
+The spine develops the *product*, and a second, smaller loop develops the agent setup. The shared working policy lives in `AGENTS.md`. `CLAUDE.md` imports it and adds Claude Code instructions.
 
 ```mermaid
 flowchart LR
@@ -111,21 +112,23 @@ flowchart LR
 
 `revise-claude-md` captures what the *user* taught in a session. The Papercuts rule in `AGENTS.md` captures what the *agent* tripped over: each session appends friction to `~/.papercuts/log.md`, and the hand-typed `papercuts` skill triages that log into fixes to the configuration. See [the papercuts evaluation](papercuts-eval.md).
 
-These are plugin skills (not custom skills, not platform built-ins), so they carry no `*`:
+The three plugin skills carry no `*`:
 
-- **`/claude-code-setup:claude-automation-recommender`** — reads a codebase and recommends which hooks, subagents, skills, plugins, and MCP servers it should have. The setup move: run it when first pointing Claude Code at a project, or when the setup feels thin.
-- **`/claude-md-management:claude-md-improver`** — audits every `CLAUDE.md` against a quality bar and applies targeted fixes. Config *maintenance*, for when the memory has drifted from how the project actually works.
-- **`/claude-md-management:revise-claude-md`** — at session close, writes what this session taught back into `CLAUDE.md`. It's the loop-closer, and the config-side twin of `ship-session`: one converts the session into as-built product docs, the other converts it into a sharper harness for the next run.
+- **`/claude-code-setup:claude-automation-recommender`** reads a codebase and recommends the hooks, subagents, skills, plugins, and MCP servers it should have. Run it when you first point Claude Code at a project, or when the setup feels thin.
+- **`/claude-md-management:claude-md-improver`** audits each `CLAUDE.md` against a quality bar and applies targeted fixes. Use it for config *maintenance*, once the memory has drifted from how the project works.
+- **`/claude-md-management:revise-claude-md`** writes what the session taught back into `CLAUDE.md` at session close. It closes the loop and mirrors `ship-session` on the config side: `ship-session` turns the session into as-built product docs, and `revise-claude-md` turns it into a sharper harness for the next run.
 
-- **`writing-for-agents`**† — the reference for writing the skills and steering files themselves: context pointers, the two loads (context and cognitive), leading words, no-ops, and the user-invoked versus model-invoked trade. Read it before editing anything in `custom-skills/` or `AGENTS.md`.
+One community skill governs the writing itself:
 
-Read as a loop: the configuration shapes each phase. The spine shows gaps in the configuration. `revise-claude-md` writes Claude Code lessons to `CLAUDE.md`.
+- **`writing-for-agents`**† is the reference for writing the skills and steering files: context pointers, the two loads (context and cognitive), leading words, no-ops, and the user-invoked versus model-invoked trade. Read it before you edit anything in `custom-skills/` or `AGENTS.md`.
+
+Read the diagram as a loop. The configuration shapes each phase, the spine exposes gaps in the configuration, and `revise-claude-md` writes Claude Code lessons back to `CLAUDE.md`.
 
 Move host-neutral lessons from `CLAUDE.md` to `AGENTS.md`. Keep only Claude Code instructions in `CLAUDE.md`.
 
 ## The document backbone
 
-The reason the kit survives a `/clear` is that every phase that matters writes to `docs/`:
+You can `/clear` without losing the kit's state because the stateful skills write to files in the repo:
 
 | Skill | Reads | Writes |
 |---|---|---|
@@ -136,8 +139,8 @@ The reason the kit survives a `/clear` is that every phase that matters writes t
 | `decision-record` | design fork | `docs/adr/` ADR |
 | `domain-modeling` | conversation | `CONTEXT.md` glossary |
 
-Read top to bottom, that's a single stateful pipeline: decide → plan → execute → survey → close, each step reconciled against a file rather than reconstructed from history. The loops — census reconciling itself, review re-opening a build unit, ship handing back to plan — are what make it a *system* instead of a checklist.
+Together these skills form one stateful pipeline: decide → plan → execute → survey → close. Each step reconciles against a file instead of rebuilding from chat history. Three loops let the pipeline repeat across sessions: census reconciles its own ledger, review re-opens a build unit, and ship hands back to plan.
 
-## Decision capture — the gap, now closed
+## Decision capture
 
-Every phase persisted its state except **Design**: a decision made at a design fork lived only in the chat — exactly the append-only-history failure mode the whole kit is built to avoid. `census` even *reads* `docs/adr/`, assuming ADRs exist, but nothing wrote them. `decision-record` closes it: at a fork, `design-a-*` generates the options, `grill-me` pressure-tests them, and `decision-record` writes which one won and why to `docs/adr/` — where census then reads it as by-design. The idea was harvested from `show-me-blueprint` without adopting the skill; see [the blueprint evaluation](show-me-blueprint-eval.md).
+Before `decision-record`, each phase persisted its state except **Design**. A decision you made at a design fork lived only in the chat, the append-only-history failure the kit exists to avoid. `census` reads `docs/adr/` and assumes ADRs exist, but no skill wrote them. `decision-record` fills that gap. At a fork, `design-a-*` generates the options, `grill-me` pressure-tests them, and `decision-record` writes the winner and the reason to `docs/adr/`. `census` then reads that ADR and treats the choice as by-design. The kit takes the idea from `show-me-blueprint` without adopting the skill; see [the blueprint evaluation](show-me-blueprint-eval.md).
