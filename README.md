@@ -10,6 +10,7 @@ dot-agents/
 ├── CLAUDE.md                # Claude Code imports and additions
 ├── bootstrap.sh             # Install skills and link global configuration
 ├── upstream-sources.txt     # Git-tracked list of community skill repos
+├── upstream-tools.txt       # Pinned CLI tools that skills call (crapper, dryer)
 ├── custom-skills/           # Personal skills (deployed; always override community)
 │   ├── complexity-optimizer/
 │   ├── review-staged/
@@ -107,6 +108,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | ----------------------- | -------------------------------------------------------------------------------------------------- |
 | `census`                | Survey a whole codebase and maintain findings as a persistent, reconciled ledger under `docs/census/`. Host-agnostic; complements `code-review`. |
 | `complexity-optimizer`  | Find algorithmic complexity hotspots — nested loops, N+1 queries, avoidable O(n²) — and report or fix. |
+| `craft`                 | Make it work, then make it right: a Shape note before the first edit (data shape, boundaries, edit or redesign, idempotency, single writer) and a Right note before done, with CRAP and duplication scores on the changed files. Rewritten from unclebob/ub-mode. |
 | `cross-engine-check`    | Observe a CSS/layout claim in Firefox, WebKit and Chromium instead of inferring it from spec knowledge. |
 | `decision-record`       | Capture a design/architecture decision as a terse ADR under `docs/adr/` — options, trade-off, what breaks if wrong. Closes the Design-phase gap; `census` reads it as by-design. |
 | `design-a-feature`      | Generate radically different UI/UX designs for one feature by varying the interaction pattern.      |
@@ -159,6 +161,18 @@ The hook runs only if `~/.claude/settings.json` (not tracked here) wires it as t
 ```
 
 A change to the hook wiring takes effect in a new session.
+
+## Tools for skills
+
+Some skills call command-line tools. `craft` calls [crapper](https://github.com/unclebob/crapper) (CRAP score per function) and [dryer](https://github.com/unclebob/dryer) (structural duplication). `upstream-tools.txt` pins each tool to a commit, because a skill depends on the tool's output format. `bootstrap.sh` installs the pinned commits with `uv tool install`. It also adds `.metrics/` and `coverage/craft/`, the tools' generated output, to the global gitignore.
+
+```bash
+scripts/agent-tools.sh check            # Compare each pin with upstream HEAD and print a compare link
+scripts/agent-tools.sh update [name]    # Move pins to upstream HEAD and reinstall
+git diff upstream-tools.txt             # Review the pin change before you commit it
+```
+
+After an update, run the `craft` script once on a real change before you commit the new pin. The script reads the tools' text output.
 
 ## Passive skills
 
