@@ -204,6 +204,25 @@ else
     echo "  ⚠ jq not found, hook not wired. See README.md#hooks."
 fi
 
+# 7. Tools that skills call (pins in upstream-tools.txt)
+#    Their generated output stays out of every repo through the global gitignore.
+echo "Installing agent tools..."
+if command -v uv >/dev/null; then
+    ~/dot-agents/scripts/agent-tools.sh install || echo "  ✗ tool install failed. Run scripts/agent-tools.sh install."
+else
+    echo "  ⚠ uv not found, tools not installed (brew install uv)"
+fi
+GLOBAL_IGNORE=$(git config --global core.excludesFile)
+if [ -n "$GLOBAL_IGNORE" ]; then
+    GLOBAL_IGNORE="${GLOBAL_IGNORE/#\~/$HOME}"
+    for pattern in ".metrics/" "coverage/craft/"; do
+        grep -qxF "$pattern" "$GLOBAL_IGNORE" 2>/dev/null || echo "$pattern" >> "$GLOBAL_IGNORE"
+    done
+    echo "  ✓ $GLOBAL_IGNORE ignores .metrics/ and coverage/craft/"
+else
+    echo "  ⚠ git core.excludesFile is not set; add .metrics/ and coverage/craft/ to each repo's .gitignore"
+fi
+
 echo ""
 echo "✅ Agent dotfiles synchronized!"
 echo ""
@@ -212,3 +231,5 @@ echo "  ./bootstrap.sh              # Overlay custom skills only (rsync copy)"
 echo "  ./bootstrap.sh --symlink    # Overlay via symlinks (live-editable)"
 echo "  ./bootstrap.sh --upstream   # Also install/update community skills"
 echo "  ./bootstrap.sh --upstream --symlink  # Both"
+echo "  scripts/agent-tools.sh check        # Compare tool pins with upstream"
+echo "  scripts/agent-tools.sh update       # Move tool pins to upstream HEAD"
