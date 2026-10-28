@@ -1,0 +1,22 @@
+[
+  {"query": "we're adding a 'reseller' account type next to admin and member in our next.js app. resellers can see their sub-accounts' invoices but can't edit them. right now the role check is `user.isAdmin` sprinkled around src/lib/auth.ts and a few pages. can you add it?", "should_trigger": true},
+  {"query": "write a one-off script that splits users.full_name into first_name / last_name for the ~40k existing rows in postgres (we use drizzle). it runs during tonight's deploy", "should_trigger": true},
+  {"query": "Our Astro blog listing needs to keep the tag filter and the page number in the URL (?tag=astro&page=2) so people can share links. Implement reading and writing those params in src/lib/listing.ts", "should_trigger": true},
+  {"query": "the stripe webhook handler in src/pages/api/webhooks/stripe.ts needs to handle invoice.payment_failed too: mark the subscription past_due and email the customer", "should_trigger": true},
+  {"query": "in our react app both the cart drawer and the checkout page write to cartStore.items, and the websocket price updates write to it too. add a 'save for later' action to the store", "should_trigger": true},
+  {"query": "calculateDiscount in src/pricing/discount.ts is already a 120 line monster with nested ifs. product wants one more rule: 3+ items from the same collection get 10% off unless a coupon is applied. add it", "should_trigger": true},
+  {"query": "refactor src/components/ProductGrid.tsx, it's 400 lines mixing fetching, filtering and rendering. behaviour must stay identical", "should_trigger": true},
+  {"query": "craft: add retryFailedExports() to src/services/export.ts that re-queues export jobs stuck in 'failed' for more than an hour", "should_trigger": true},
+  {"query": "before I open the MR, score the files I changed on this branch against main for complexity and copy-paste duplication", "should_trigger": true},
+  {"query": "add feature flags read from the FEATURE_FLAGS env var (comma separated, like `newCheckout,betaSearch`) in src/config.ts and expose isEnabled(flag)", "should_trigger": true},
+  {"query": "fix the typo in the hero heading on the landing page, 'Wellcome' should be 'Welcome'", "should_trigger": false},
+  {"query": "the checkout button sits 2px too low in Safari only, can you fix it in Checkout.module.css", "should_trigger": false},
+  {"query": "bump astro from 4.15 to 5.0 in package.json and run the build", "should_trigger": false},
+  {"query": "users say the dashboard throws 'Cannot read properties of undefined (reading map)' right after login. can you figure out why", "should_trigger": false},
+  {"query": "throw together a quick throwaway prototype of a kanban board so I can show the team the drag interaction tomorrow, code quality doesn't matter", "should_trigger": false},
+  {"query": "explain how src/middleware.ts decides which routes are public", "should_trigger": false},
+  {"query": "quick question for a code review argument: does a switch with 8 cases count as cyclomatic complexity 8 or 9?", "should_trigger": false},
+  {"query": "write unit tests for the existing formatDate helper in src/utils/date.ts, it has none right now", "should_trigger": false},
+  {"query": "rename getUserData to fetchUserProfile everywhere in the repo", "should_trigger": false},
+  {"query": "review the staged diff for security problems before I commit", "should_trigger": false}
+]

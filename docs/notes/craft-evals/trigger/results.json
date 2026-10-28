@@ -1,0 +1,247 @@
+[
+  {
+    "id": "wholesale",
+    "run": 1,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Skill(craft)"
+    ],
+    "seconds": 6.4
+  },
+  {
+    "id": "wholesale",
+    "run": 2,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Skill(craft)"
+    ],
+    "seconds": 9.5
+  },
+  {
+    "id": "slug-backfill",
+    "run": 1,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Skill(craft)"
+    ],
+    "seconds": 7.0
+  },
+  {
+    "id": "slug-backfill",
+    "run": 2,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Skill(craft)"
+    ],
+    "seconds": 6.5
+  },
+  {
+    "id": "url-filters",
+    "run": 1,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Skill(craft)"
+    ],
+    "seconds": 8.0
+  },
+  {
+    "id": "url-filters",
+    "run": 2,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Skill(craft)"
+    ],
+    "seconds": 7.7
+  },
+  {
+    "id": "mark-all-read",
+    "run": 1,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Skill(craft)"
+    ],
+    "seconds": 7.4
+  },
+  {
+    "id": "mark-all-read",
+    "run": 2,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Bash",
+      "Bash",
+      "Skill(craft)"
+    ],
+    "seconds": 18.2
+  },
+  {
+    "id": "island-shipping",
+    "run": 1,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Bash",
+      "Skill(craft)"
+    ],
+    "seconds": 9.6
+  },
+  {
+    "id": "island-shipping",
+    "run": 2,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Bash",
+      "Skill(craft)"
+    ],
+    "seconds": 11.8
+  },
+  {
+    "id": "pricing-refactor",
+    "run": 1,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Skill(craft)"
+    ],
+    "seconds": 4.1
+  },
+  {
+    "id": "pricing-refactor",
+    "run": 2,
+    "should": true,
+    "triggered": true,
+    "verdict": "craft-before-edit",
+    "tools": [
+      "Skill(craft)"
+    ],
+    "seconds": 5.9
+  },
+  {
+    "id": "neg-label-text",
+    "run": 1,
+    "should": false,
+    "triggered": false,
+    "verdict": "edit-first",
+    "tools": [
+      "Grep",
+      "Read",
+      "Edit"
+    ],
+    "seconds": 12.1
+  },
+  {
+    "id": "neg-label-text",
+    "run": 2,
+    "should": false,
+    "triggered": false,
+    "verdict": "edit-first",
+    "tools": [
+      "Grep",
+      "Read",
+      "Edit"
+    ],
+    "seconds": 8.2
+  },
+  {
+    "id": "neg-question",
+    "run": 1,
+    "should": false,
+    "triggered": false,
+    "verdict": "ended-without-either",
+    "tools": [
+      "Grep",
+      "Read",
+      "Read"
+    ],
+    "seconds": 13.1
+  },
+  {
+    "id": "neg-question",
+    "run": 2,
+    "should": false,
+    "triggered": false,
+    "verdict": "ended-without-either",
+    "tools": [
+      "Grep",
+      "Read"
+    ],
+    "seconds": 16.1
+  },
+  {
+    "id": "neg-rename",
+    "run": 1,
+    "should": false,
+    "triggered": false,
+    "verdict": "edit-first",
+    "tools": [
+      "Grep",
+      "Glob",
+      "Read",
+      "Read",
+      "Grep",
+      "Edit"
+    ],
+    "seconds": 14.3
+  },
+  {
+    "id": "neg-rename",
+    "run": 2,
+    "should": false,
+    "triggered": false,
+    "verdict": "edit-first",
+    "tools": [
+      "Grep",
+      "Glob",
+      "Read",
+      "Read",
+      "Grep",
+      "Edit"
+    ],
+    "seconds": 12.5
+  },
+  {
+    "id": "neg-tests-only",
+    "run": 1,
+    "should": false,
+    "triggered": false,
+    "verdict": "edit-first",
+    "tools": [
+      "Bash",
+      "Bash",
+      "Write"
+    ],
+    "seconds": 18.4
+  },
+  {
+    "id": "neg-tests-only",
+    "run": 2,
+    "should": false,
+    "triggered": false,
+    "verdict": "edit-first",
+    "tools": [
+      "Bash",
+      "Bash",
+      "Write"
+    ],
+    "seconds": 20.9
+  }
+]

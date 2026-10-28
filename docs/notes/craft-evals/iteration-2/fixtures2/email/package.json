@@ -1,0 +1,1 @@
+{ "name": "email", "private": true, "type": "module", "scripts": { "test": "vitest run" } }

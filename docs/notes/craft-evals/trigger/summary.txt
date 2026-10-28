@@ -1,0 +1,11 @@
+PASS  2/2 should=True   wholesale        ['craft-before-edit', 'craft-before-edit']
+PASS  2/2 should=True   slug-backfill    ['craft-before-edit', 'craft-before-edit']
+PASS  2/2 should=True   url-filters      ['craft-before-edit', 'craft-before-edit']
+PASS  2/2 should=True   mark-all-read    ['craft-before-edit', 'craft-before-edit']
+PASS  2/2 should=True   island-shipping  ['craft-before-edit', 'craft-before-edit']
+PASS  2/2 should=True   pricing-refactor ['craft-before-edit', 'craft-before-edit']
+PASS  0/2 should=False  neg-label-text   ['edit-first', 'edit-first']
+PASS  0/2 should=False  neg-question     ['ended-without-either', 'ended-without-either']
+PASS  0/2 should=False  neg-rename       ['edit-first', 'edit-first']
+PASS  0/2 should=False  neg-tests-only   ['edit-first', 'edit-first']
+recall 12/12  false triggers 0/8

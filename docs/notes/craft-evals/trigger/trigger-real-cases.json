@@ -1,0 +1,62 @@
+[
+  {
+    "id": "wholesale",
+    "fixture": "pricing",
+    "should_trigger": true,
+    "query": "We're adding wholesale customers to the shop in this project. Wholesale customers get 15% off, free shipping once the subtotal reaches 500, and promo codes don't apply to them. The checkout summary should show '(Wholesale)' for them, like it shows '(VIP)'. Please implement it."
+  },
+  {
+    "id": "slug-backfill",
+    "fixture": "backfill",
+    "should_trigger": true,
+    "query": "Posts created before we added slugs have `slug = null`. Add `backfillSlugs(db: Db): Promise<void>` in src/backfill.ts that gives each of those posts a slug from its title, using our `slugify`. Slugs must be unique; there's a unique index on posts.slug. We'll run it against production tonight."
+  },
+  {
+    "id": "url-filters",
+    "fixture": "filters",
+    "should_trigger": true,
+    "query": "Make the product filters shareable. Add `filtersToQuery(filters: Filters): string` and `filtersFromQuery(query: string): Filters` in src/filtersUrl.ts. The page will write the query string whenever the filters change and read it on load, so a copied link restores the same view."
+  },
+  {
+    "id": "mark-all-read",
+    "fixture": "inbox",
+    "should_trigger": true,
+    "query": "Add the logic for a 'Mark all as read' button: `Inbox.markAllRead(): Promise<void>` should tell the API about every unread notification in one call and clear the badge (`unreadCount`)."
+  },
+  {
+    "id": "island-shipping",
+    "fixture": "shipping",
+    "should_trigger": true,
+    "query": "Add two shipping rules: GB postcodes in the Scottish islands (areas HS and ZE, and districts KW15 to KW17) cost an extra 15, and any parcel over 30 kg goes by freight at a flat 80, regardless of the other rules."
+  },
+  {
+    "id": "pricing-refactor",
+    "fixture": "pricing",
+    "should_trigger": true,
+    "query": "discount() and shipping() in src/pricing.ts keep growing special cases. refactor so each customer type's rules sit in one place, behaviour must stay exactly the same"
+  },
+  {
+    "id": "neg-label-text",
+    "fixture": "pricing",
+    "should_trigger": false,
+    "query": "in src/checkout.ts the summary should start with 'Client' instead of 'Customer'. just that text change please"
+  },
+  {
+    "id": "neg-question",
+    "fixture": "shipping",
+    "should_trigger": false,
+    "query": "what does shippingCost return for a 12 kg express parcel to France? just tell me, don't change anything"
+  },
+  {
+    "id": "neg-rename",
+    "fixture": "inbox",
+    "should_trigger": false,
+    "query": "rename Inbox.list() to Inbox.unreadNotifications() everywhere it is used"
+  },
+  {
+    "id": "neg-tests-only",
+    "fixture": "email",
+    "should_trigger": false,
+    "query": "add a unit test for formatMoney with GBP amounts in tests/money.test.ts"
+  }
+]

@@ -1,0 +1,99 @@
+{
+  "skill_name": "craft",
+  "evals": [
+    {
+      "id": 1,
+      "name": "wholesale-tier",
+      "fixture": "pricing",
+      "prompt": "We're adding wholesale customers to the shop in this project. Wholesale customers get 15% off, free shipping once the subtotal reaches 500, and promo codes don't apply to them. The checkout summary should show '(Wholesale)' for them, like it shows '(VIP)'. Please implement it.",
+      "expectations": [
+        "E1.1 Customer kind is one discriminated field",
+        "E1.2 Per-tier rules live in one place",
+        "E1.3 Tests cover wholesale discount, ignored promo, and 500 boundary on both sides",
+        "Own test suite passes in the final state",
+        "The diff adds no any, as-cast, non-null !, @ts-ignore, @ts-expect-error or eslint-disable in src/"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "slug-backfill",
+      "fixture": "backfill",
+      "prompt": "Posts created before we added slugs have `slug = null`. Add `backfillSlugs(db: Db): Promise<void>` in src/backfill.ts that gives each of those posts a slug from its title, using our `slugify`. Slugs must be unique; there's a unique index on posts.slug. We'll run it against production tonight.",
+      "expectations": [
+        "HB1 Hidden test: fills null slugs and keeps existing ones",
+        "HB2 Hidden test: avoids a slug an existing post already has",
+        "HB3 Hidden test: gives duplicate titles unique slugs",
+        "HB4 Hidden test: a second run changes nothing",
+        "HB5 Hidden test: a rerun after a crash halfway completes without changing finished posts",
+        "HB6 Hidden test: a title with no letters or digits gets a non-empty unique slug",
+        "Own test suite passes in the final state",
+        "The diff adds no any, as-cast, non-null !, @ts-ignore, @ts-expect-error or eslint-disable in src/"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "filters-in-url",
+      "fixture": "filters",
+      "prompt": "Make the product filters shareable. Add `filtersToQuery(filters: Filters): string` and `filtersFromQuery(query: string): Filters` in src/filtersUrl.ts. The page will write the query string whenever the filters change and read it on load, so a copied link restores the same view.",
+      "expectations": [
+        "HU1 Hidden test: round trip of a full filter",
+        "HU2 Hidden test: round trip of the defaults",
+        "HU3 Hidden test: junk values fall back to defaults",
+        "HU4 Hidden test: empty numbers are null, not 0",
+        "HU5 Hidden test: a junk maxPrice does not hide every product",
+        "HU6 Hidden test: an inherited object key such as constructor is not a category",
+        "Own test suite passes in the final state",
+        "The diff adds no any, as-cast, non-null !, @ts-ignore, @ts-expect-error or eslint-disable in src/"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "mark-all-read",
+      "fixture": "inbox",
+      "prompt": "Add the logic for a 'Mark all as read' button: `Inbox.markAllRead(): Promise<void>` should tell the API about every unread notification in one call and clear the badge (`unreadCount`).",
+      "expectations": [
+        "HI1 Hidden test: markAllRead sends every unread id in one call and clears the badge",
+        "HI2 Hidden test: a notification that arrives during markAllRead stays unread",
+        "HI3 Hidden test: a failed API call clears nothing",
+        "HI4 Hidden test: the existing markRead lost update is fixed: a notification arriving mid-call is still counted",
+        "E4.S unreadCount is derived from the unread set (a getter), so no method can write a stale count",
+        "Own test suite passes in the final state",
+        "The diff adds no any, as-cast, non-null !, @ts-ignore, @ts-expect-error or eslint-disable in src/"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "confirmation-email",
+      "fixture": "email",
+      "prompt": "Add the text body of the order confirmation email: `confirmationEmail(order: Order): string` in src/email/confirmation.ts, where `Order` is `{ id: string; customerName: string; cart: Cart }`. Greet the customer, name the order id, list each item with its quantity and line total, then the subtotal, any discount, shipping and the total, in the order's currency.",
+      "expectations": [
+        "HE1 Hidden test: amounts use the shop formatter",
+        "HE2 Hidden test: GBP orders use the GBP formatter",
+        "HE3 Hidden test: a discount larger than the subtotal matches the cart total",
+        "HE4 Hidden test: the greeting names the order",
+        "E5.D dryer finds no duplicate pair that touches src/email/",
+        "E5.M confirmation.ts has no money formatting or totals arithmetic of its own (Intl.NumberFormat, toFixed, / 100, reduce)",
+        "Own test suite passes in the final state",
+        "The diff adds no any, as-cast, non-null !, @ts-ignore, @ts-expect-error or eslint-disable in src/"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "island-shipping",
+      "fixture": "shipping",
+      "prompt": "Add two shipping rules: GB postcodes in the Scottish islands (areas HS and ZE, and districts KW15 to KW17) cost an extra 15, and any parcel over 30 kg goes by freight at a flat 80, regardless of the other rules.",
+      "expectations": [
+        "HS1 Hidden test: a Hebrides postcode adds 15",
+        "HS2 Hidden test: a Shetland postcode adds 15",
+        "HS3 Hidden test: KW15 and KW17 are islands",
+        "HS4 Hidden test: KW1, KW14 and KW18 are mainland",
+        "HS5 Hidden test: over 30 kg is freight at 80, even express or abroad",
+        "HS6 Hidden test: exactly 30 kg is not freight",
+        "HS7 Hidden test: existing rules still hold",
+        "E6.C Every function in src/shipping.ts scores CRAP < 10 with coverage from the project's own tests (crapper)",
+        "Own test suite passes in the final state",
+        "The diff adds no any, as-cast, non-null !, @ts-ignore, @ts-expect-error or eslint-disable in src/"
+      ]
+    }
+  ]
+}
