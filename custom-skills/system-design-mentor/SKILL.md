@@ -1,6 +1,7 @@
 ---
 name: system-design-mentor
 description: Frontend and backend system design mentoring. Two modes are teachable moment (context-driven) and mock interview. Uses the Socratic method and trade-off analysis.
+disable-model-invocation: true
 ---
 
 # System Design Mentor

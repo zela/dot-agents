@@ -1,6 +1,7 @@
 ---
 name: third-opinion
 description: Use for a third opinion from an alternative AI CLI (Claude or Copilot).
+disable-model-invocation: true
 ---
 
 # third-opinion

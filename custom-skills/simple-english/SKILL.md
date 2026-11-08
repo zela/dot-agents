@@ -1,6 +1,6 @@
 ---
 name: simple-english
-description: 'Write or rewrite TECHNICAL documentation in plain, unambiguous English with ASD-STE100 (Simplified Technical English) discipline: short sentences, active voice, simple tenses, one word one meaning, condition before command, defined terms. Use for docs, READMEs, runbooks, procedures, API guides, error messages, release notes, incident reports, and for authoring SKILL.md / agent instructions — writing meant to be followed exactly and read cold. Also triggers on explicit "STE", "ASD-STE100", "Simplified Technical English", or "strict STE compliance". Default mode Plain; Strict adds full dictionary compliance on request. NOT for general prose, marketing, chat-style rewriting, or de-slopping arbitrary text — that stays with stop-slop and grammar-tutor; this skill owns controlled-language technical writing only. When it does run, it also shapes the reply channel (answer first, short sentences).'
+description: 'Write or rewrite technical documentation in ASD-STE100 (Simplified Technical English) discipline. Use for docs, READMEs, runbooks, procedures, API guides, error messages, release notes, incident reports, and SKILL.md or agent instructions: text a reader follows exactly and reads cold. Also triggers on "STE" or "ASD-STE100". General prose belongs to stop-slop and grammar-tutor.'
 license: MIT
 compatibility: claude-code cursor codex gemini-cli opencode
 metadata:

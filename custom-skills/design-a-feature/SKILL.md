@@ -1,6 +1,7 @@
 ---
 name: design-a-feature
 description: Generate radically different UI/UX designs for a feature by holding the user task stable and varying interaction patterns. Use when the user wants to design a frontend feature, explore UX options, compare interaction patterns, or mentions "design it twice" in a frontend context.
+disable-model-invocation: true
 ---
 
 # Design a Feature

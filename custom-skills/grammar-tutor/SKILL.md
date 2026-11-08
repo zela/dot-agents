@@ -1,6 +1,7 @@
 ---
 name: grammar-tutor
 description: Use for grammar help, style evaluation, and English tutoring.
+disable-model-invocation: true
 ---
 
 # Grammar Tutor Skill

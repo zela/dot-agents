@@ -1,6 +1,7 @@
 ---
 name: complexity-optimizer
 description: Find algorithmic complexity hotspots in a codebase (nested loops, repeated scans, N+1 queries, render-time recomputation, avoidable O(n²)) and either report them or implement safe fixes. Use when the user asks to audit/scan/profile for performance, find hotspots, reduce complexity (for example "O(n²) → O(n log n)"), or eliminate N+1 queries. Do NOT use for general code review or refactoring. See code-review or simplify for those.
+disable-model-invocation: true
 ---
 
 # Complexity Optimizer
