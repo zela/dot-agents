@@ -71,6 +71,14 @@ uv run scripts/teal_benchmark.py --models claude-sonnet-4-6 --parallel --judge
 
 ---
 
+### claude-usage.py
+
+Counts Skill, slash-command, MCP and Agent use from Claude Code transcripts in `~/.claude/projects`, and the prompt size of each session's first turn. Use it to see which plugins and skills earn their place in the skill listing. Standard library only.
+
+```bash
+scripts/claude-usage.py 30   # last 30 days
+```
+
 ## Initial Benchmark Findings
 
 We measured TEAL's effectiveness by comparing a standard baseline prompt against the TEAL system instructions. Below are highlights from initial runs:
