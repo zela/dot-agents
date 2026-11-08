@@ -114,6 +114,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `design-a-feature`      | Generate radically different UI/UX designs for one feature by varying the interaction pattern.      |
 | `design-an-interface`   | Generate radically different interface designs for one module ("design it twice"). Carries the deep-module vocabulary, the dependency categories, and subagent-per-variant. |
 | `diagnosing-bugs`       | Disciplined loop for hard bugs: a red feedback loop first, minimise, 3–5 falsifiable hypotheses, tagged instrumentation, regression test at a correct seam. Vendored from mattpocock/skills. |
+| `diagram`               | Diagram from text, two branches: a ~4 KB Mermaid HTML page you edit and reload (no install), or a D2 render committed next to a doc: SVG that follows light/dark, ASCII for Markdown, PNG/PDF/PPTX, animated steps. D2 needs the `d2` CLI. |
 | `doc-check`             | Check plan session docs against the code before a session runs: one read-only agent per doc, fix only blockers, wrong facts and harmful or vacuous checks, re-check changed lines until clean. |
 | `domain-modeling`       | Build the project's glossary in `CONTEXT.md`: challenge fuzzy terms, stress-test with scenarios, record the canonical word. Decisions go to `decision-record`. Vendored from mattpocock/skills. |
 | `grammar-tutor`         | Gentle English grammar and style tutor.                                                            |

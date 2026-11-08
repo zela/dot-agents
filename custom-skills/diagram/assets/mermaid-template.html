@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagram Title</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --fg: #1c1c1e;
+    --muted: #6b6b70;
+    --line: #e4e4e1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #141416;
+      --surface: #1c1c1f;
+      --fg: #ececee;
+      --muted: #9a9aa1;
+      --line: #2e2e33;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #141416;
+    --surface: #1c1c1f;
+    --fg: #ececee;
+    --muted: #9a9aa1;
+    --line: #2e2e33;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 72rem; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.5rem; line-height: 1.25; margin: 0 0 0.25rem; }
+  .lede { color: var(--muted); margin: 0 0 1.5rem; }
+  figure {
+    margin: 0 0 1.5rem;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow-x: auto;
+  }
+  pre.mermaid { margin: 0; text-align: center; font: inherit; }
+  pre.mermaid svg { display: block; margin: 0 auto; }
+  figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 0.75rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Diagram Title</h1>
+  <p class="lede">One sentence on what these diagrams show.</p>
+
+  <figure>
+    <pre class="mermaid">
+flowchart TD
+  user([User]) --> api[API]
+  subgraph backend [Backend]
+    api --> queue[(Queue)]
+    queue --> worker[Worker]
+  end
+  worker --> db[(Database)]
+    </pre>
+    <figcaption>Request path. Source: <code>src/api/</code>, <code>src/worker/</code>.</figcaption>
+  </figure>
+
+  <figure>
+    <pre class="mermaid">
+sequenceDiagram
+  participant U as User
+  participant A as API
+  participant W as Worker
+  U->>A: POST /jobs
+  A-->>U: 202 Accepted
+  A->>W: enqueue(job)
+  W-->>A: done
+    </pre>
+    <figcaption>Job lifecycle.</figcaption>
+  </figure>
+</main>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12.2.0/dist/mermaid.esm.min.mjs";
+
+  // Mermaid replaces each block's text with an SVG, so keep the source to re-render on a theme change.
+  const blocks = [...document.querySelectorAll("pre.mermaid")];
+  for (const block of blocks) block.dataset.source = block.textContent;
+
+  const darkQuery = matchMedia("(prefers-color-scheme: dark)");
+  const isDark = () => {
+    const forced = document.documentElement.dataset.theme;
+    return forced ? forced === "dark" : darkQuery.matches;
+  };
+
+  async function render() {
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: isDark() ? "redux-dark-color" : "redux-color",
+    });
+    for (const block of blocks) {
+      block.removeAttribute("data-processed");
+      block.textContent = block.dataset.source;
+    }
+    // A syntax error draws an error box in place and rejects; the other diagrams still render.
+    await mermaid.run({ nodes: blocks }).catch((error) => console.error(error));
+    // Mermaid shrinks a wide diagram to fit the column without limit, which makes labels unreadable
+    // on a phone. Below 60% of natural size the diagram scrolls inside its figure instead.
+    for (const svg of document.querySelectorAll('pre.mermaid svg:not([aria-roledescription="error"])')) {
+      svg.style.minWidth = `${svg.viewBox.baseVal.width * 0.6}px`;
+    }
+  }
+
+  darkQuery.addEventListener("change", render);
+  render();
+</script>
+</body>
+</html>

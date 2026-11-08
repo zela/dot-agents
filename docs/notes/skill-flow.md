@@ -2,7 +2,7 @@
 
 The skills trace one development lifecycle, tied together by one idea: **durable state lives in `docs/`, and the chat is scratch.** Each phase reads the artifacts the previous phase wrote and leaves its own behind, so you can `/clear` any session and resume cold. The kit generalizes [SKILL.state](skill-state-and-the-ledger-pattern.md) from one skill to the whole set, with the document tree as the bounded, reconciled state.
 
-The HTML renders live in [diagrams/](diagrams/). The spine render includes the additions from [mattpocock/skills](mattpocock-skills-eval.md); the meta-loop render predates `writing-for-agents`†.
+The HTML renders live in [diagrams/](diagrams/). The spine render includes the additions from [mattpocock/skills](mattpocock-skills-eval.md); the meta-loop render predates `writing-for-agents`†. Both were rendered with `archify`, which is now archived; to re-render them from their `.workflow.json` sources, uncomment its line in `upstream-sources.txt`.
 
 ## The spine
 
@@ -18,7 +18,7 @@ flowchart LR
   subgraph D[2 · Design]
     daf[design-a-feature]
     dai[design-an-interface]
-    viz[archify · beautiful-mermaid]
+    viz[diagram]
     dr["decision-record → docs/adr/"]
     proto[prototype]
     dm["domain-modeling → CONTEXT.md"]
@@ -65,7 +65,7 @@ flowchart LR
 `system-design-mentor` teaches the trade-off space. `grill-me` interrogates a plan until you resolve each branch, and `third-opinion` cross-checks it against another model. This phase produces comprehension, which feeds the first doc. `to-questionnaire`† turns a decision someone else holds the facts for into a questionnaire; `handoff`† carries the thread to another harness or directory.
 
 **2 · Design: compare real alternatives.**
-`design-a-feature` and `design-an-interface` hold the task stable and vary the interaction or module shape, so you choose from real options instead of the first idea. `archify` and `beautiful-mermaid` render the chosen shape. You make the *decision* in this phase, and `decision-record` writes it as an ADR under `docs/adr/`, so the choice and what would prove it wrong outlive the chat. `prototype` covers the runnable half of design: N variants on one route, or a single-file state-machine demo, for a question you cannot settle on paper. As decisions land, `domain-modeling` keeps the terms consistent and writes the glossary to `CONTEXT.md`.
+`design-a-feature` and `design-an-interface` hold the task stable and vary the interaction or module shape, so you choose from real options instead of the first idea. `diagram` renders the chosen shape, as a Mermaid page or a D2 render. You make the *decision* in this phase, and `decision-record` writes it as an ADR under `docs/adr/`, so the choice and what would prove it wrong outlive the chat. `prototype` covers the runnable half of design: N variants on one route, or a single-file state-machine demo, for a question you cannot settle on paper. As decisions land, `domain-modeling` keeps the terms consistent and writes the glossary to `CONTEXT.md`.
 
 **3 · Plan: sequence the work.**
 `multi-session-plan` turns the chosen design into linked docs under `docs/`: an index, one doc per session, and a deferred-work roadmap. The build reads these back as its first durable state.
