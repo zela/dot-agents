@@ -114,15 +114,17 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `design-a-feature`      | Generate radically different UI/UX designs for one feature by varying the interaction pattern.      |
 | `design-an-interface`   | Generate radically different interface designs for one module ("design it twice"). Carries the deep-module vocabulary, the dependency categories, and subagent-per-variant. |
 | `diagnosing-bugs`       | Disciplined loop for hard bugs: a red feedback loop first, minimise, 3–5 falsifiable hypotheses, tagged instrumentation, regression test at a correct seam. Vendored from mattpocock/skills. |
+| `doc-check`             | Check plan session docs against the code before a session runs: one read-only agent per doc, fix only blockers, wrong facts and harmful or vacuous checks, re-check changed lines until clean. |
 | `domain-modeling`       | Build the project's glossary in `CONTEXT.md`: challenge fuzzy terms, stress-test with scenarios, record the canonical word. Decisions go to `decision-record`. Vendored from mattpocock/skills. |
 | `grammar-tutor`         | Gentle English grammar and style tutor.                                                            |
 | `grill-me`              | Interview the user relentlessly about a plan: a design tree worked in rounds, facts fetched by the agent, decisions left to the user, done when the frontier is empty. |
 | `multi-session-plan`    | Break a large build into a sequenced roadmap of linked docs under `docs/`. Expand–contract for wide refactors; the roadmap holds the fog. |
 | `papercuts`             | Inspect the agent friction log at `~/.papercuts/log.md`: cluster papercuts into root-cause families, keep a dated note per family in `notes.md`, and fix the families you pick. Pairs with the Papercuts rule in `AGENTS.md`. |
+| `parallel-sessions`     | Run plan sessions at once in sibling git worktrees: rules for a worktree session, setup, review, and (in `coordinator.md`) wave preparation and the join, local or through MRs. A project doc supplies the values; `adopt.md` and a project-doc template set up a new project. |
 | `prototype`             | Throwaway code that answers one design question: N structurally different UI variants on one route, or a single-file HTML state-machine demo. Vendored from mattpocock/skills. |
 | `resolving-merge-conflicts` | Resolve an in-progress merge or rebase hunk by hunk, by intent traced to each side's primary source. Never `--abort`; waits for a yes before the final commit. |
 | `review-mr`             | Review the current GitLab MR branch and save findings as ready-to-paste MR comments. Adds a Spec axis against the MR description and an MR-description template on request. |
-| `review-staged`         | Review the staged diff, stress-test findings, fix survivors, commit granularly.                    |
+| `review-staged`         | Review the staged diff or a named branch range, stress-test findings, fix survivors and verified spec gaps, commit granularly. |
 | `run-state`             | Execute a long-horizon many-step run (bulk migration, backlog, long refactor) via an external state file, so context stays bounded and the session can be `/clear`'d and resumed. |
 | `ship-session`          | Close out a build session: verify acceptance, convert the plan to as-built, commit. No code review. |
 | `simple-english`        | Rewrite technical docs/runbooks/SKILL.md with ASD-STE100 (Simplified Technical English) discipline. Vendored (MIT); scoped to technical writing so it doesn't collide with `stop-slop`. |

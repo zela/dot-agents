@@ -1,14 +1,14 @@
 ---
 name: review-staged
 disable-model-invocation: true
-description: Review the staged diff, stress-test each finding against the source or a live system, fix only the survivors, then commit granularly. Use when the user asks to review staged changes, review `git diff --staged`, check what is staged before you commit, or mentions "review-staged".
+description: Review the staged diff, or a branch range the user names, stress-test each finding against the source or a live system, fix only the survivors, then commit granularly. Use when the user asks to review staged changes, review `git diff --staged`, check what is staged before you commit, or mentions "review-staged".
 ---
 
-1. Invoke the `code-review` skill. Target the staged paths explicitly (`git diff --staged --name-only`). Never target "the current diff", which can pull in unstaged work. Pass through any requested effort level. If a file is partly staged, discard findings that land on unstaged hunks. They are not what you are about to commit. Where `code-review` is unavailable, list candidates directly.
+1. Invoke the `code-review` skill. Target the staged paths explicitly (`git diff --staged --name-only`). Never target "the current diff", which can pull in unstaged work. When the user names a branch range instead (for example `main...HEAD`, for a branch whose work is already committed), target that range and skip the staged-path rules. Pass through any requested effort level. If a file is partly staged, discard findings that land on unstaged hunks. They are not what you are about to commit. Where `code-review` is unavailable, list candidates directly.
 
    Its output is candidates, not conclusions.
 
-   If a plan session doc under `docs/`, or an issue or spec the user names, covers this change, run one Spec subagent as well. Give it the staged diff and the acceptance criteria, and ask for requirements that are missing, behaviour that was not asked for, and requirements that look implemented but wrong, each quoting the criterion. Report these under their own heading in step 6. Do not rerank them against the code findings.
+   If a plan session doc under `docs/`, or an issue or spec the user names, covers this change, run one Spec subagent as well. Give it the diff and the acceptance criteria, and ask for requirements that are missing, behaviour that was not asked for, and requirements that look implemented but wrong, each quoting the criterion. Its gaps go through steps 2–4 like the code findings: a verified gap is in scope and gets fixed. If the session doc lists the files the session may edit, a gap whose fix needs another file is reported, not fixed.
 2. Verify EACH finding in its own subagent, launched in parallel. Use the `verifier` subagent if this host has one, otherwise a general subagent. Either way give it only the bare claim and where to look. Never give it the reasoning that produced it or the other findings:
 
    > Independently verify this claim against the actual source: "<claim>", at `<file:line>`. You have no prior context and must assume nothing. Report REPRODUCES or DOES-NOT-REPRODUCE with `file:line` evidence, plus how the site is reached and how large a change the claim implies. Default to DOES-NOT-REPRODUCE if the evidence is ambiguous.
@@ -21,13 +21,15 @@ description: Review the staged diff, stress-test each finding against the source
    Drop: taste-only rewrites, renames with no behavior change, speculative generality, abstraction with one call site, and any fix whose diff is larger than the risk it removes.
 
    Unsure → it goes in the report as a note, unfixed. Never silently.
+
+   Second look, before anything lands in "not worth it": write down the fix's actual size and the failure it prevents. A fix of a few lines in files the change already touches, or a missing test for the change, is worth it. Keep an item in "not worth it" only when its real diff is larger than the risk, or it needs a file the change does not touch.
 4. Fix what survives both filters. Minimal diff, no extra abstraction.
 5. Run typecheck, tests, lint. All must pass.
-6. Report, in three lists:
-   - Fixed
+6. Report, in these lists:
+   - Fixed (spec gaps included)
    - Refuted (with the verifier's evidence)
-   - True but not worth it (with the reason)
-   - Spec gaps (only when a spec existed)
+   - True but not worth it (with the fix size and the reason)
+   - Spec gaps not fixed (only when a spec existed; with what blocks each: a file outside the list, or a decision the spec does not make)
 
    Then propose the commits.
 
