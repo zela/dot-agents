@@ -24,10 +24,9 @@
 # Uncomment to re-render docs/notes/diagrams/*.workflow.json.
 # tt-a1i/archify archify
 
-# mattpocock/skills: adopted as-is per docs/notes/mattpocock-skills-eval.md (wizard deferred)
-
 hardikpandya/stop-slop stop-slop
 
 googlechrome/modern-web-guidance modern-web-guidance
 
+# mattpocock/skills: adopted as-is per docs/notes/mattpocock-skills-eval.md (wizard deferred)
 mattpocock/skills tdd research to-questionnaire handoff writing-for-agents teach
