@@ -163,6 +163,8 @@ now passes is the best for everything else.
 Finding counts by severity, thread counts (addressed, still open, settled), the review scope (full, or the delta and its range), the file path. Remind: pushing new
 commits changes `HEAD_SHA`. Post first, or regenerate after.
 
+If the host publishes artifact pages, offer the review page in one line: a private page with a copy button and "Posted" and "Skipped" ticks per comment. When the user accepts, or asks for the page, follow [REVIEW-PAGE.md](REVIEW-PAGE.md). If the review file has a `- Review page:` line, refresh that page instead of offering it.
+
 ---
 
 <sub>The Spec axis is from `code-review`, and the description shape from `pr` (which credits HumanLayer's `show-me`), both in [mattpocock/skills](https://github.com/mattpocock/skills) (MIT). See [the evaluation](../../docs/notes/mattpocock-skills-eval.md).</sub>

@@ -1,0 +1,333 @@
+<title>MR !0000 review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: one narrow reading column; a sticky filter and progress bar; one card per paste-ready comment, evidence folded away. */
+:root {
+  --bg: #f6f7f8;
+  --surface: #ffffff;
+  --fg: #1c2127;
+  --muted: #5b6672;
+  --line: #dde1e6;
+  --accent: #1f6f78;
+  --accent-fg: #ffffff;
+  --code-bg: #eef1f4;
+  --quote-bg: #f1f6f6;
+  --bug: #b4232c;
+  --risk: #a05a00;
+  --style: #6b3fa0;
+  --clean: #4d6b55;
+  --spec: #1f5fa8;
+  --ok: #2f7d4a;
+  --skip: #8a1c22;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121519; --surface: #1a1f24; --fg: #e3e7eb; --muted: #9aa5b0; --line: #2c333b;
+    --accent: #5fb7bf; --accent-fg: #0d1214; --code-bg: #242b32; --quote-bg: #1c2629;
+    --bug: #ff7a80; --risk: #f0a540; --style: #b99be6; --clean: #8fb89a; --spec: #7fb2f0; --ok: #6cc98c; --skip: #c4474e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121519; --surface: #1a1f24; --fg: #e3e7eb; --muted: #9aa5b0; --line: #2c333b;
+  --accent: #5fb7bf; --accent-fg: #0d1214; --code-bg: #242b32; --quote-bg: #1c2629;
+  --bug: #ff7a80; --risk: #f0a540; --style: #b99be6; --clean: #8fb89a; --spec: #7fb2f0; --ok: #6cc98c; --skip: #c4474e;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 760px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; display: grid; gap: 28px; }
+header { display: grid; gap: 10px; }
+h1, h2 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h1 { font-size: 30px; font-weight: 600; letter-spacing: -0.01em; }
+h2 { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 13px; }
+.meta code { font-size: 12px; }
+a { color: var(--accent); }
+.note { margin: 0; color: var(--muted); font-size: 14px; max-width: 65ch; }
+code { font-family: var(--font-mono); font-size: 0.88em; background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 10px; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.progress { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--muted); margin-left: auto; }
+.progress strong { color: var(--fg); }
+.chip { font: 500 12px/1 var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 6px 10px; border-radius: 999px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.chip:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section { display: grid; gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 12px; min-width: 0; box-shadow: inset 0 0 0 1px transparent; }
+.card.posted, .card.skipped { opacity: 0.6; }
+.card.posted { border-color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok); }
+.card.skipped { border-color: var(--skip); box-shadow: inset 0 0 0 1px var(--skip); }
+.card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+.sev { font: 600 11px/1 var(--font-body); letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 7px; border-radius: 4px; border: 1px solid currentColor; }
+.sev.bug { color: var(--bug); } .sev.risk { color: var(--risk); } .sev.style { color: var(--style); } .sev.clean { color: var(--clean); } .sev.spec { color: var(--spec); } .sev.thread { color: var(--ok); }
+.num { font: 500 13px/1 var(--font-mono); color: var(--muted); }
+.title { font-weight: 600; font-size: 16px; flex: 1 1 260px; min-width: 0; text-wrap: balance; }
+.anchor { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.anchor code { background: none; padding: 0; color: var(--muted); font-size: 12.5px; }
+.comment { background: var(--quote-bg); border-radius: 6px; padding: 12px 14px; margin: 0; max-width: 65ch; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.copy { font: 600 13px/1 var(--font-body); background: var(--accent); color: var(--accent-fg); border: 0; border-radius: 6px; padding: 9px 14px; cursor: pointer; }
+.copy.small { background: none; color: var(--accent); padding: 4px 6px; font-weight: 500; font-size: 12px; }
+.posted-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); cursor: pointer; }
+.posted-toggle input { width: 16px; height: 16px; accent-color: var(--accent); }
+details { font-size: 14px; }
+summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+details .body { display: grid; gap: 8px; padding-top: 8px; max-width: 65ch; }
+details p { margin: 0; }
+.label { font-weight: 600; }
+ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 65ch; }
+.status { font-size: 14px; margin: 0; }
+.toast { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 8px 14px; border-radius: 6px; font-size: 13px; }
+@media (prefers-reduced-motion: no-preference) { .card { transition: opacity 0.2s, border-color 0.2s, box-shadow 0.2s; } }
+</style>
+
+<!--
+  Data contract: REVIEW-PAGE.md. Replace the whole JSON below and the <title> above.
+  Inside JSON strings, write "<\/" for every "</" so the script block stays closed.
+-->
+<script type="application/json" id="review-data">
+{
+  "iid": "0000",
+  "title": "Example MR title",
+  "url": "https://gitlab.com/group/project/-/merge_requests/0000",
+  "head": "abcdef12",
+  "state": "Open",
+  "note": "Example data. Copy a comment, paste it on its anchor in the GitLab diff, then tick Posted. Tick Skipped for a note you leave out.",
+  "threads": [
+    { "title": "Example thread claim", "url": "https://gitlab.com/group/project/-/merge_requests/0000#note_1", "anchor": "src/example.ts:12", "status": "Still open", "action": "Reply", "reply": "Example reply text with `code`." }
+  ],
+  "findings": [
+    { "n": "1", "sev": "bug", "title": "Example finding", "anchor": "src/example.ts:42", "comment": "Example paste-ready comment with `code`.", "why": "Example evidence.", "fix": "Example fix." }
+  ],
+  "specNote": "Example: measured against the linked issue.",
+  "spec": [
+    { "n": "S1", "sev": "spec", "title": "Example spec finding", "anchor": "src/example.ts (general note)", "comment": "Example spec comment.", "why": "Example quoted spec line." }
+  ],
+  "checked": ["Example refuted candidate and why it is not an issue."],
+  "reviewFile": "docs/mr-0000-review-comments.md"
+}
+</script>
+
+<div class="wrap">
+  <header>
+    <h1 id="page-title"></h1>
+    <div class="meta">
+      <span><a id="mr-link" target="_blank" rel="noopener"></a></span>
+      <span>Reviewed head <code id="mr-head"></code></span>
+      <span id="mr-state"></span>
+    </div>
+    <p class="note" id="mr-note"></p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="Filter comments">
+    <button class="chip" data-filter="all" aria-pressed="true">All</button>
+    <button class="chip" data-filter="thread" aria-pressed="false">Threads</button>
+    <button class="chip" data-filter="bug" aria-pressed="false">Bugs</button>
+    <button class="chip" data-filter="risk" aria-pressed="false">Risky</button>
+    <button class="chip" data-filter="minor" aria-pressed="false">Style &amp; cleanup</button>
+    <button class="chip" data-filter="spec" aria-pressed="false">Spec</button>
+    <span class="progress" id="progress"></span>
+  </div>
+
+  <section id="threads" aria-labelledby="h-threads">
+    <h2 id="h-threads">Existing threads</h2>
+  </section>
+
+  <section id="findings" aria-labelledby="h-findings">
+    <h2 id="h-findings">Code findings</h2>
+  </section>
+
+  <section id="spec" aria-labelledby="h-spec">
+    <h2 id="h-spec">Spec</h2>
+    <p class="note" id="spec-note"></p>
+  </section>
+
+  <section id="checked" aria-labelledby="h-checked">
+    <h2 id="h-checked">Checked, not an issue</h2>
+    <ul class="plain" id="checked-list"></ul>
+  </section>
+
+  <p class="note" id="source-note"></p>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+const data = JSON.parse(document.getElementById("review-data").textContent);
+const SEV = { bug: "Bug", risk: "Risky", style: "Style", clean: "Cleanup", spec: "Spec", thread: "Thread" };
+const KEY = "mr" + data.iid + "-posted";
+
+/** Each item is unmarked, "posted" or "skipped". An older page stored an array of posted ids under the same key. */
+function loadMarks() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(KEY) || "{}");
+    if (Array.isArray(raw)) return new Map(raw.map((id) => [id, "posted"]));
+    return new Map(Object.entries(raw));
+  } catch (e) { return new Map(); }
+}
+function saveMarks(map) {
+  try { localStorage.setItem(KEY, JSON.stringify(Object.fromEntries(map))); } catch (e) {}
+}
+const marks = loadMarks();
+
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+function inline(s) { return esc(s).replace(/`([^`]+)`/g, "<code>$1</code>"); }
+
+const toast = document.getElementById("toast");
+let toastTimer;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toast.hidden = true; }, 1600);
+}
+function selectText(node) {
+  const range = document.createRange();
+  range.selectNodeContents(node);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+function copy(text, node, msg) {
+  const fallback = () => { selectText(node); showToast("Selected. Press ⌘C to copy"); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => showToast(msg), fallback);
+  } else {
+    fallback();
+  }
+}
+
+/** A postable item has paste-ready text: every finding, and a thread only when its action carries a reply. */
+const postable = [];
+
+const MARKS = [["posted", "Posted"], ["skipped", "Skipped"]];
+
+function markControls(id) {
+  return MARKS.map(([mark, label]) =>
+    '<label class="posted-toggle"><input type="checkbox" data-mark="' + mark + '" id="' + mark + "-" + id + '"' +
+    (marks.get(id) === mark ? " checked" : "") + "> " + label + "</label>").join("");
+}
+function applyMark(el, id) {
+  const current = marks.get(id);
+  MARKS.forEach(([mark]) => el.classList.toggle(mark, current === mark));
+}
+function wireMarks(el, id) {
+  el.querySelectorAll("input[data-mark]").forEach((box) => box.addEventListener("change", () => {
+    if (box.checked) marks.set(id, box.dataset.mark); else marks.delete(id);
+    el.querySelectorAll("input[data-mark]").forEach((other) => { other.checked = marks.get(id) === other.dataset.mark; });
+    applyMark(el, id);
+    saveMarks(marks);
+    updateProgress();
+  }));
+}
+function wireAnchor(el, anchor) {
+  el.querySelector('[data-copy="anchor"]').addEventListener("click", () =>
+    copy(anchor.replace(/ \(general note\)$/, ""), el.querySelector(".anchor code"), "Path copied"));
+}
+
+function renderThread(t, i) {
+  const id = "t" + (i + 1);
+  const el = document.createElement("article");
+  el.className = "card";
+  el.dataset.sev = "thread";
+  const title = t.url ? '<a href="' + esc(t.url) + '" target="_blank" rel="noopener">' + inline(t.title) + "</a>" : inline(t.title);
+  let html =
+    '<div class="card-head"><span class="sev thread">' + esc(t.status) + '</span><span class="title">' + title + "</span></div>" +
+    (t.anchor ? '<div class="anchor"><code>' + esc(t.anchor) + '</code><button class="copy small" data-copy="anchor" type="button">Copy path</button></div>' : "") +
+    '<p class="status"><span class="label">Action:</span> ' + inline(t.action) + "</p>";
+  if (t.reply) {
+    postable.push(id);
+    applyMark(el, id);
+    html += '<p class="comment">' + inline(t.reply) + "</p>" +
+      '<div class="actions"><button class="copy" data-copy="comment" type="button">Copy reply</button>' + markControls(id) + "</div>";
+  }
+  el.innerHTML = html;
+  if (t.anchor) wireAnchor(el, t.anchor);
+  if (t.reply) {
+    el.querySelector('[data-copy="comment"]').addEventListener("click", () => copy(t.reply, el.querySelector(".comment"), "Reply copied"));
+    wireMarks(el, id);
+  }
+  return el;
+}
+
+function renderFinding(f) {
+  const id = "f-" + f.n;
+  postable.push(id);
+  const el = document.createElement("article");
+  el.className = "card";
+  applyMark(el, id);
+  el.dataset.sev = f.sev;
+  el.innerHTML =
+    '<div class="card-head"><span class="sev ' + esc(f.sev) + '">' + (SEV[f.sev] || esc(f.sev)) + '</span><span class="num">' + esc(f.n) + '</span><span class="title">' + inline(f.title) + "</span></div>" +
+    '<div class="anchor"><code>' + esc(f.anchor) + '</code><button class="copy small" data-copy="anchor" type="button">Copy path</button></div>' +
+    '<p class="comment">' + inline(f.comment) + "</p>" +
+    '<div class="actions"><button class="copy" data-copy="comment" type="button">Copy comment</button>' + markControls(id) + "</div>" +
+    (f.why || f.fix
+      ? "<details><summary>Evidence" + (f.fix ? " and fix" : "") + '</summary><div class="body">' +
+        (f.why ? "<p>" + inline(f.why) + "</p>" : "") +
+        (f.fix ? '<p><span class="label">Fix:</span> ' + inline(f.fix) + "</p>" : "") + "</div></details>"
+      : "");
+  el.querySelector('[data-copy="comment"]').addEventListener("click", () => copy(f.comment, el.querySelector(".comment"), "Comment copied"));
+  wireAnchor(el, f.anchor);
+  wireMarks(el, id);
+  return el;
+}
+
+function updateProgress() {
+  const count = (mark) => postable.filter((id) => marks.get(id) === mark).length;
+  const posted = count("posted");
+  const skipped = count("skipped");
+  document.getElementById("progress").innerHTML =
+    "<strong>" + (posted + skipped) + "</strong> of " + postable.length + " done · " + posted + " posted · " + skipped + " skipped";
+}
+
+document.getElementById("page-title").textContent = "MR !" + data.iid + " review";
+const link = document.getElementById("mr-link");
+link.href = data.url;
+link.textContent = data.title;
+document.getElementById("mr-head").textContent = data.head;
+document.getElementById("mr-state").textContent = data.state || "";
+document.getElementById("mr-note").textContent = data.note || "";
+document.getElementById("spec-note").textContent = data.specNote || "";
+document.getElementById("source-note").innerHTML = data.reviewFile ? "Source of truth: <code>" + esc(data.reviewFile) + "</code>." : "";
+
+const sections = [
+  ["threads", data.threads || [], renderThread],
+  ["findings", data.findings || [], renderFinding],
+  ["spec", data.spec || [], renderFinding]
+];
+sections.forEach(([sectionId, items, render]) => {
+  const section = document.getElementById(sectionId);
+  if (!items.length) { section.hidden = true; return; }
+  items.forEach((item, i) => section.appendChild(render(item, i)));
+});
+const checked = data.checked || [];
+if (checked.length) {
+  const list = document.getElementById("checked-list");
+  checked.forEach((c) => { const li = document.createElement("li"); li.innerHTML = inline(c); list.appendChild(li); });
+} else {
+  document.getElementById("checked").hidden = true;
+}
+updateProgress();
+
+const chips = document.querySelectorAll(".chip");
+const match = {
+  all: () => true,
+  thread: (s) => s === "thread",
+  bug: (s) => s === "bug",
+  risk: (s) => s === "risk",
+  minor: (s) => s === "style" || s === "clean",
+  spec: (s) => s === "spec"
+};
+chips.forEach((chip) => chip.addEventListener("click", () => {
+  chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+  const test = match[chip.dataset.filter];
+  document.querySelectorAll("article[data-sev]").forEach((card) => { card.hidden = !test(card.dataset.sev); });
+}));
+</script>

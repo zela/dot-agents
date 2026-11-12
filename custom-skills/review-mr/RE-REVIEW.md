@@ -32,3 +32,4 @@ Update `docs/mr-<IID>-review-comments.md` in place, so that it shows the state a
 - `## Existing threads`, the findings, and `## Spec`: replace them with this round's results. The findings are the new ones plus the unposted findings that still reproduce, renumbered.
 - `## Checked, not an issue`: keep the entries the delta did not touch. Re-check the others.
 - `## Spec source`: keep it. Add any spec text pasted this round.
+- `- Review page:` line: keep it, and rebuild that page from the refreshed file ([REVIEW-PAGE.md](REVIEW-PAGE.md)).
