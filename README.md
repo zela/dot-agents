@@ -125,7 +125,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `prototype`             | Throwaway code that answers one design question: N structurally different UI variants on one route, or a single-file HTML state-machine demo. Vendored from mattpocock/skills. |
 | `resolving-merge-conflicts` | Resolve an in-progress merge or rebase hunk by hunk, by intent traced to each side's primary source. Never `--abort`; waits for a yes before the final commit. |
 | `review-mr`             | Review the current GitLab MR branch and save findings as ready-to-paste MR comments. Adds a Spec axis against the MR description, an MR-description template on request, and an optional review page with copy buttons. |
-| `review-staged`         | Review the staged diff or a named branch range, stress-test findings, fix survivors and verified spec gaps, commit granularly. |
+| `review-staged`         | Review the staged diff or a named branch range, stress-test findings, fix survivors, verified spec gaps and comment residue, commit granularly. |
 | `run-state`             | Execute a long-horizon many-step run (bulk migration, backlog, long refactor) via an external state file, so context stays bounded and the session can be `/clear`'d and resumed. |
 | `ship-session`          | Close out a build session: verify acceptance, convert the plan to as-built, commit. No code review. |
 | `simple-english`        | Rewrite technical docs/runbooks/SKILL.md with ASD-STE100 (Simplified Technical English) discipline. Vendored (MIT); scoped to technical writing so it doesn't collide with `stop-slop`. |
