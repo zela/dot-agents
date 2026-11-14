@@ -4,13 +4,23 @@ disable-model-invocation: true
 description: Review the staged diff, or a branch range the user names, stress-test each finding against the source or a live system, fix only the survivors, then commit granularly. Use when the user asks to review staged changes, review `git diff --staged`, check what is staged before you commit, or mentions "review-staged".
 ---
 
-1. Invoke the `code-review` skill. Target the staged paths explicitly (`git diff --staged --name-only`). Never target "the current diff", which can pull in unstaged work. When the user names a branch range instead (for example `main...HEAD`, for a branch whose work is already committed), target that range and skip the staged-path rules. Pass through any requested effort level. If a file is partly staged, discard findings that land on unstaged hunks. They are not what you are about to commit. Where `code-review` is unavailable, list candidates directly.
+1. If every path in the diff is a doc (`.md`, `.mdx`, `.txt`, `.rst`), skip `code-review`. The Prose and Writing subagents that follow are the reviewers. Otherwise, invoke the `code-review` skill. Target the staged paths explicitly (`git diff --staged --name-only`). Never target "the current diff", which can pull in unstaged work. When the user names a branch range instead (for example `main...HEAD`, for a branch whose work is already committed), target that range and skip the staged-path rules. Pass through any requested effort level. If a file is partly staged, discard findings that land on unstaged hunks. They are not what you are about to commit. Where `code-review` is unavailable, list candidates directly.
 
    Its output is candidates, not conclusions.
 
-   If a plan session doc under `docs/`, or an issue or spec the user names, covers this change, run one Spec subagent as well. Give it the diff and the acceptance criteria, and ask for requirements that are missing, behavior that was not asked for, and requirements that look implemented but wrong, each quoting the criterion. Its gaps go through steps 2–4 like the code findings: a verified gap is in scope and gets fixed. If the session doc lists the files the session may edit, a gap whose fix needs another file is reported, not fixed.
+   If a plan session doc under `docs/` covers this change, run one Spec subagent. Do the same if the user names an issue or a spec that covers it. Give it the diff and the acceptance criteria. Ask it for missing requirements, for behavior that nobody asked for, and for requirements that look implemented but wrong. Each finding quotes its criterion. A verified gap is in scope. Fix it in step 4. If the session doc lists the files that the session can edit, report a gap whose fix needs another file. Do not fix it.
 
-   If the diff adds or changes comments or Markdown prose, run one Comments subagent as well. Give it the diff and the path to `references/comment-checklist.md` in this skill's directory. Ask for each line that matches a checklist category. Its findings go through steps 2–4 like the code findings. A finding that matches a category is a defect, not a taste-only rewrite.
+   If the diff adds or changes comments or docs, run one Prose subagent. Give it the diff and the path to `references/prose-checklist.md` in this skill's directory. Ask for each line that matches a checklist category.
+
+   If the diff adds or changes docs, run one Writing subagent. Give it the changed doc lines. Tell it to load the rules for each kind of doc:
+   - Agent instructions (`SKILL.md`, `AGENTS.md`, `CLAUDE.md`, a file that a skill points to): the `writing-for-agents` skill and the `simple-english` skill
+   - Other text that a reader follows exactly (a README, a guide, a runbook): the `simple-english` skill
+   - Other prose (notes, evals, explanations): the `stop-slop` skill, with em-dashes permitted (`AGENTS.md` § Writing)
+   - Every doc: the Writing rules in `AGENTS.md`.
+
+   Ask for each line that breaks a rule, with the skill and the rule that it breaks.
+
+   The Spec and Prose findings go through steps 2–4 like the code findings. Writing findings skip step 2, which sends each finding to a verifier. A Writing finding does not need one, because it quotes its line and its rule. In step 3, a Prose or Writing finding counts as a defect, not a taste-only rewrite, because it names a rule. In step 4, read the line of each Writing finding again before you fix it. If the line does not break the rule, discard the finding.
 2. Verify EACH finding in its own subagent, launched in parallel. Use the `verifier` subagent if this host has one, otherwise a general subagent. Either way give it only the bare claim and where to look. Never give it the reasoning that produced it or the other findings:
 
    > Independently verify this claim against the actual source: "<claim>", at `<file:line>`. You have no prior context and must assume nothing. Report REPRODUCES or DOES-NOT-REPRODUCE with `file:line` evidence, plus how the site is reached and how large a change the claim implies. Default to DOES-NOT-REPRODUCE if the evidence is ambiguous.
@@ -26,7 +36,7 @@ description: Review the staged diff, or a branch range the user names, stress-te
 
    Second look, before anything lands in "not worth it": write down the fix's actual size and the failure it prevents. A fix of a few lines in files the change already touches, or a missing test for the change, is worth it. Keep an item in "not worth it" only when its real diff is larger than the risk, or it needs a file the change does not touch.
 4. Fix what survives both filters. Minimal diff, no extra abstraction.
-5. Run typecheck, tests, lint. All must pass.
+5. If every path in the diff is a doc, skip this step. Otherwise, run the typecheck, the tests and the lint. All must pass.
 6. Report, in these lists:
    - Fixed (spec gaps included)
    - Refuted (with the verifier's evidence)
