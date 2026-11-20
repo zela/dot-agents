@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>MR !0000 review</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
@@ -13,11 +14,8 @@
   --accent-fg: #ffffff;
   --code-bg: #eef1f4;
   --quote-bg: #f1f6f6;
-  --bug: #b4232c;
-  --risk: #a05a00;
-  --style: #6b3fa0;
-  --clean: #4d6b55;
-  --spec: #1f5fa8;
+  --blocker: #b4232c;
+  --major: #a05a00;
   --ok: #2f7d4a;
   --skip: #8a1c22;
   --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
@@ -28,14 +26,14 @@
   :root:not([data-theme="light"]) {
     --bg: #121519; --surface: #1a1f24; --fg: #e3e7eb; --muted: #9aa5b0; --line: #2c333b;
     --accent: #5fb7bf; --accent-fg: #0d1214; --code-bg: #242b32; --quote-bg: #1c2629;
-    --bug: #ff7a80; --risk: #f0a540; --style: #b99be6; --clean: #8fb89a; --spec: #7fb2f0; --ok: #6cc98c; --skip: #c4474e;
+    --blocker: #ff7a80; --major: #f0a540; --ok: #6cc98c; --skip: #c4474e;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #121519; --surface: #1a1f24; --fg: #e3e7eb; --muted: #9aa5b0; --line: #2c333b;
   --accent: #5fb7bf; --accent-fg: #0d1214; --code-bg: #242b32; --quote-bg: #1c2629;
-  --bug: #ff7a80; --risk: #f0a540; --style: #b99be6; --clean: #8fb89a; --spec: #7fb2f0; --ok: #6cc98c; --skip: #c4474e;
+  --blocker: #ff7a80; --major: #f0a540; --ok: #6cc98c; --skip: #c4474e;
   color-scheme: dark;
 }
 body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
@@ -63,11 +61,13 @@ section { display: grid; gap: 12px; }
 .card.posted, .card.skipped { opacity: 0.6; }
 .card.posted { border-color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok); }
 .card.skipped { border-color: var(--skip); box-shadow: inset 0 0 0 1px var(--skip); }
-.card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
-.sev { font: 600 11px/1 var(--font-body); letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 7px; border-radius: 4px; border: 1px solid currentColor; }
-.sev.bug { color: var(--bug); } .sev.risk { color: var(--risk); } .sev.style { color: var(--style); } .sev.clean { color: var(--clean); } .sev.spec { color: var(--spec); } .sev.thread { color: var(--ok); }
-.num { font: 500 13px/1 var(--font-mono); color: var(--muted); }
-.title { font-weight: 600; font-size: 16px; flex: 1 1 260px; min-width: 0; text-wrap: balance; }
+.card-head { display: grid; gap: 8px; min-width: 0; }
+.eyebrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font: 600 11px/1 var(--font-body); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pill { padding: 4px 7px; border-radius: 4px; border: 1px solid currentColor; }
+.pill.blocker { background: var(--blocker); border-color: var(--blocker); color: var(--surface); }
+.pill.major { color: var(--major); }
+.pill.thread { color: var(--ok); }
+.title { font-weight: 600; font-size: 16px; text-wrap: balance; }
 .anchor { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .anchor code { background: none; padding: 0; color: var(--muted); font-size: 12.5px; }
 .comment { background: var(--quote-bg); border-radius: 6px; padding: 12px 14px; margin: 0; max-width: 65ch; }
@@ -103,12 +103,14 @@ ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 65
     { "title": "Example thread claim", "url": "https://gitlab.com/group/project/-/merge_requests/0000#note_1", "anchor": "src/example.ts:12", "status": "Still open", "action": "Reply", "reply": "Example reply text with `code`." }
   ],
   "findings": [
-    { "n": "1", "sev": "bug", "title": "Example finding", "anchor": "src/example.ts:42", "comment": "Example paste-ready comment with `code`.", "why": "Example evidence.", "fix": "Example fix." }
+    { "n": "1", "sev": "bug", "grade": "Major", "title": "Example finding", "anchor": "src/example.ts:42", "comment": "Example paste-ready comment with `code`.", "why": "Example evidence.", "fix": "Example fix." }
   ],
   "specNote": "Example: measured against the linked issue.",
   "spec": [
-    { "n": "S1", "sev": "spec", "title": "Example spec finding", "anchor": "src/example.ts (general note)", "comment": "Example spec comment.", "why": "Example quoted spec line." }
+    { "n": "S1", "sev": "spec", "grade": "Major", "title": "Example spec finding", "anchor": "src/example.ts (general note)", "comment": "Example spec comment.", "why": "Example quoted spec line." }
   ],
+  "bar": "Major",
+  "held": ["🧹 Minor `src/example.ts:7` — Example held-back finding: example trigger and consequence."],
   "checked": ["Example refuted candidate and why it is not an issue."],
   "reviewFile": "docs/mr-0000-review-comments.md"
 }
@@ -128,10 +130,9 @@ ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 65
   <div class="bar" role="toolbar" aria-label="Filter comments">
     <button class="chip" data-filter="all" aria-pressed="true">All</button>
     <button class="chip" data-filter="thread" aria-pressed="false">Threads</button>
-    <button class="chip" data-filter="bug" aria-pressed="false">Bugs</button>
-    <button class="chip" data-filter="risk" aria-pressed="false">Risky</button>
-    <button class="chip" data-filter="minor" aria-pressed="false">Style &amp; cleanup</button>
-    <button class="chip" data-filter="spec" aria-pressed="false">Spec</button>
+    <button class="chip" data-filter="blocker" aria-pressed="false">Blocker</button>
+    <button class="chip" data-filter="major" aria-pressed="false">Major</button>
+    <button class="chip" data-filter="minor" aria-pressed="false">Minor</button>
     <span class="progress" id="progress"></span>
   </div>
 
@@ -146,6 +147,12 @@ ul.plain { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 65
   <section id="spec" aria-labelledby="h-spec">
     <h2 id="h-spec">Spec</h2>
     <p class="note" id="spec-note"></p>
+  </section>
+
+  <section id="held" aria-labelledby="h-held">
+    <h2 id="h-held">Held back</h2>
+    <p class="note" id="held-note"></p>
+    <ul class="plain" id="held-list"></ul>
   </section>
 
   <section id="checked" aria-labelledby="h-checked">
@@ -235,10 +242,10 @@ function renderThread(t, i) {
   const id = "t" + (i + 1);
   const el = document.createElement("article");
   el.className = "card";
-  el.dataset.sev = "thread";
+  el.dataset.group = "thread";
   const title = t.url ? '<a href="' + esc(t.url) + '" target="_blank" rel="noopener">' + inline(t.title) + "</a>" : inline(t.title);
   let html =
-    '<div class="card-head"><span class="sev thread">' + esc(t.status) + '</span><span class="title">' + title + "</span></div>" +
+    '<div class="card-head"><div class="eyebrow"><span class="pill thread">' + esc(t.status) + '</span></div><span class="title">' + title + "</span></div>" +
     (t.anchor ? '<div class="anchor"><code>' + esc(t.anchor) + '</code><button class="copy small" data-copy="anchor" type="button">Copy path</button></div>' : "") +
     '<p class="status"><span class="label">Action:</span> ' + inline(t.action) + "</p>";
   if (t.reply) {
@@ -262,9 +269,12 @@ function renderFinding(f) {
   const el = document.createElement("article");
   el.className = "card";
   applyMark(el, id);
-  el.dataset.sev = f.sev;
+  el.dataset.group = (f.grade || "").toLowerCase();
   el.innerHTML =
-    '<div class="card-head"><span class="sev ' + esc(f.sev) + '">' + (SEV[f.sev] || esc(f.sev)) + '</span><span class="num">' + esc(f.n) + '</span><span class="title">' + inline(f.title) + "</span></div>" +
+    '<div class="card-head"><div class="eyebrow">' +
+    (f.grade ? '<span class="pill ' + esc(f.grade.toLowerCase()) + '">' + esc(f.grade) + "</span>" : "") +
+    "<span>" + (SEV[f.sev] || esc(f.sev)) + " · " + esc(f.n) + "</span></div>" +
+    '<span class="title">' + inline(f.title) + "</span></div>" +
     '<div class="anchor"><code>' + esc(f.anchor) + '</code><button class="copy small" data-copy="anchor" type="button">Copy path</button></div>' +
     '<p class="comment">' + inline(f.comment) + "</p>" +
     '<div class="actions"><button class="copy" data-copy="comment" type="button">Copy comment</button>' + markControls(id) + "</div>" +
@@ -307,27 +317,20 @@ sections.forEach(([sectionId, items, render]) => {
   if (!items.length) { section.hidden = true; return; }
   items.forEach((item, i) => section.appendChild(render(item, i)));
 });
-const checked = data.checked || [];
-if (checked.length) {
-  const list = document.getElementById("checked-list");
-  checked.forEach((c) => { const li = document.createElement("li"); li.innerHTML = inline(c); list.appendChild(li); });
-} else {
-  document.getElementById("checked").hidden = true;
-}
+[["held", data.held || []], ["checked", data.checked || []]].forEach(([sectionId, items]) => {
+  if (!items.length) { document.getElementById(sectionId).hidden = true; return; }
+  const list = document.getElementById(sectionId + "-list");
+  items.forEach((c) => { const li = document.createElement("li"); li.innerHTML = inline(c); list.appendChild(li); });
+});
+document.getElementById("held-note").textContent = data.bar ? "Below the post bar (" + data.bar + "). Not drafted as comments." : "";
 updateProgress();
 
 const chips = document.querySelectorAll(".chip");
-const match = {
-  all: () => true,
-  thread: (s) => s === "thread",
-  bug: (s) => s === "bug",
-  risk: (s) => s === "risk",
-  minor: (s) => s === "style" || s === "clean",
-  spec: (s) => s === "spec"
-};
+const filled = [...document.querySelectorAll("section")].filter((s) => !s.hidden);
 chips.forEach((chip) => chip.addEventListener("click", () => {
   chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
-  const test = match[chip.dataset.filter];
-  document.querySelectorAll("article[data-sev]").forEach((card) => { card.hidden = !test(card.dataset.sev); });
+  const filter = chip.dataset.filter;
+  document.querySelectorAll("article[data-group]").forEach((card) => { card.hidden = filter !== "all" && card.dataset.group !== filter; });
+  filled.forEach((s) => { s.hidden = filter !== "all" && !s.querySelector("article:not([hidden])"); });
 }));
 </script>
