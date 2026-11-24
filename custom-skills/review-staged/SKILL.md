@@ -23,16 +23,16 @@ description: Review the staged diff, or a branch range the user names, stress-te
    The Spec and Prose findings go through steps 2–4 like the code findings. Writing findings skip step 2, which sends each finding to a verifier. A Writing finding does not need one, because it quotes its line and its rule. In step 3, a Prose or Writing finding counts as a defect, not a taste-only rewrite, because it names a rule. In step 4, read the line of each Writing finding again before you fix it. If the line does not break the rule, discard the finding.
 2. Verify EACH finding in its own subagent, launched in parallel. Use the `verifier` subagent if this host has one, otherwise a general subagent. Either way give it only the bare claim and where to look. Never give it the reasoning that produced it or the other findings:
 
-   > Independently verify this claim against the actual source: "<claim>", at `<file:line>`. You have no prior context and must assume nothing. Report REPRODUCES or DOES-NOT-REPRODUCE with `file:line` evidence, plus how the site is reached and how large a change the claim implies. Default to DOES-NOT-REPRODUCE if the evidence is ambiguous.
+   > Independently verify this claim against the actual source: "<claim>", at `<file:line>`. You have no prior context and must assume nothing. Report REPRODUCES or DOES-NOT-REPRODUCE with `file:line` evidence, plus how the site is reached and how large a change the claim implies. On a protected subject (security or auth, data loss, concurrency, injection, secrets exposure, cryptography, memory safety, a public contract), report DOES-NOT-REPRODUCE only with refuting evidence. Refuting evidence is a quoted `file:line`, version-specific documentation, or a test that exercised the exact trigger. If that evidence is missing, report UNRESOLVED and name what is missing. On any other subject, default to DOES-NOT-REPRODUCE if the evidence is ambiguous.
 
-   Discard anything that does not reproduce. Do not re-argue a discarded finding.
+   Discard each DOES-NOT-REPRODUCE. Do not re-argue a discarded finding.
 3. Is it worth fixing? True ≠ worth a diff. Decide this yourself — the verifier saw one claim through a keyhole and cannot weigh it against the whole change.
 
    Never filtered out: input validation at trust boundaries, error handling that prevents data loss, security, accessibility, anything explicitly requested.
 
    Drop: taste-only rewrites, renames with no behavior change, speculative generality, abstraction with one call site, and any fix whose diff is larger than the risk it removes.
 
-   Unsure → it goes in the report as a note, unfixed. Never silently.
+   Unsure, or UNRESOLVED in step 2 → it goes in the report as a note, unfixed, with the evidence it lacks. Never silently.
 
    Second look, before anything lands in "not worth it": write down the fix's actual size and the failure it prevents. A fix of a few lines in files the change already touches, or a missing test for the change, is worth it. Keep an item in "not worth it" only when its real diff is larger than the risk, or it needs a file the change does not touch.
 4. Fix what survives both filters. Minimal diff, no extra abstraction.
@@ -41,6 +41,7 @@ description: Review the staged diff, or a branch range the user names, stress-te
    - Fixed (spec gaps included)
    - Refuted (with the verifier's evidence)
    - True but not worth it (with the fix size and the reason)
+   - Notes: Unsure and UNRESOLVED findings (with the evidence that each one lacks)
    - Spec gaps not fixed (only when a spec existed; with what blocks each: a file outside the list, or a decision the spec does not make)
 
    Then propose the commits.

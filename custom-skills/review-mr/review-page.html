@@ -322,7 +322,7 @@ sections.forEach(([sectionId, items, render]) => {
   const list = document.getElementById(sectionId + "-list");
   items.forEach((c) => { const li = document.createElement("li"); li.innerHTML = inline(c); list.appendChild(li); });
 });
-document.getElementById("held-note").textContent = data.bar ? "Below the post bar (" + data.bar + "). Not drafted as comments." : "";
+document.getElementById("held-note").textContent = data.bar ? "Below the post bar (" + data.bar + "), or Unresolved. Not drafted as comments." : "";
 updateProgress();
 
 const chips = document.querySelectorAll(".chip");

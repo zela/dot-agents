@@ -22,7 +22,7 @@ Give `code-review` the delta as its scope: the hunks of `git diff <PREV_HEAD> <H
 
 ## Unposted findings
 
-A finding in the review file that matches no thread is unposted. Send each unposted finding to a `verifier` in the thread-check batch. Give it the claim and the anchor, with the line quoted from `git show <PREV_HEAD>:<path>`. Also ask it for the trigger and the consequence, as in SKILL.md Step 2. If the finding still reproduces, keep it and anchor it again to the line at `HEAD_SHA`. If it does not reproduce, drop it.
+A finding in the review file that matches no thread is unposted. Send each unposted finding to a `verifier` in the thread-check batch. Give it the claim and the anchor, with the line quoted from `git show <PREV_HEAD>:<path>`. Also ask it for the trigger and the consequence, as in SKILL.md Step 2. If the finding still reproduces, keep it and anchor it again to the line at `HEAD_SHA`. If it comes back DOES-NOT-REPRODUCE, drop it. If it comes back UNRESOLVED, keep it as an `Unresolved` line under `## Held back` (SKILL.md Step 2).
 
 ## Refresh the file
 

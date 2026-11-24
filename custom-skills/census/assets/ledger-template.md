@@ -7,7 +7,7 @@ Standing whole-codebase review. Each row is a vetted finding; reconcile (`census
 - **Depth:** quick | standard | deep
 - **Not swept:** <what this census did not cover — be honest>
 
-**Status legend:** `·` open · `▶` in progress · `✓` done (verified gone) · `~` stale (code moved, needs re-read) · `⊘` retired (no longer applies) · `⊙` tracked (scoped by an intent/plan doc, unbuilt — not a fresh defect) · `min` minor / latent (real but low-leverage; sits below the cut line)
+**Status legend:** `·` open · `▶` in progress · `✓` done (verified gone) · `~` stale (code moved, needs re-read) · `⊘` retired (no longer applies) · `⊙` tracked (scoped by an intent/plan doc, unbuilt — not a fresh defect) · `min` minor / latent (real but low-leverage; sits below the cut line) · `?` needs verification (verifier returned UNRESOLVED; the finding names the missing evidence)
 
 ## Findings
 
