@@ -108,7 +108,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | ----------------------- | -------------------------------------------------------------------------------------------------- |
 | `census`                | Survey a whole codebase and maintain findings as a persistent, reconciled ledger under `docs/census/`. Host-agnostic; complements `code-review`. |
 | `complexity-optimizer`  | Find algorithmic complexity hotspots — nested loops, N+1 queries, avoidable O(n²) — and report or fix. |
-| `craft`                 | Make it work, then make it right: a Shape note before the first edit (data shape, boundaries, edit or redesign, idempotency, single writer) and a Right note before done, with CRAP and duplication scores on the changed files. Rewritten from unclebob/ub-mode. |
+| `craft`                 | Make it work, then make it right: a Shape note before the first edit (data shape, boundaries, edit or redesign, idempotency, single writer) and a Right note before done, with a `simplify` pass and CRAP and duplication scores on the changed files. Rewritten from unclebob/ub-mode. |
 | `cross-engine-check`    | Observe a CSS/layout claim in Firefox, WebKit and Chromium instead of inferring it from spec knowledge. |
 | `decision-record`       | Capture a design/architecture decision as a terse ADR under `docs/adr/` — options, trade-off, what breaks if wrong. Closes the Design-phase gap; `census` reads it as by-design. |
 | `design-a-feature`      | Generate radically different UI/UX designs for one feature by varying the interaction pattern.      |
@@ -135,7 +135,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `third-opinion`         | Get a read-only opinion from another provider's CLI: Codex from Claude Code, Claude from Codex, Copilot on request. |
 | `wtf`                   | Explain the last message, or a file, link or passage, in plain words: the point first, then what you must decide or do. Vendored from EveryInc (MIT). |
 
-Skills only ever typed by hand carry `disable-model-invocation: true`, so their descriptions cost no context on Claude Code. Those that also carry an `agents/openai.yaml` policy (`census`, `papercuts`, `review-mr`, `review-staged`, `run-state`, `ship-session`, `wtf`) cost none on any host.
+User-invoked skills carry `disable-model-invocation: true`, so their descriptions cost no context on Claude Code. Those that also carry an `agents/openai.yaml` policy cost none on any host.
 
 ## Adopted community skills
 
@@ -167,6 +167,15 @@ The hook runs only if `~/.claude/settings.json` (not tracked here) wires it as t
 ```
 
 A change to the hook wiring takes effect in a new session.
+
+`hooks/skill-reminders.sh` is a `PreToolUse` hook on `Edit|Write|MultiEdit`. A skill description alone rarely makes Claude load a skill. Before this hook, `craft` ran in 16 of 94 sessions that edited code. `modern-web-guidance` ran in 3 of 52 sessions that edited frontend files (Oct 28 to Nov 24, 2026). The hook adds context only. It never blocks an edit:
+
+- Before the first code edit of a session, it tells Claude to load `craft`.
+- Before the first edit of a `.vue`, `.css`, `.scss`, `.html`, `.tsx`, `.jsx` or `.svelte` file, it tells Claude to load `modern-web-guidance`.
+- Each reminder fires once per session, and once per subagent. A skill that the session or subagent transcript shows as already loaded gets no reminder.
+- The hook skips docs, configuration files, data files and temp-dir files.
+
+`bootstrap.sh` wires `skill-reminders.sh` the same way as `block-dangerous-git.sh`, under its own matcher.
 
 ## Tools for skills
 

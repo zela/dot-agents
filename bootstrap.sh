@@ -204,6 +204,31 @@ else
     echo "  ⚠ jq not found, hook not wired. See README.md#hooks."
 fi
 
+# 6b. Claude Code skill reminder hook, on edits. Same merge rules as above.
+echo "Wiring skill reminder hook..."
+REMINDER_CMD='"$HOME"/dot-agents/hooks/skill-reminders.sh'
+if command -v jq >/dev/null; then
+    tmp=$(mktemp)
+    if jq -e --arg cmd "$REMINDER_CMD" \
+        'any(.hooks.PreToolUse[]?.hooks[]?; .command == $cmd)' \
+        "$CLAUDE_SETTINGS" >/dev/null 2>&1; then
+        rm -f "$tmp"
+        echo "  ✓ already wired"
+    elif jq --arg cmd "$REMINDER_CMD" '
+        .hooks.PreToolUse = (.hooks.PreToolUse // [])
+          + [{matcher: "Edit|Write|MultiEdit", hooks: [{type: "command", command: $cmd}]}]' \
+        "$CLAUDE_SETTINGS" > "$tmp"; then
+        chmod 600 "$tmp"
+        mv "$tmp" "$CLAUDE_SETTINGS"
+        echo "  ✓ wired in $CLAUDE_SETTINGS (takes effect in a new session)"
+    else
+        rm -f "$tmp"
+        echo "  ✗ could not parse $CLAUDE_SETTINGS, hook not wired"
+    fi
+else
+    echo "  ⚠ jq not found, hook not wired. See README.md#hooks."
+fi
+
 # 7. Tools that skills call (pins in upstream-tools.txt)
 #    Their generated output stays out of every repo through the global gitignore.
 echo "Installing agent tools..."
