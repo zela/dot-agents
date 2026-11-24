@@ -65,6 +65,8 @@ The best design often combines elements from multiple options. Ask:
 - "Which design best fits your primary use case?"
 - "Any elements from other designs worth incorporating?"
 
+Before you declare a combined design, compare it with each responsibility and constraint from step 1. For each one, write one concrete call sequence that can break it. Trace it through the combined design and show the result.
+
 ## Theoretical Foundation
 
 **John Ousterhout — *A Philosophy of Software Design***

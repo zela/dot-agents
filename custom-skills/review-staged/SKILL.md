@@ -32,6 +32,10 @@ description: Review the staged diff, or a branch range the user names, stress-te
 
    Drop: taste-only rewrites, renames with no behavior change, speculative generality, abstraction with one call site, and any fix whose diff is larger than the risk it removes.
 
+   Instruction prose (`SKILL.md`, a skill's references, `AGENTS.md`, a rule file) is not code. This rule covers a finding against the logic of a rule. A Prose or Writing finding is about the wording, and it stays a defect (step 1). If the rule's stated condition already decides the case, the finding is not a fix. Report it with the condition quoted. If the condition is wrong, fix the condition. If the rule sits in a file that does not do that work, move it to the file that does. Never add the case. On a second round of findings against the same block, restate the block as its goal and done condition. Do not patch it again.
+
+   A finding that undoes a decision recorded in an ADR or in a plan's decisions log goes in the report, unfixed. Fix it only if the decision is infeasible or destructive.
+
    Unsure, or UNRESOLVED in step 2 → it goes in the report as a note, unfixed, with the evidence it lacks. Never silently.
 
    Second look, before anything lands in "not worth it": write down the fix's actual size and the failure it prevents. A fix of a few lines in files the change already touches, or a missing test for the change, is worth it. Keep an item in "not worth it" only when its real diff is larger than the risk, or it needs a file the change does not touch.

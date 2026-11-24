@@ -64,6 +64,7 @@ Break the work into sessions of roughly one working block each. For every sessio
 
 - **Front-load the foundation**: scaffold, then the shared contract — these unblock everything.
 - **Map true dependencies, not a default chain.** Draw the dependency graph (see overview template). Identify independent tracks (for example, a UI track on fixtures running parallel to a data track) and the single join session where they merge.
+- **Keep main safe after every merge.** No capability is reachable on main before the guard that limits it, such as a permission check or a spending limit. If the guard lands in a later session, restrict the capability until then. Each shared artifact (a type, a table, a migration, a route, a configuration key) has one session that creates it, and each session that uses it depends on that session.
 - **Flag oversized sessions** (for example, "port three complex components + assemble page") and note a split (2a/2b) rather than pretending it fits.
 - **Name the cross-cutting risks** that span sessions — data gaps, full-cohort/whole-dataset requirements that break partial-run dev modes, volume/perf limits, statistical caveats — and put each in the risks register pointing at the session that handles it.
 - **Wide refactors are the exception to vertical slicing.** A wide refactor is one mechanical change (rename a column, retype a shared symbol) whose blast radius fans across the whole codebase, so no single session can land green. Sequence it as **expand–contract**: an *expand* session adds the new form beside the old, so nothing breaks; *migrate* sessions move the call sites over in batches sized by blast radius (per package, per directory), each green because the old form still exists; a *contract* session deletes the old form once no caller remains. When even the batches cannot stay green alone, keep the sequence on an integration branch and promise green only at a final integrate-and-verify session. The migrate sessions are the archetypal `run-state` run.
@@ -72,9 +73,13 @@ Break the work into sessions of roughly one working block each. For every sessio
 
 Use the templates. Write `00-overview.md` and `architecture.md` first (and `data-model.md` if needed), then one session doc per session, then the roadmap. Every session doc gets all seven sections — an empty "Out-of-scope" is a smell that scope is not pinned.
 
+Plan a mechanism nobody asked for (a guard, a retry, a mode) only when it passes the test in `AGENTS.md` § Before You Add Code. List each concern that fails the test under "Considered and not built" in the session doc.
+
 The roadmap holds the fog: stages you can see coming but cannot yet specify. The test for whether an item is a session or a roadmap entry is not whether you can answer it now but whether you can **state its question precisely** now. A precise question is a session, even if it is blocked. A vague one stays in the roadmap until an earlier session sharpens it. Do not pre-slice the fog into session-sized pieces; one roadmap entry can become several sessions, or none.
 
 Keep each doc **scannable but executable**: enough that a fresh session can act without re-discovery, not so much that it duplicates the codebase. Link liberally between docs (overview ↔ sessions ↔ data-model). Reference real file paths found in step 1.
+
+Give each rule one owner. State a gate, a threshold or a contract in full in one place, and cite that place everywhere else. A restated copy drifts, and a decision that supersedes it (§6) then has two passages to change.
 
 Make sure before you finish: does every output produced by one session get consumed by a later one? Does every "needs X" have a session that produces X earlier? A benchmark series used by the backtest but never extracted is the classic miss. Trace each data dependency end to end.
 

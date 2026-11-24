@@ -42,7 +42,12 @@ Read the affected code and trace the real flow before you use this list. A small
 
 Do not remove input validation at trust boundaries, data-loss prevention, security controls, accessibility, or explicitly requested behavior.
 
-Do only the requested work. Do not add or propose fallback systems, abstraction layers, fixtures, or speculative guards without a demonstrated need.
+Do only the requested work. Do not add or propose fallback systems, abstraction layers, or fixtures without a demonstrated need. Add a guard, a retry, or a mode that nobody asked for only when one of these conditions is true:
+
+- Without it, harm can occur that nobody notices in time.
+- Adding it later is expensive, because it touches stored data or its format, a shared interface, money, or security.
+
+A safeguard that nobody asked for never narrows requested behavior. If such a safeguard and a requested behavior conflict, build the behavior and tell the user about the conflict.
 
 For a defect, find the cause before you patch the symptom. Inspect relevant callers and fix the lowest safe shared layer.
 

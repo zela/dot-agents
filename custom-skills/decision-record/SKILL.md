@@ -30,7 +30,7 @@ Write an ADR when a choice is **hard to reverse, load-bearing for later work, or
 
 1. **Number monotonically.** Scan `docs/adr/` for the highest `NNNN` and take the next. Create `docs/adr/` if absent. Filename: `docs/adr/NNNN-<kebab-slug>.md` (for example, `0007-postgres-over-dynamo.md`).
 2. **Fill [assets/adr-template.md](assets/adr-template.md).** Six short sections: Context, Options, Decision, Trade-off accepted, What breaks if we are wrong, Consequences. The two that carry the weight and that people skip:
-   - **Options**. Record the forks *honestly*. A straw-man alternative you never seriously considered is a lie to your future self. List the ones that were genuinely in play, one real trade-off line each.
+   - **Options**. Record the forks *honestly*. A straw-man alternative you never seriously considered is a lie to your future self. List the ones that were genuinely in play, one real trade-off line each. "Keep what we have" and "do nothing" are real options.
    - **What breaks if we are wrong**. This is the falsifier. Name the concrete signal that proves this decision wrong and the blast radius when it does. An ADR without this is a press release.
 3. **Keep it under a page and terse.** House style: plain words, no hedging, say why not what. The ADR explains a decision. It does not re-derive the whole design.
 4. **Status lifecycle.** New records are `Accepted` (or `Proposed` if the call is not final). When a later decision overturns an earlier one, do not edit the old ADR's content. Flip its status to `Superseded by [ADR-XXXX]` and write a new record. The trail of superseded decisions *is* the value. If you delete it, you lose the why.

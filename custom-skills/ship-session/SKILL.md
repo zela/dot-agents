@@ -82,6 +82,7 @@ Check the repo's conventions first, do not assume:
 - **Branch policy** — some repos want a feature branch. Others (solo, session-sized history) commit straight to the default branch. Check project memory and recent history before branching.
 - **Message style** — match the existing log. Follow any docs-vs-feature commit separation the repo keeps, and include any required trailer.
 - **Approval** — if the project or user memory requires explicit per-commit approval, ask rather than assume this skill grants it.
+- **Staging**: stage only the paths that this run changed. Write the message to a file outside the repo, and commit with a pathspec: `git commit -F <msgfile> -- <paths>`. A bare `git commit` takes the whole index, so it also commits work that the user staged earlier.
 
 Then report: whether the work was reviewed, gates status, **which acceptance criteria you verified versus inherited**, what was converted, the commit, and anything left for the user — subjective acceptance items especially.
 

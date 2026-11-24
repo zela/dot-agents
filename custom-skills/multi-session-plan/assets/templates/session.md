@@ -33,3 +33,7 @@
 ## Out of scope
 
 - <Explicitly deferred work (which later session or roadmap item owns it). An empty section is a smell — pin the boundary.>
+
+**Considered and not built:**
+
+- <Concern: why it is not built, and what evidence can change the call. One line each.>

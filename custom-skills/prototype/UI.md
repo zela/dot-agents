@@ -93,6 +93,8 @@ Put the switcher in a single shared component so both sub-shapes can reuse it. L
 
 ### 5. Hand it over
 
+Before you hand it over, look at the rendered screen of each variant at rest: a screenshot or the browser. An HTTP 200 does not show the render. If you cannot see the render, say so when you hand over the URL.
+
 Surface the URL (and the `?variant=` keys). The user will flip through whenever they get to it. The interesting feedback is usually **"I want the header from B with the sidebar from C"**, which is the actual design they want.
 
 ### 6. Capture the answer and clean up
