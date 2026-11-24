@@ -7,7 +7,7 @@ description: Craft runs Shape checks before the first code edit (data shape, inp
 
 The red-green loop belongs to `tdd`. A bug belongs to `diagnosing-bugs`. Domain words belong to `domain-modeling`. For a one-line fix or a mechanical change, do step 3 only.
 
-If `CONTEXT.md` exists, read it before step 1. Read the ADRs in `docs/adr/` for the area that you touch.
+If `CONTEXT.md` exists, read it before step 1. Read the ADRs in `docs/adr/` for the area that you touch. Also read the lessons in `docs/lessons/` whose `applies_when` matches that area. If a lesson changes what you do, cite its path in the plan doc or the commit message.
 
 ## 1. Shape
 

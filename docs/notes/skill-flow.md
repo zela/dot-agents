@@ -33,6 +33,7 @@ flowchart LR
     craft[craft]
     tdd[tdd†]
     dbg[diagnosing-bugs]
+    lr["lesson-record → docs/lessons/"]
   end
   subgraph R[5 · Review]
     cr[code-review*]
@@ -54,7 +55,7 @@ flowchart LR
   cen -. reconcile across sessions .-> cen
 
   classDef doc fill:#e8f0fe,stroke:#4285f4,color:#111;
-  class msp,rs,cen,ship,dr,dm doc;
+  class msp,rs,cen,ship,dr,dm,lr doc;
 ```
 
 <sub>`*` marks platform built-ins the kit composes with. `†` marks community skills installed as-is from `upstream-sources.txt` (mattpocock/skills). Dotted edges mark the loops that carry state from one session to the next.</sub>
@@ -71,13 +72,13 @@ flowchart LR
 `multi-session-plan` turns the chosen design into linked docs under `docs/`: an index, one doc per session, and a deferred-work roadmap. The build reads these back as its first durable state.
 
 **4 · Build / Execute: do the work with flat context.**
-`run-state` executes a long homogeneous run (migration, backlog, mechanical refactor) against an external state file, so context stays bounded and you can `/clear` mid-run. `complexity-optimizer` fixes perf hotspots inline. `craft` frames the slices with a Shape note before the first edit (data shape, parse at the boundary, edit or redesign, idempotency, single writer) and a Right note before done (no silenced checker, the empty-return test, CRAP and duplication scores on the changed files). `tdd`† drives each slice red-green at pre-agreed seams. `diagnosing-bugs` runs the loop for a hard bug: build a red feedback loop first, then minimise, hypothesise, instrument, and fix with a regression test. Both read the plan doc; run-state writes its own state file. `/run` (native) launches the real app to confirm a change works at runtime. Of all the Build steps, only `/run` exercises the built thing beyond its tests.
+`run-state` executes a long homogeneous run (migration, backlog, mechanical refactor) against an external state file, so context stays bounded and you can `/clear` mid-run. `complexity-optimizer` fixes perf hotspots inline. `craft` frames the slices with a Shape note before the first edit (data shape, parse at the boundary, edit or redesign, idempotency, single writer) and a Right note before done (no silenced checker, the empty-return test, CRAP and duplication scores on the changed files). `tdd`† drives each slice red-green at pre-agreed seams. `diagnosing-bugs` runs the loop for a hard bug: build a red feedback loop first, then minimise, hypothesise, instrument, and fix with a regression test. Both read the plan doc; run-state writes its own state file. `lesson-record` keeps what a fix or a session taught under `docs/lessons/`, one lesson per file, when a test or a lint rule cannot hold it. `craft`, `diagnosing-bugs` and `multi-session-plan` read the matching lessons before they start ([ADR-0001](../adr/0001-lesson-store.md)). `/run` (native) launches the real app to confirm a change works at runtime. Of all the Build steps, only `/run` exercises the built thing beyond its tests.
 
 **5 · Review: check safety and standing debt.**
 Review works at two altitudes. **Diff-scoped:** `code-review` gates a change on correctness and quality. `/simplify` (native) does the quality-only pass without the gate, and `/security-review` (native) adds the security lens the custom kit lacks. `review-staged` triages staged changes; `review-mr` formats findings as MR comments. `cross-engine-check` verifies a CSS claim across engines, and `verifier` re-checks a single claim cold. **Repo-scoped:** `census` surveys the whole standing codebase and keeps a reconciled ledger under `docs/census/`. You re-take that ledger across sessions, which makes it the one review artifact that persists.
 
 **6 · Ship: verify and close the session.**
-`ship-session` verifies the acceptance gates, converts the plan doc from forward-plan to as-built reference, trims the index to match what shipped, and commits. The next session picks up at Plan.
+`ship-session` verifies the acceptance gates, converts the plan doc from forward-plan to as-built reference, trims the index to match what shipped, and commits. It runs `lesson-record` on the session's gotchas and deviations. The next session picks up at Plan.
 
 ## Native built-ins the kit composes with
 
@@ -138,6 +139,7 @@ You can `/clear` without losing the kit's state because the stateful skills writ
 | `ship-session` | plan doc | as-built plan doc + commit |
 | `decision-record` | design fork | `docs/adr/` ADR |
 | `domain-modeling` | conversation | `CONTEXT.md` glossary |
+| `lesson-record` | a fix or a closed session | `docs/lessons/` one lesson per file |
 
 Together these skills form one stateful pipeline: decide → plan → execute → survey → close. Each step reconciles against a file instead of rebuilding from chat history. Three loops let the pipeline repeat across sessions: census reconciles its own ledger, review re-opens a build unit, and ship hands back to plan.
 

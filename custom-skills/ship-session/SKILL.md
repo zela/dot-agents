@@ -49,6 +49,7 @@ Rewrite the session doc **in place**, from forward plan into as-built reference,
 - Future → past tense: "will extract" → "extracts". "Files to create" → the real files, with paths.
 - Planned specifics → what actually shipped: real function and module names, the approach taken, test counts.
 - Record **deviations from the plan** and **gotchas hit**. These are the highest-value lines in the doc — a later session learns from them, and they are the first thing lost if you rush.
+- Run `lesson-record` for each gotcha or deviation that meets its bar. Tell `lesson-record` to report a check (a test or a lint rule), not to write it. List each reported check in your report.
 
 **The failure mode this step exists to prevent is the append.** Stacking `## As-built — session 1`, `## As-built — session 2` under a design section still written in the future tense is how a 120-line plan becomes an unreadable 300-line one, with the reader left to work out which half is true. Fold each session into the section whose design it realises. If the plan already carries stacked as-built sections from earlier sessions, folding them in is part of this step, not a separate cleanup.
 

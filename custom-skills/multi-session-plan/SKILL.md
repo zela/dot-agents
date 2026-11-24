@@ -41,6 +41,8 @@ Understand what already exists before planning anything new. Look for: existing 
 
 Prefer launching `Explore` (or general-purpose) subagents in parallel for breadth. You want the conclusions, not the file dumps. Capture concrete file paths. They become the "Reuse references" in each session doc.
 
+If the repo has `docs/lessons/`, read each lesson whose `applies_when` matches the area. When a lesson changes the plan, cite its path in the plan doc that it changes.
+
 ### 2. Resolve the decisions that change the plan
 
 Before sequencing, surface the choices that genuinely reshape the work, and ask the user rather than guessing. The recurring high-impact ones:

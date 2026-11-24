@@ -7,7 +7,7 @@ description: Diagnosis loop for hard bugs and performance regressions. Use when 
 
 A discipline for hard bugs. Skip a phase only when you give a reason.
 
-Before you explore the code, read `CONTEXT.md` if it exists. It gives the names of the modules. Read the ADRs in `docs/adr/` for the area you touch.
+Before you explore the code, read `CONTEXT.md` if it exists. It gives the names of the modules. Read the ADRs in `docs/adr/` for the area you touch, and the lessons in `docs/lessons/` whose `applies_when` matches that area. If a lesson changes what you do, cite its path in the commit message.
 
 ## Redact
 
@@ -129,6 +129,7 @@ Required before you declare done:
 - [ ] The regression test passes, or the absence of a seam is recorded.
 - [ ] All `[DEBUG-...]` instrumentation is removed. Grep the prefix.
 - [ ] Every throwaway file you created (harness, script, fixture) is listed for the user with a proposal: delete it, or move it to a marked debug location. Do not delete without an explicit yes.
+- [ ] `lesson-record` ran on what the diagnosis taught, after the items above, with or without a seam.
 - [ ] The confirmed hypothesis is written down for the commit message, so that the next debugger learns. Do not commit unless the user asks.
 
 ---
