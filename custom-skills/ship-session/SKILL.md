@@ -12,7 +12,7 @@ The closing ritual for one build session in a `docs/`-based plan. It is a **docu
 
 The point is to keep the plan **self-maintaining**. The index is the project's memory across sessions. If it drifts from reality, the next session re-derives context from zero.
 
-**Scope discipline:** this skill is deliberately small. It does **not** review code. Reviewing a diff, triaging findings, and fixing them is separate work with its own judgement load, and `/code-review` already does it. If the session wants a review, that is a separate invocation before this one. A heavy ritual is a ritual nobody invokes.
+**Scope discipline:** this skill is deliberately small. It does **not** review code. Reviewing a diff, triaging findings, and fixing them is separate work with its own judgement load, and `code-review` already does it. If the session wants a review, that is a separate invocation before this one. A heavy ritual is a ritual nobody invokes.
 
 ## The boundary — read this first
 
@@ -26,7 +26,7 @@ When you hit one of those edges, hand back rather than push through. That checkp
 
 ### 0. Has anything actually reviewed this code?
 
-One question, before the gates: has the work been through a review — `/code-review`, `/review-staged`, a human — or only through the build?
+One question, before the gates: has the work been through a review — `code-review`, `review-staged`, a human — or only through the build?
 
 Ask it because **the gates in step 1 pass on broken code, routinely.** Typecheck, lint, and a green suite are indifferent to three kinds of defect. A pane can highlight the wrong passage. The developer can forget a state reset, so a stale target survives into the next draft. A control label can contradict what the control does. None of those are type errors, and a plan can carry a full column of ticked acceptance boxes while all three are live.
 

@@ -131,6 +131,7 @@ When you commit code, commit the documents that describe it in the same change.
 - State material uncertainty precisely.
 - When the user asks for code, give ready-to-paste code. Do not give a mapping table or a description of the changes instead.
 - Em-dashes are permitted in prose. For technical text that a reader follows exactly (docs, runbooks, `SKILL.md`, agent instructions, error messages), apply the `simple-english` discipline: short sentences, one instruction per sentence, the relation named instead of a dash.
+- In a skill that more than one host loads, name another skill by its bare name in backticks. For example, write `review-staged`, not `/review-staged`. Each host has its own invocation prefix (`/` or `$`). A host command such as `/clear` keeps its prefix.
 - Do not hard-wrap Markdown paragraphs. One paragraph is one line. Let the editor apply soft wrapping. This applies to every `.md` file and to commit message bodies.
 - Keep line breaks that define paragraphs, list items, table rows, headings, and code blocks.
 - In Markdown docs, use nested lists instead of tables, and keep diagrams in code blocks narrow. The user reads docs on a narrow screen.

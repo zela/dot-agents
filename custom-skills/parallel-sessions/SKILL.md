@@ -77,6 +77,6 @@ The project doc gives these values. A rule below that names one of them reads it
 Each worktree branch gets a review before the join. Reviews still find real defects after every doc check.
 
 - Start the review in a new session in the same worktree, after the worktree session has ended. One worktree holds one live session.
-- Run `/review-staged <effort> <base>...HEAD`. The base is `main`, or the parent branch for a stacked MR. Name the session doc in the prompt, so that the review checks the spec.
+- Run `review-staged` with the arguments `<effort> <base>...HEAD`. The base is `main`, or the parent branch for a stacked MR. Name the session doc in the prompt, so that the review checks the spec.
 - The review keeps the session doc's file list. A fix that needs another file stops the review, as in rule 3.
 - The review commits on the branch under rule 8, and updates the doc's as-built part when a fix changes it. It does not rewrite history to regroup commits that are already made.
