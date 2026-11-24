@@ -1,6 +1,6 @@
 ---
 name: craft
-description: Craft runs Shape checks before the first code edit (data shape, input parsing, idempotency, single writer) and Right checks before you finish (type escapes, boundary tests, CRAP and duplication scores). Use it whenever you change code, including a port from another branch and edits that follow a plan, a step list, or "go ahead". If you skipped it, use it before you report the work as done. Also use it to score a branch.
+description: Craft runs Shape checks before the first code edit (data shape, input parsing, idempotency, single writer) and Right checks before you finish (type escapes, boundary tests, a simplify pass, CRAP and duplication scores). Use it whenever you change code, including a port from another branch and edits that follow a plan, a step list, or "go ahead". If you skipped it, use it before you report the work as done. Also use it to score a branch.
 ---
 
 # Craft
@@ -47,6 +47,7 @@ Before you call the change done, go through each item against the diff.
 - **Root cause.** Fix the cause at the lowest shared layer. A guard that only hides the crash leaves the bug in place. Give a real bug to `diagnosing-bugs`.
 - **Only the approach that worked.** Remove from the diff the code of each approach that did not work.
 - **Deleted files.** For each deleted file, make sure that nothing still reaches it. A static import is not the only reader. Search for references by string (asset paths, configuration and plugin names). Also search for routes that come from file names and for registrations that the file made at import time.
+- **Cleanup pass.** Skip this item for a one-line fix or a mechanical change. Otherwise, when the tests are green, run the `simplify` skill on the diff. It examines reuse of existing helpers, simplification, altitude, and efficiency. The scores do not measure these, and `code-review` rarely reports them. Run the tests again after its fixes. On a host without `simplify`, examine the same four things by hand.
 - **Scores on the changed files.** Read [references/scores.md](references/scores.md) first, because the run has a cost. Then run [scripts/check-changed.sh](scripts/check-changed.sh) from the project root. To score a whole branch, run `check-changed.sh --since <branch>`.
 
 The step is done when each item has an answer and your reply ends with a **Right** note. The note has one line for each item that found something, and that line says what you did about it. One more line lists the items that found nothing. Keep the rest of the reply to the result and what the user must decide.
