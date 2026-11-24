@@ -8,7 +8,7 @@ description: Review the staged diff, or a branch range the user names, stress-te
 
    Its output is candidates, not conclusions.
 
-   If a plan session doc under `docs/` covers this change, run one Spec subagent. Do the same if the user names an issue or a spec that covers it. Give it the diff and the acceptance criteria. Ask it for missing requirements, for behavior that nobody asked for, and for requirements that look implemented but wrong. Each finding quotes its criterion. A verified gap is in scope. Fix it in step 4. If the session doc lists the files that the session can edit, report a gap whose fix needs another file. Do not fix it.
+   If a plan session doc under `docs/` covers this change, run one Spec subagent. Do the same if the user names an issue or a spec that covers it. Give it the diff and the acceptance criteria. Ask it for missing requirements, for behavior that nobody asked for, and for requirements that look implemented but wrong. Also ask for each changed test that is tautological. A tautological test takes its expected value from the implementation's output, not from the criterion. An existing assertion edited to match new output counts, unless the spec replaced that behavior. A regression test for existing behavior needs no criterion. Each finding quotes its criterion. A verified gap is in scope. Fix it in step 4. If the session doc lists the files that the session can edit, report a gap whose fix needs another file. Do not fix it.
 
    If the diff adds or changes comments or docs, run one Prose subagent. Give it the diff and the path to `references/prose-checklist.md` in this skill's directory. Ask for each line that matches a checklist category.
 
