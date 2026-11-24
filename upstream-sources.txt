@@ -24,7 +24,8 @@
 # Uncomment to re-render docs/notes/diagrams/*.workflow.json.
 # tt-a1i/archify archify
 
-hardikpandya/stop-slop stop-slop
+# Moved 2026-11-24 to custom-skills/stop-slop, merged with ce-noslop (docs/notes/compound-engineering-eval.md).
+# hardikpandya/stop-slop stop-slop
 
 googlechrome/modern-web-guidance modern-web-guidance
 

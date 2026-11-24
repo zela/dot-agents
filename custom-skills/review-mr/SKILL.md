@@ -142,7 +142,7 @@ Anchor rules:
 
 ## Step 3b — Editorial pass
 
-**Comments.** Send every **Comment** and every thread reply to one Editor subagent. Give it the texts and the comment rules from Step 3, without the evidence. Label each comment with its block number and each reply with its thread link. Ask it to make each text shorter and more casual. If a text already meets the rules, the subagent returns it unchanged.
+**Comments.** Send every **Comment** and every thread reply to one Editor subagent. Give it the texts and the comment rules from Step 3, without the evidence. Label each comment with its block number and each reply with its thread link. Tell it to load the `stop-slop` skill and apply it together with the comment rules. Where the two disagree, the comment rules win. Ask it to make each text shorter and more casual. If a text already meets the rules, the subagent returns it unchanged.
 
 Then compare each comment with its block, and each reply with its thread item. The rewrite must keep the problem, the fix or the agreed outcome, and every identifier. If it drops one, restore it from your draft. When every comment and reply meets the rules, the pass is done.
 

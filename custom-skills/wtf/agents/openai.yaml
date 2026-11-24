@@ -1,0 +1,5 @@
+interface:
+  display_name: "WTF"
+  short_description: "Explain the last message in plain words"
+policy:
+  allow_implicit_invocation: false

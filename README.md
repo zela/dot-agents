@@ -130,10 +130,12 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `run-state`             | Execute a long-horizon many-step run (bulk migration, backlog, long refactor) via an external state file, so context stays bounded and the session can be `/clear`'d and resumed. |
 | `ship-session`          | Close out a build session: verify acceptance, convert the plan to as-built, commit. No code review. |
 | `simple-english`        | Rewrite technical docs/runbooks/SKILL.md with ASD-STE100 (Simplified Technical English) discipline. Vendored (MIT); scoped to technical writing so it doesn't collide with `stop-slop`. |
+| `stop-slop`             | Rewrite, check or draft prose that people read (MR comments, reports, notes) without AI writing tells. It keeps every source fact. Merged from hardikpandya/stop-slop and EveryInc `ce-noslop` (MIT). |
 | `system-design-mentor`  | Staff-level engineering mentor for Frontend and Backend system design.                             |
 | `third-opinion`         | Get a read-only opinion from another provider's CLI: Codex from Claude Code, Claude from Codex, Copilot on request. |
+| `wtf`                   | Explain the last message, or a file, link or passage, in plain words: the point first, then what you must decide or do. Vendored from EveryInc (MIT). |
 
-Skills only ever typed by hand (`census`, `papercuts`, `review-mr`, `review-staged`, `run-state`, `ship-session`) carry `disable-model-invocation: true` and an `agents/openai.yaml` policy, so their descriptions cost no context on any host.
+Skills only ever typed by hand carry `disable-model-invocation: true`, so their descriptions cost no context on Claude Code. Those that also carry an `agents/openai.yaml` policy (`census`, `papercuts`, `review-mr`, `review-staged`, `run-state`, `ship-session`, `wtf`) cost none on any host.
 
 ## Adopted community skills
 

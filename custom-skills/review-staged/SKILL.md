@@ -15,7 +15,7 @@ description: Review the staged diff, or a branch range the user names, stress-te
    If the diff adds or changes docs, run one Writing subagent. Give it the changed doc lines. Tell it to load the rules for each kind of doc:
    - Agent instructions (`SKILL.md`, `AGENTS.md`, `CLAUDE.md`, a file that a skill points to): the `writing-for-agents` skill and the `simple-english` skill
    - Other text that a reader follows exactly (a README, a guide, a runbook): the `simple-english` skill
-   - Other prose (notes, evals, explanations): the `stop-slop` skill, with em-dashes permitted (`AGENTS.md` § Writing)
+   - Other prose (notes, evals, explanations): the `stop-slop` skill
    - Every doc: the Writing rules in `AGENTS.md`.
 
    Ask for each line that breaks a rule, with the skill and the rule that it breaks.
