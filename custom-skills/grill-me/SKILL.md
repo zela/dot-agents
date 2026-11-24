@@ -24,7 +24,7 @@ Each round of answers reshapes the tree. Settled decisions push the frontier out
 
 Facts are your job, never the user's. When a frontier question needs a fact from the environment (the codebase, the filesystem, a tool), find it yourself. Use a subagent when the search is wide. Do not block on it. A running search is an unsettled prerequisite, so only the questions downstream of it wait. Ask the rest of the frontier now. Decisions are the user's. Put each one to them and wait. Do not ask again about a decision that the user made after they saw the trade-off. A bare directive ("build it with X") gets exactly one challenge. Never mark your own proposal as settled.
 
-If a term is fuzzy or overloaded, or the repo has a `CONTEXT.md`, run `domain-modeling` alongside, so that the words get fixed as the decisions do.
+Offer the `domain-modeling` skill when a term is fuzzy or overloaded, or when the repo has a `CONTEXT.md`. Only the user can invoke it. It fixes the terms while this session fixes the decisions.
 
 The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Before you call it empty, combine the user's answers with your own defaults and look for effects nobody asked about. Ask one question per real combination. Do not act on the plan until the user confirms that you reached a shared understanding. If the outcome is a load-bearing decision, offer `decision-record`.
 

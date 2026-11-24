@@ -1,6 +1,7 @@
 ---
 name: domain-modeling
-description: Build and sharpen a project's domain glossary in CONTEXT.md. Use when discussing codebase terminology, when a term is fuzzy or overloaded, or when writing or editing a CONTEXT.md.
+description: Build and sharpen a project's domain glossary in CONTEXT.md.
+disable-model-invocation: true
 ---
 
 # Domain Modeling
