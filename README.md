@@ -115,7 +115,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `design-an-interface`   | Generate radically different interface designs for one module ("design it twice"). Carries the deep-module vocabulary, the dependency categories, and subagent-per-variant. |
 | `diagnosing-bugs`       | Disciplined loop for hard bugs: a red feedback loop first, minimise, 3–5 falsifiable hypotheses, tagged instrumentation, regression test at a correct seam. Vendored from mattpocock/skills. |
 | `diagram`               | Diagram from text, two branches: a ~4 KB Mermaid HTML page you edit and reload (no install), or a D2 render committed next to a doc: SVG that follows light/dark, ASCII for Markdown, PNG/PDF/PPTX, animated steps. D2 needs the `d2` CLI. |
-| `doc-check`             | Check plan session docs against the code before a session runs: one read-only agent per doc, fix only blockers, wrong facts and harmful or vacuous checks, re-check changed lines until clean. |
+| `doc-check`             | Check plan session docs against the code before a session runs. One read-only agent per doc, plus a cross-provider pass on request. Fix only blockers, wrong facts and harmful or vacuous checks. Re-check changed lines until clean. A launch gate catches a doc edited after its check. |
 | `domain-modeling`       | Build the project's glossary in `CONTEXT.md`: challenge fuzzy terms, stress-test with scenarios, record the canonical word. Decisions go to `decision-record`. Vendored from mattpocock/skills. |
 | `grammar-tutor`         | Gentle English grammar and style tutor.                                                            |
 | `grill-me`              | Interview the user relentlessly about a plan: a design tree worked in rounds, facts fetched by the agent, decisions left to the user, done when the frontier is empty. |
@@ -130,7 +130,7 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `ship-session`          | Close out a build session: verify acceptance, convert the plan to as-built, commit. No code review. |
 | `simple-english`        | Rewrite technical docs/runbooks/SKILL.md with ASD-STE100 (Simplified Technical English) discipline. Vendored (MIT); scoped to technical writing so it doesn't collide with `stop-slop`. |
 | `system-design-mentor`  | Staff-level engineering mentor for Frontend and Backend system design.                             |
-| `third-opinion`         | Consult an alternative AI model via CLI (Copilot or Claude Code).                                  |
+| `third-opinion`         | Get a read-only opinion from another provider's CLI: Codex from Claude Code, Claude from Codex, Copilot on request. |
 
 Skills only ever typed by hand (`census`, `papercuts`, `review-mr`, `review-staged`, `run-state`, `ship-session`) carry `disable-model-invocation: true` and an `agents/openai.yaml` policy, so their descriptions cost no context on any host.
 
