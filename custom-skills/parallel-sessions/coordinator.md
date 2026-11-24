@@ -13,7 +13,7 @@ Keep the wave small and its file lists disjoint. Six branches in one wave hit fo
    - Commit the doc to `main` when its grill ends, before `/clear`: one commit per grill. Each grill's decisions then stay reviewable on their own, and a `/clear` cannot lose them.
 2. **Grill the join doc.** Run one `/grill-me` on the wave's join doc. It covers the merge order, the hotspot files, and the changes that make a session stop and ask (rules 3, 5 and 6). It also collects the approvals that the join needs in one batch. A grill of one session does not cover how the sessions interact. Commit the join doc when its grill ends.
 3. **Run the doc check.** Use the `doc-check` skill on every session doc and the join doc, against `main` with every grill committed. The project doc names the docs that each must agree with and where the report goes. The check can also run before step 1, to give the grill its facts. After the grills, run it again on each doc that a grill changed.
-4. **Launch the worktrees.** Create each worktree from a session in the primary checkout (`SKILL.md` § Running a worktree). Give the user one launch prompt per worktree. A question about the session's own implementation can still come up in its worktree. A question about a contract stops the session (rule 5).
+4. **Launch the worktrees.** First run the launch gate in `doc-check` § Launch gate. Create each worktree from a session in the primary checkout (`SKILL.md` § Running a worktree). Give the user one launch prompt per worktree. A question about the session's own implementation can still come up in its worktree. A question about a contract stops the session (rule 5).
 
 ## Several sessions in the primary checkout
 
