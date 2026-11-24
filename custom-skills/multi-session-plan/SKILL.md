@@ -76,9 +76,16 @@ Keep each doc **scannable but executable**: enough that a fresh session can act 
 
 Make sure before you finish: does every output produced by one session get consumed by a later one? Does every "needs X" have a session that produces X earlier? A benchmark series used by the backtest but never extracted is the classic miss. Trace each data dependency end to end.
 
+Then write the acceptance against that trace:
+
+- **Real output.** A session that consumes the output of another program runs its acceptance at least once on that real output. A fixture-first session names the later session that runs the real-output check. A captured real output on disk counts. Real data follows `doc-check` § Secrets.
+- **Replacement.** A session that replaces code (a rewrite, a port, a library swap) compares the old and the new code. It runs both on the same inputs, real ones where they exist. The acceptance lists the intended differences. Any other difference is a defect.
+
 ### 6. Maintain the plan
 
-This skill also edits existing plans. When a session completes, **tick its box in the overview table** (`☐` → `☑`) and add the commit/PR link in the Notes column. When scope shifts: add or split a session doc, update the dependency graph, and append to the decisions log rather than silently rewriting history. The plan is a living document. Its value is that it always reflects reality.
+This skill also edits existing plans. When a session completes, **tick its box in the overview table** (`☐` → `☑`) and add the commit/PR link in the Notes column. When scope shifts: add or split a session doc, update the dependency graph, and append to the decisions log rather than silently rewriting history. The log keeps the history. The rest of the plan keeps the current truth.
+
+When a decision replaces a behavior, grep every plan doc for the old condition's terms: names, values, status codes, thresholds. Change each passage that still states the old behavior, the acceptance items included. The plan is a living document. Its value is that it always reflects reality.
 
 ## Status legend (use consistently)
 

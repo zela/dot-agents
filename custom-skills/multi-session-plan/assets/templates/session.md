@@ -27,6 +27,8 @@
 - <Observable check — a command that passes, output that exists, a page that renders.>
 - <Test expectation: which test file, what it asserts.>
 - <Spot-check against a known-good case.>
+- <Real output: if this session consumes another program's output, the check that runs on that program's real output, or the later session that runs it.>
+- <Replacement: if this session replaces code, the old and the new code on the same inputs, and the intended differences. Any other difference fails.>
 
 ## Out of scope
 
