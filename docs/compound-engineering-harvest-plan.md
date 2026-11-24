@@ -1,6 +1,6 @@
 # Harvest compound-engineering into our skills
 
-**Status:** changes 1–4 and 6–11 made in the working tree (2026-11-24), uncommitted. `bootstrap.sh` installed them before the review fixes (see As built). Change 5 waits for the first `/papercuts` run. No skill was run after its edit. Source evaluation: [notes/compound-engineering-eval.md](notes/compound-engineering-eval.md). Decisions come from the grill of 2026-11-24. The lesson store is [ADR-0001](adr/0001-lesson-store.md).
+**Status:** changes 1–4 and 6–11 made in the working tree (2026-11-24), committed and installed (see As built). Change 5 waits for the first `/papercuts` run. No skill was run after its edit. Source evaluation: [notes/compound-engineering-eval.md](notes/compound-engineering-eval.md). Decisions come from the grill of 2026-11-24. The lesson store is [ADR-0001](adr/0001-lesson-store.md).
 
 Upstream paths are relative to `skills/` in EveryInc/compound-engineering-plugin at `fcb5e3ad`. Before each edit, re-check that our target does not already state the rule. Use a grep that writes to a file, because the `rtk` rewrite returned a false empty result once in the evaluation.
 
@@ -70,7 +70,7 @@ Where the edits differ from the list above, or add to it:
 - `design-an-interface` checks the combined design against the responsibilities and constraints of its step 1, because the skill has no "guarantee" term.
 - `stop-slop` rules 45–47: false agency outside code, narrator from a distance, lazy extremes. Each rule narrows or names an actor only from what the source states. Not imported: the absolute bans on adverbs, passive voice, em-dashes, Wh- openers and three-item lists, and the 1–10 score.
 - `wtf` has a `LICENSE` and an `agents/openai.yaml` policy (implicit invocation off), like the other hand-typed skills.
-- Installed on 2026-11-24, before the review fixes, as copies in `~/.claude/skills` and `~/.agents/skills`, with `verifier.md` in `~/.claude/agents`. `~/.claude/skills/stop-slop` is now a copy, not the upstream symlink. `~/.gemini/antigravity/skills` does not exist, so bootstrap skipped it. Run `./bootstrap.sh` again to install the review fixes.
+- Installed on 2026-11-24, with the review fixes, as copies in `~/.claude/skills` and `~/.agents/skills`, with `verifier.md` in `~/.claude/agents`. `~/.claude/skills/stop-slop` is now a copy, not the upstream symlink. `~/.gemini/antigravity/skills` does not exist, so bootstrap skipped it.
 - `diagnosing-bugs` runs `lesson-record` as a Phase 6 item after the cleanup, not in Phase 5, so that it runs with or without a seam and the debug instrumentation is gone first.
 - The protected-subject list adds memory safety.
 - A host without the `verifier` agent gets the verifier's bar inline: `review-staged` step 2, `review-mr` Step 2 and `census` step 3.
