@@ -66,7 +66,13 @@ section { display: grid; gap: 12px; }
 .pill { padding: 4px 7px; border-radius: 4px; border: 1px solid currentColor; }
 .pill.blocker { background: var(--blocker); border-color: var(--blocker); color: var(--surface); }
 .pill.major { color: var(--major); }
-.pill.thread { color: var(--ok); }
+.pill.ok { color: var(--ok); }
+.pill.open { color: var(--major); }
+.pill.reopen { color: var(--blocker); }
+.verdict { margin: 0; max-width: 65ch; font-size: 14px; color: var(--muted); padding-left: 12px; border-left: 3px solid var(--line); }
+.verdict.ok { border-left-color: var(--ok); }
+.verdict.open { border-left-color: var(--major); }
+.verdict.reopen { border-left-color: var(--blocker); }
 .title { font-weight: 600; font-size: 16px; text-wrap: balance; }
 .anchor { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .anchor code { background: none; padding: 0; color: var(--muted); font-size: 12.5px; }
@@ -238,15 +244,32 @@ function wireAnchor(el, anchor) {
     copy(anchor.replace(/ \(general note\)$/, ""), el.querySelector(".anchor code"), "Path copied"));
 }
 
+/** The Status values of SKILL.md Step 3. Longest first, so "Resolved, not fixed" is not read as a shorter value. */
+const VERDICTS = [["Resolved, not fixed", "reopen"], ["Still open", "open"], ["Addressed", "ok"], ["Settled", "ok"]];
+
+/** Split a status into its verdict and the explanation after it. A status with no known verdict is all explanation. */
+function splitStatus(status) {
+  const s = String(status || "").trim();
+  const hit = VERDICTS.find(([v]) => s.toLowerCase().startsWith(v.toLowerCase()));
+  if (!hit) return { verdict: "", tone: "", detail: s };
+  const detail = s.slice(hit[0].length).replace(/^[\s.:;,—–-]+/, "");
+  return { verdict: hit[0], tone: hit[1], detail: detail.charAt(0).toUpperCase() + detail.slice(1) };
+}
+
 function renderThread(t, i) {
   const id = "t" + (i + 1);
   const el = document.createElement("article");
   el.className = "card";
   el.dataset.group = "thread";
   const title = t.url ? '<a href="' + esc(t.url) + '" target="_blank" rel="noopener">' + inline(t.title) + "</a>" : inline(t.title);
+  const st = splitStatus(t.status);
   let html =
-    '<div class="card-head"><div class="eyebrow"><span class="pill thread">' + esc(t.status) + '</span></div><span class="title">' + title + "</span></div>" +
+    '<div class="card-head"><div class="eyebrow">' +
+    (st.verdict ? '<span class="pill ' + st.tone + '">' + esc(st.verdict) + "</span>" : "") +
+    "<span>" + SEV.thread + "</span></div>" +
+    '<span class="title">' + title + "</span></div>" +
     (t.anchor ? '<div class="anchor"><code>' + esc(t.anchor) + '</code><button class="copy small" data-copy="anchor" type="button">Copy path</button></div>' : "") +
+    (st.detail ? '<p class="verdict ' + st.tone + '">' + inline(st.detail) + "</p>" : "") +
     '<p class="status"><span class="label">Action:</span> ' + inline(t.action) + "</p>";
   if (t.reply) {
     postable.push(id);
