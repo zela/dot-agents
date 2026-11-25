@@ -1,6 +1,6 @@
 ---
 name: stop-slop
-description: "Rewrite, check, or draft prose that people read (MR comments, reports, notes, evals, explanations) so it carries no AI writing tells and keeps every source fact. Use when the user asks to de-slop or tighten prose or to check it for AI tells, or when another skill loads it. Text a reader follows exactly belongs to simple-english; the user's own grammar belongs to grammar-tutor."
+description: "Rewrite, check, or draft prose that people read (MR comments, reports, notes, evals, explanations) so it carries no AI writing tells and keeps every source fact. Use when the user asks to de-slop or tighten prose. Text a reader follows exactly belongs to simple-english."
 argument-hint: "[mode:author|edit|detect] [text, file path, or nothing]"
 ---
 
@@ -20,7 +20,7 @@ Take a `mode:` token when one is given. Otherwise: no draft means **author**; an
 - **edit.** Rewrite only the sentences a test fails on, and return the text. A sentence that passes stays as written, so a second pass on the returned text changes nothing. Say what changed in one line only when the caller asks for it, and keep that line outside the rewritten text and out of any artifact.
 - **detect.** Name each pattern found, quote the line, give the fix in a few words. Do not rewrite.
 
-For edit and detect, and for an author passage the tests alone do not settle, read `references/patterns.md`. On text that is not English, apply the tests only. Note that the pattern catalog did not apply inside detect findings or inside a change line the caller asked for, and nowhere else.
+For edit and detect, and for an author passage the tests alone do not settle, read `references/patterns.md`. On text that is not English, apply the tests only. Say that the pattern catalog did not apply. Say it only in detect findings or in a change line the caller asked for.
 
 ## Register
 
@@ -40,8 +40,8 @@ Apply these to every sentence, in author mode as constraints and in edit or dete
 4. **One idea.** Would the reader have to reread or decode the sentence? Split it or spell it out. A sentence the reader gets on the first pass stays, however long.
 5. **Density.** One device proves nothing. Three or more distinct patterns in a passage, or one repeated across passages, is a finding.
 6. **Decision first.** Does the first sentence carry the outcome the reader needs?
-7. **Reader.** Can someone without the document or the code open act on this? Gloss the identifier or name the consequence.
+7. **Reader.** Can someone without the document or the code open act on this? Gloss an unfamiliar term or identifier the reader needs, or name its consequence. Unless the caller requires the exact wording, replace internal jargon and invented labels with the action or consequence they mean.
 
-Keep exact identifiers, paths, commands, and thresholds. For wording choices, read `references/terminology.md`.
+Keep exact identifiers, paths, commands, thresholds, and the technical terms that precision needs.
 
 <sub>Adapted from `ce-noslop` in [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) v3.38.3 and from [hardikpandya/stop-slop](https://github.com/hardikpandya/stop-slop), both MIT (see `LICENSE`). The body and catalog rules 1 to 44 follow `ce-noslop`, with pointers to other `ce-*` skills removed and rule 41 adjusted for counts a caller's format requires. Rules 45 to 47 come from `stop-slop`. See [the evaluation](../../docs/notes/compound-engineering-eval.md).</sub>

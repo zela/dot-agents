@@ -4,7 +4,12 @@ Rule numbers are stable ids. A removed rule leaves a gap; never renumber. Each r
 
 **False-positive floor.** A single device is a choice, not a tell. Flag a passage when patterns accumulate (SKILL.md test 5), and never flag: text inside quotation marks, the title of a cited work, or code; a term the domain uses for one exact meaning; deliberate repetition for emphasis; a scope statement, safety notice, or real correction; one short sentence for emphasis; a letter's greeting, heading, or sign-off, where the sign-off is the closing word and the name, not a stock line before them.
 
-**What an edit may change.** Decide for each sentence whether a test or rule fails on it before you rewrite anything. A sentence nothing fails on comes back exactly as written, even when the sentence beside it is rewritten. In a failing sentence, change only the span that fails and keep the rest of its words. When a deleted span holds a fact, keep the fact in plain words. Before returning, compare each sentence with its source and restore every change no test or rule required. The usual failure is a passing sentence reworded while its neighbor was being fixed: a word swapped for a synonym ("sits on" to "is on", "Thank you" to "Thanks"), a tense or voice changed ("will stop" to "stops", "signed off by Shifza" to "Shifza signs off"), a qualifier trimmed ("has room for 45 desks" to "has 45 desks"), or a sentence split or merged.
+**What an edit can change.** Edit mode in `SKILL.md` sets the scope. Decide for each sentence whether a test or rule fails on it before you rewrite anything. In a failing sentence, change only the span that fails and keep the rest of its words. When a deleted span holds a fact, keep the fact in plain words. Before you return the text, compare each sentence with its source and restore every change no test or rule required. The usual failure is a passing sentence that you reworded while you fixed its neighbor:
+
+- A word swapped for a synonym ("sits on" to "is on", "Thank you" to "Thanks").
+- A tense or voice changed ("will stop" to "stops", "signed off by Shifza" to "Shifza signs off").
+- A qualifier trimmed ("has room for 45 desks" to "has 45 desks").
+- A sentence split or merged.
 
 ## Content
 
@@ -31,13 +36,13 @@ Rule numbers are stable ids. A removed rule leaves a gap; never renumber. Each r
 18. **Adverbs doing a verb's work.** "Runs quickly" becomes "finishes in 40 ms"; "significantly improves" becomes the measured change. When the adverb carries the meaning, replace the verb or supply the number.
 19. **Verbs turned into nouns.** "The demotion of the grid is the change" is "demote the grid". Prefer the verb.
 20. **Borrowed metaphors for ordinary operations.** Words from physics, strategy, or machinery standing in for a plain code action: a "vector" that is a method, a "surface" that is an API, a "primitive" that is a function, a "lever" or "wedge" that is a change, a "north star" that is a goal, a "flywheel" that is a feedback loop, "evacuating" code that is being moved, a "substrate" that is a base layer, "gold-plating" that is more than the job needs, a "ratchet" that is a limit that only tightens, an "endgame" that is the last phase. Name the operation or the thing.
-21. **Feeling instead of mechanism.** "Deploys feel effortless", "errors are handled gracefully", "the API gets out of your way". Name what the reader can do or check: "a failed deploy rolls back within one minute", "a malformed row is skipped and logged with its line number".
+21. **Feeling instead of mechanism.** See SKILL.md test 1. "Deploys feel effortless", "errors are handled gracefully", "the API gets out of your way". Name what the reader can do or check: "a failed deploy rolls back within one minute", "a malformed row is skipped and logged with its line number".
 
 ## Structure
 
-22. **Dense sentences.** A sentence the reader parses twice. One idea per sentence; a chain of semicolons becomes a list.
-23. **Passive hiding the actor.** "Queries are validated" leaves the reader guessing who validates; "the compiler validates queries" does not. Keep the passive only when naming the actor adds nothing.
-24. **Buried decision.** The conclusion arrives after its rationale. Conclusion, then reason, then background.
+22. **Dense sentences.** See SKILL.md test 4. A chain of semicolons becomes a list.
+23. **Passive hiding the actor.** See SKILL.md test 3. "Queries are validated" becomes "the compiler validates queries".
+24. **Buried decision.** See SKILL.md test 6. The conclusion arrives after its rationale. Write the conclusion, then the reason, then the background.
 25. **Heading restated in the first sentence.** Delete the restatement; start with the content.
 26. **Summary-recap ending.** "In conclusion", "overall", a paragraph that repeats the piece. End on the last concrete point or the next action.
 27. **Dramatic fragments.** "No priors. No nostalgia. The old rules were gone." One short sentence can land a point; a row of them is a pose. Rewrite as sentences.
