@@ -65,7 +65,6 @@
 
 - The overview's acceptance procedure.
 - Task 1 is decided and both files agree.
-- `ship-session/SKILL.md` falls by at least 400 words; record the real number.
 
 ## Out of scope
 

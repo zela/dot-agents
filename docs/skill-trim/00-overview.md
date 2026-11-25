@@ -4,7 +4,7 @@
 
 ## What we're doing
 
-Cut excess from the custom skills in `custom-skills/`: duplication, rules already in `AGENTS.md`, positioning prose, descriptions that carry the body, and branch-only reference kept in `SKILL.md`. Fix the defects the review found along the way. The source is a read-only review of 27 skills on 2026-11-25 against the `writing-for-agents` criteria; `grill-me` was trimmed first as the calibration case (commit `dec444e`). The estimated saving is 4–5k of about 47k words, an inference from the review.
+Cut excess from the custom skills in `custom-skills/`: duplication, rules already in `AGENTS.md`, positioning prose, descriptions that carry the body, and branch-only reference kept in `SKILL.md`. Fix the defects the review found along the way. The source is a read-only review of 27 skills on 2026-11-25 against the `writing-for-agents` criteria; `grill-me` was trimmed first as the calibration case (commit `dec444e`). Word count is a record, not a goal. Acceptance step 1 records it, and a line that delivers quality stays, however long the skill gets (the user's call, 2026-11-25).
 
 ## Goals
 
@@ -50,8 +50,9 @@ Sessions are batches by file ownership: each skill belongs to exactly one sessio
 - ◐ [Session 01 — grammar-tutor](./session-01-grammar-tutor.md)
   - Goal: fix the skill, then move it to `passive-skills/`.
   - Words: `SKILL.md` 232 → 129, `hooks/hooks.json` 20 → removed, `evaluate.sh` 156 and `grammar-hook.md` 138 unchanged.
-- ☐ [Session 02 — prose skills](./session-02-prose-skills.md)
+- ◐ [Session 02 — prose skills](./session-02-prose-skills.md)
   - Goal: `simple-english`, `stop-slop`, `wtf`. Take ownership of the two vendored bodies and restructure `simple-english`.
+  - Words: `simple-english/SKILL.md` 3384 → 3160, `checklist.md` 865 → 845, `safety.md` new 122, `strict-vocabulary.md`, `use-cases.md` and `word-swaps.md` unchanged (folder 6287 → 6165). `stop-slop/SKILL.md` 752 → 759, `patterns.md` 2003 → 1992, `terminology.md` 66 → removed. `wtf/SKILL.md` 422 → 387.
 - ☐ [Session 03 — planning skills](./session-03-planning-skills.md)
   - Goal: `multi-session-plan`, `parallel-sessions`, `run-state`. Settle the two meanings of "join".
 - ☐ [Session 04 — census](./session-04-census.md)
