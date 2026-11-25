@@ -1,6 +1,6 @@
 ---
 name: wtf
-description: "Explain the last message, or a supplied file, link, or passage, in plain language a person follows on the first read. Use when the user invokes wtf because they did not follow something. Use simple-english for docs a reader follows exactly, and stop-slop to rewrite prose."
+description: "Explain the last message, or a supplied file, link, or passage, in plain language that a person follows on the first read."
 disable-model-invocation: true
 argument-hint: "[file path, URL, pasted text, or which part lost you; blank for the last message]"
 ---
@@ -32,4 +32,4 @@ If the target is still unclear, ask one short question instead of guessing.
 - Add no claims the source does not make. If the source is vague or contradicts itself, say so. If re-reading your own message shows it was wrong, say that and correct it.
 - Plain does not mean childish. Do not force analogies, cheerlead, or talk down.
 
-<sub>Vendored from `skills/wtf` in [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) v3.38.3 (MIT, Copyright (c) 2025 Every). Only the description's last sentence changed, to point at `simple-english` and `stop-slop`. See [the evaluation](../../docs/notes/compound-engineering-eval.md).</sub>
+<sub>Adapted from `skills/wtf` in [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) at v3.38.3 (MIT, Copyright (c) 2025 Every). See [the evaluation](../../docs/notes/compound-engineering-eval.md).</sub>
