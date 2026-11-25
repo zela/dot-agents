@@ -6,11 +6,11 @@
 
 ## Tasks
 
-1. **Settle "join" with the user.** In `multi-session-plan:66` it is the session where two tracks merge. In `parallel-sessions` it is the merge of a wave of sessions into `main`. Propose one name for each meaning, ask the user, and record the settled term in `CONTEXT.md` in its format.
+1. **Settle "join" with the user.** In `multi-session-plan:66` it is the session where two tracks merge. In `parallel-sessions` it is the merge of a wave of sessions into `main`. Propose one name for each meaning, ask the user, and record the settled term in `CONTEXT.md` in its format. Also update the two uses outside this session's skills: `README.md:125` ("the join") and `custom-skills/doc-check/SKILL.md:57` ("join doc"). Session 05 owns `doc-check`; this one line moves with the term.
 2. **`multi-session-plan`.**
    - `:27-32` "Why this shape works" (R2). `:29` repeats `:10` and `:93`; `:31` repeats `:66` and the overview template `:39`; `:32` repeats the template's decisions log.
    - `:70` wide refactors / expand–contract (R4): only plans with a wide refactor need it. Move it to a reference file behind a pointer.
-   - Data-model optionality is said at `:16`, `:23`, `:59` "(if any)", `:103` and the data-model template `:5`. Keep `:16` and `:103` (R5).
+   - Data-model optionality is said at `:16`, `:23`, `:57` "(if any)", `:103` and the data-model template `:5`. Keep `:16` and `:103` (R5).
    - `:97-99` status legend repeats the overview template `:27` and `:93` (R5).
    - `:25` "Read them… do not reinvent the structure" vs `:74` "Use the templates" (R5, R6).
    - `:36` "Do not jump straight to writing docs…" (R6, R7: the step order enforces it). `:95` "The plan is a living document…" (R7).
@@ -18,7 +18,7 @@
    - `:42` "You want the conclusions, not the file dumps": maybe a no-op given `AGENTS.md` § Subagent Delegation. Unsure (R7).
    - `:55` names `AskUserQuestion`, a Claude-only tool, in a skill that several hosts load. Name the action ("ask the user"), not the tool.
    - Description (R3): "an overview, one doc per session, and a deferred-work roadmap" is body identity.
-   - Tables in the templates: `AGENTS.md` § Writing asks for nested lists in Markdown docs. Convert the templates, so the next plan does not need D4 of this plan.
+   - Tables in the templates: `AGENTS.md` § Writing asks for nested lists in Markdown docs. Convert the templates, so the next plan does not need D4 of this plan. Then fix the `SKILL.md` passages that still describe tables: `:14` "status table", `:29` "A checkbox table", `:93` "overview table" and "Notes column", `:103` "status table".
    - Add a pointer to `parallel-sessions` for running sessions at once; today only `parallel-sessions` (`adopt.md:5`) points the other way.
 3. **`parallel-sessions`.**
    - `:29-39` "The project doc" caches the field list of `assets/project-doc.md`; `:31` repeats `:10`. Point at the template (R5).
@@ -32,7 +32,7 @@
    - Description (R3): user-invoked, 77 words with rationale, triggers and exclusions. One line.
    - `:9-11` "quadratic growth" and "payoff" rationale. The source is in the `<sub>` line and `docs/notes/skill-state-and-the-ledger-pattern.md` (R2).
    - `:13-23` "Where this fits" (R2). Keep the `:21` archetype if it changes behaviour.
-   - `:37`, `:38`, `:40` repeat the rules at `:45`/`:46`: cold-resume test, one unit, discard reasoning (R5).
+   - `:37`, `:38`, `:40` repeat rules stated elsewhere: the cold-resume read (`:45`), one unit, one patch (`:46`), and discarding the reasoning (`:54`, `:58`) (R5).
    - `:49` no-commit rule, and the template `:11` copy (R1).
    - `:50` "Match the codebase" (R1). Keep the gates clause.
    - `:54` and `:56-58` summarize the loop twice (R2, R5).
@@ -42,8 +42,9 @@
 ## Files to create / modify
 
 - `CONTEXT.md`: the "join" terms.
+- `README.md:125`, `custom-skills/doc-check/SKILL.md:57`: the "join" uses in task 1.
 - `custom-skills/multi-session-plan/SKILL.md`, its `assets/templates/*`, and a new reference file for wide refactors.
-- `custom-skills/parallel-sessions/SKILL.md`, `references/coordinator.md`, `references/adopt.md`, `assets/project-doc.md`.
+- `custom-skills/parallel-sessions/SKILL.md`, `coordinator.md`, `adopt.md`, `assets/project-doc.md`. The two `.md` files sit at the skill root.
 - `custom-skills/run-state/SKILL.md`, its template.
 - A note under `docs/notes/` for the `parallel-sessions` evidence, or an existing note that fits.
 
@@ -56,7 +57,7 @@
 
 - The overview's acceptance procedure.
 - `grep -rn "\bjoin" custom-skills/multi-session-plan custom-skills/parallel-sessions` shows each use matching one of the two settled terms.
-- `grep -rn AskUserQuestion custom-skills` returns nothing outside Claude-only skills.
+- `grep -rn AskUserQuestion custom-skills` returns nothing. `bootstrap.sh` deploys every custom skill to all hosts, so no skill is Claude-only.
 
 ## Out of scope
 

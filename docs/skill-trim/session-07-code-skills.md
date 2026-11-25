@@ -19,7 +19,9 @@
    - `:24-35` the 10-item loop menu: the model may know most of it. Candidate for R4, not a cut. Unsure.
    - `:84` "Do not continue until…" repeats its done line. `:106` "Never log everything and grep" (R6). `:108` "Tagged logs die." `:132` repeats `:126`. `:135` and `:138` restate `AGENTS.md` on delete and commit (R1).
    - Description (R3): "broken, throwing, failing" is one branch.
+   - `:118` names `design-an-interface`. Session 06 changes that line to `design-it-twice`; leave it to that session.
 3. **`prototype`.**
+   - Description (R3): user-invoked, but it carries a trigger list ("Use when the user wants…"). One human line.
    - `SKILL.md:11-13` "Where this fits" (R2). Keep the line that routes to `design-it-twice` for paper designs if it changes what the agent does.
    - `LOGIC.md:7-14` and `UI.md:5-12` "When this is the right shape": `SKILL.md:15-22` picks the branch before either file is read (R5).
    - `LOGIC.md:60-67` Anti-patterns: all negation, nearly every line repeats an earlier rule. Keep `:67` at most (R5, R6).
@@ -37,21 +39,23 @@
    - Description (R3): "vendor prefixes" and "`-moz-`/`-webkit-` behavior" are one branch.
 6. **`resolving-merge-conflicts`.**
    - Description (R3): lead with the trigger: "Resolve an in-progress git merge or rebase conflict."
-   - `:11-12` restates `AGENTS.md` (find the checks, wait before commit). The `<sub>` line records this as a deliberate change from upstream. Under D1 the upstream text is ours: remove the upstream line that leads the other way, then apply R1.
-7. **Attribution (R8).** `diagnosing-bugs:142`, `prototype:35` and `resolving-merge-conflicts:14` say "Vendored from". Rewrite each as "Adapted from".
+   - `:11-12` restate `AGENTS.md` (find the checks, wait before commit). `:12` is the deliberate change that replaced upstream's commit step; no line in the file leads the other way now. Apply R1: keep `:12` as one positive sentence only if resolving a conflict would otherwise lead the agent to `--continue` on its own, and record the call.
+7. **Attribution (R8).** `diagnosing-bugs:142`, `prototype:35` and `resolving-merge-conflicts:14` say "Vendored from". Rewrite each as "Adapted from … at v1.2.3". Change `README.md:116` and `:126` from "Vendored" to "Adapted"; `README.md:117` "~4 KB" repeats the cache that task 4 cuts, so drop it there too.
 
 ## Files to create / modify
 
 - `custom-skills/craft/SKILL.md`.
-- `custom-skills/diagnosing-bugs/SKILL.md` and new reference files for the branch material.
+- `custom-skills/diagnosing-bugs/SKILL.md` and new sibling files for the branch material.
 - `custom-skills/prototype/SKILL.md`, `LOGIC.md`, `UI.md`.
 - `custom-skills/diagram/SKILL.md`, `MERMAID.md`.
 - `custom-skills/cross-engine-check/SKILL.md`, `custom-skills/resolving-merge-conflicts/SKILL.md`.
+- `README.md:116-117`, `:126`: task 7.
+- `docs/notes/skill-flow.md` or `docs/user-invoked-skills.md`: only for a fact R2 moves.
 
 ## Reuse references (read-only)
 
 - `AGENTS.md` § Build Right, § Evidence Discipline: the rules R1 cuts against.
-- `custom-skills/diagnosing-bugs/` existing reference file (196 words): the place for moved branch material.
+- `custom-skills/prototype/LOGIC.md`, `UI.md`: the sibling-file pattern for the branch material moved out of `diagnosing-bugs`. `diagnosing-bugs` has no prose reference file yet; `scripts/hitl-loop.template.sh` is a script, not a destination.
 
 ## Acceptance / verification
 
@@ -66,4 +70,4 @@
 
 **Considered and not built:**
 
-- A shared "read the context first" preamble (CONTEXT.md, ADRs, lessons by `applies_when`) for `craft:10`, `diagnosing-bugs:10` and `multi-session-plan:44`: roadmap.
+- A shared "read the context first" preamble (CONTEXT.md, ADRs, lessons by `applies_when`) for `craft:10` and `diagnosing-bugs:10`; `multi-session-plan:44` reads only lessons: roadmap.

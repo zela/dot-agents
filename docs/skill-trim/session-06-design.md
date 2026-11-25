@@ -11,7 +11,7 @@
    - `INTERFACE.md`: the module anchor, the gather questions (`design-an-interface:17-22`), the four constraints, the five outputs, the comparison criteria reduced to names where the vocabulary defines them (`:54`, `:56`, `:57` vs `:85`, `:89`, `:86`), the vocabulary and three tests, the dependency categories.
    - `FEATURE.md`: the user-task anchor, the gather questions (`design-a-feature:21-25`), the four constraints, the four outputs, the comparison criteria, and one line for the references: "Judge with Norman, Nielsen's heuristics and Krug; borrow Design 4 from Tidwell."
    - Description (R3): user-invoked. One human line that covers both: a module's interface or a feature's interaction design.
-   - The `<sub>` line keeps the `codebase-design` attribution from `design-an-interface:119` (R8).
+   - The `<sub>` line keeps the `codebase-design` attribution from `design-an-interface:119` and adds the version, v1.2.3 (R8).
 2. **Cut while merging.**
    - `design-an-interface:70-77` "Theoretical Foundation": "Ousterhout" at `:9` already carries it (R2).
    - Both Anti-Patterns sections (`design-an-interface:110-115`, `design-a-feature:83-88`) repeat earlier steps. Keep one positive scope line: design the shape or the flow, not the implementation, and do not weigh implementation effort (R5, R6).
@@ -22,8 +22,9 @@
 4. **Update references to the old names.** Living docs and skills only; dated eval notes and harvest plans keep the old names.
    - `README.md:114-115`, `docs/user-invoked-skills.md:11-12`.
    - `docs/notes/skill-flow.md:19-20`, `:69`.
-   - `docs/notes/diagrams/skill-flow-spine.workflow.json:39` and the rendered `skill-flow-spine.html`. Find how the HTML is produced before you edit it; regenerate it rather than hand-editing it if a generator exists.
-   - `custom-skills/prototype/SKILL.md:13` (Session 07's file; this one line moves with the rename), `custom-skills/decision-record/SKILL.md:16`, `custom-skills/domain-modeling/SKILL.md:60`.
+   - `docs/notes/diagrams/skill-flow-spine.workflow.json:39` and the rendered `skill-flow-spine.html`. The generator is `archify`, which `docs/notes/skill-flow.md:5` calls archived; re-rendering means uncommenting `upstream-sources.txt:25` and installing it. Ask the user: reinstall and re-render, or hand-edit the label in both files.
+   - `custom-skills/decision-record/SKILL.md:16` and `:40` ("`design-a-*`"), `custom-skills/decision-record/assets/adr-template.md:11` ("design-a-*"), `custom-skills/domain-modeling/SKILL.md:60`, `docs/notes/skill-flow.md:148` ("`design-a-*`").
+   - Lines in files that other sessions own; only these lines move with the rename: `custom-skills/prototype/SKILL.md:13` (Session 07), `custom-skills/diagnosing-bugs/SKILL.md:118` (Session 07), `custom-skills/census/references/audit-categories.md:66` (Session 04).
 5. **`decision-record`.**
    - Description (R3): model-invoked, 88 words, the largest description in the kit. "Closes the one gap in the skill flow…" is rationale (`docs/notes/skill-flow.md:148` has it); the four-part list repeats the body.
    - `:10-21` "Where this fits" (R2). Keep one line: run `grill-me` first when the decision is load-bearing, and link the plan in Consequences.
@@ -35,7 +36,8 @@
    - `:11-13` "Why a glossary" (R2). `:9` "Use this skill when you change the model…" is invocation advice for a user-invoked skill (R3).
    - `:15-27` file structure repeats `CONTEXT-FORMAT.md:32-60`, including "create lazily" (R5).
    - `:57-60` Composition describes other skills; `docs/user-invoked-skills.md:10` has it (R2).
-   - `CONTEXT-FORMAT.md:29` says "project-specific only" three times in one bullet (R5).
+   - `CONTEXT-FORMAT.md:29` makes the "only terms specific to this project's context" point three times in one bullet (R5).
+   - Attribution (R8): `SKILL.md:64` says "Vendored from"; rewrite it as "Adapted from … at v1.2.3". `README.md:119`: "Vendored" to "Adapted".
 7. **`system-design-mentor`.**
    - `:9`, `:21`, `:52` say "do not give the answer first" three ways; "Socratic" is the leading word. Keep one positive line (R5, R6).
    - `:53` repeats the loop at `:24`; `:54` partly repeats `:22` (R5).
@@ -47,7 +49,9 @@
 - `custom-skills/design-it-twice/SKILL.md`, `INTERFACE.md`, `FEATURE.md`: new.
 - `custom-skills/design-an-interface/`, `custom-skills/design-a-feature/`: removed on the user's yes.
 - `custom-skills/decision-record/SKILL.md` and its template, `custom-skills/domain-modeling/SKILL.md`, `CONTEXT-FORMAT.md`, `custom-skills/system-design-mentor/SKILL.md`, `custom-skills/third-opinion/SKILL.md`.
-- `README.md`, `docs/user-invoked-skills.md`, `docs/notes/skill-flow.md`, `docs/notes/diagrams/skill-flow-spine.*`, `custom-skills/prototype/SKILL.md:13`.
+- `README.md`, `docs/user-invoked-skills.md`, `docs/notes/skill-flow.md`, `docs/notes/diagrams/skill-flow-spine.*`, `custom-skills/decision-record/assets/adr-template.md`.
+- One line each in other sessions' files: `custom-skills/prototype/SKILL.md:13`, `custom-skills/diagnosing-bugs/SKILL.md:118`, `custom-skills/census/references/audit-categories.md:66`.
+- `upstream-sources.txt`: only if the user chooses to re-render the diagram.
 
 ## Reuse references (read-only)
 
@@ -57,7 +61,8 @@
 ## Acceptance / verification
 
 - The overview's acceptance procedure. For step 2, the old versions are both design skills together; the new version is `design-it-twice`. Every capability of each old skill appears in `SKILL.md` or its branch file, or is an intended cut named above.
-- `grep -rn "design-an-interface\|design-a-feature" README.md docs/user-invoked-skills.md docs/notes/skill-flow.md docs/notes/diagrams custom-skills` returns nothing.
+- `grep -rn "design-an-interface\|design-a-" README.md docs/user-invoked-skills.md docs/notes/skill-flow.md docs/notes/diagrams custom-skills` returns nothing. The second pattern catches `design-a-feature` and the `design-a-*` shorthand.
+- `custom-skills/design-it-twice/SKILL.md` sets `disable-model-invocation: true`.
 - The combined word count of `design-it-twice` is below the old 1956; record the real number.
 
 ## Out of scope

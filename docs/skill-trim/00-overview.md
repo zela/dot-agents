@@ -26,7 +26,7 @@ Each rule has its owner here. Session docs cite a rule by its number.
 - **R5 — Duplication inside a skill.** Keep one copy, where it bites: in the step or the template that is read at that moment.
 - **R6 — Negation.** State the target behaviour positively. Keep a prohibition only as a hard guardrail, paired with the positive target.
 - **R7 — No-ops.** Cut a sentence that does not change behaviour versus the model default. When unsure, keep it and say so in the session notes.
-- **R8 — Attribution.** The skills are ours now (D1). Change `Vendored from` to `Adapted from <source> at <version> (<license>)`. Drop re-pull and re-apply instructions. Keep each `LICENSE` file. Keep the `<sub>` line itself; it is a kit convention.
+- **R8 — Attribution.** The skills are ours now (D1). Change `Vendored from` to `Adapted from <source> at <version> (<license>)`. Take the version from the current `<sub>` line or the eval note it links; for `mattpocock/skills` that is v1.2.3 (`docs/notes/mattpocock-skills-eval.md:3`). If no version is recorded, ask the user. Drop re-pull and re-apply instructions. Keep each `LICENSE` file. Keep the `<sub>` line itself; it is a kit convention. Change the skill's `README.md` row from "Vendored" to "Adapted" in the same session.
 
 Findings in the session docs are the reviewers' inferences from reading, not from running the skills. Line numbers refer to commit `dec444e`; each finding quotes a few words so it can be found after earlier edits shift lines.
 
@@ -34,16 +34,16 @@ Findings in the session docs are the reviewers' inferences from reading, not fro
 
 Run this for every session before you tick it.
 
-1. Record `wc -w` for each changed `SKILL.md` and its reference files, before and after, in the Notes of the session index.
+1. Record `wc -w` for each changed `SKILL.md` and its reference files, before and after, in the session's entry in the session index below.
 2. **Replacement check.** Give an independent subagent the old version (`git show HEAD:<path>`) and the new version of each changed skill folder. It lists every behaviour the old text produced that the new text does not. Each item must be an intended cut named in the session doc; anything else is restored or added to the doc as a deliberate cut with the user's OK.
 3. Run `review-staged` on the staged session diff.
-4. `grep -rn "Vendored from" custom-skills/<session skills>` returns nothing.
+4. For a session that owns an adapted skill (R8): `grep -rn "Vendored from\|vendored-from" custom-skills/<session skills>` returns nothing (a plain `vendored` grep hits the legitimate use at `census/SKILL.md:25`), `grep -ni vendored README.md` shows no row for those skills, and no `<sub>` line keeps re-pull or "body verbatim" text. Skip this step for a session with no adapted skill.
 5. Each changed `SKILL.md` still has `name` equal to its folder name and a `description`.
 6. The user commits; the session does not commit on its own.
 
 ## Session index
 
-Sessions are batches by file ownership: each skill belongs to exactly one session. The order below is a recommendation by payoff, not a dependency chain.
+Sessions are batches by file ownership: each skill belongs to exactly one session. The exceptions are single lines that follow a rename into another session's file; both docs name each one. The order below is a recommendation by payoff, not a dependency chain.
 
 **Status legend:** ☐ not started · ◐ in progress · ☑ done.
 
@@ -76,7 +76,7 @@ Plus the [roadmap](./roadmap.md) for later work.
 07 ─┘
 ```
 
-- No session needs another's output. Each skill has one owning session.
+- No session needs another's output. Each skill has one owning session, apart from the single-line rename edits that both docs name: Session 03 edits `doc-check/SKILL.md:57` (Session 05), and Session 06 edits `prototype/SKILL.md:13`, `diagnosing-bugs/SKILL.md:118` (Session 07) and `census/references/audit-categories.md:66` (Session 04).
 - Several sessions edit the same living docs: `README.md`, `docs/user-invoked-skills.md`, `docs/notes/skill-flow.md`. Run the sessions one at a time on `main`. This repo has not adopted `parallel-sessions`.
 - Run 01 before 02 if you can: 02 removes the routing lines that point at `grammar-tutor`, and it reads more naturally once the skill is gone.
 
@@ -114,7 +114,7 @@ Plus the [roadmap](./roadmap.md) for later work.
 
 - Start each session by reading this overview (the trim rules and the acceptance procedure), then the session doc top to bottom.
 - Read `~/.claude/skills/writing-for-agents/SKILL.md` before the first edit; the trim rules use its vocabulary.
-- Finish a session only when the acceptance procedure passes. Then tick its box and put the word counts in its index entry.
+- Finish a session only when the acceptance procedure passes. Then tick its box and put the word counts in its index entry. Every session edits this overview for that; the session file lists do not repeat it.
 
 ## Reference materials
 
