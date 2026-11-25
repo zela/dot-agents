@@ -36,4 +36,6 @@ _Avoid_: <the synonyms that the session rejected>
 
 If the repo has a `CONTEXT-MAP.md`, ask which context each term belongs to. Write each term to the `CONTEXT.md` of its context. If the repo has neither file, create `CONTEXT.md` at the repo root. Give it a `# <Project>` heading, one line about the project, and a `## Language` section. Offer the `domain-modeling` skill only for a larger glossary job, such as one glossary built from terms spread across many docs. Only the user can invoke it.
 
+If the plan is a doc in the repo, record the grilling date in it after the user confirms. Put a `Grilled: YYYY-MM-DD` line under the doc's title. If the line exists, replace its date. Get the date from the system with `date +%F`.
+
 <sub>The frontier-and-rounds model is from the `grilling` primitive in [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), the successor of the one-question-at-a-time `grill-me` this skill started as. See [the evaluation](../../docs/notes/mattpocock-skills-eval.md).</sub>
