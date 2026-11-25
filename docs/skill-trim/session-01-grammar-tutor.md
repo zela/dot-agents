@@ -18,6 +18,14 @@
    - `README.md:120`: move the row from the custom skills table to the passive skills section (`README.md:192`).
    - `docs/user-invoked-skills.md:29`: remove the entry.
 
+## Outcome
+
+- Task 1 answer (from the `claude-code-guide` agent, 2026-11-25): a skill declares hooks in its `SKILL.md` frontmatter under `hooks:`, in the settings format. The hooks register when the user or the model invokes the skill. They stay registered until `/clear`, `/resume` or exit. `hooks/hooks.json` loads only from a plugin root. Sources: https://code.claude.com/docs/en/skills.md (frontmatter table, `hooks` row) and https://code.claude.com/docs/en/hooks.md ("Hooks in skills and agents"). The docs show no `UserPromptSubmit` example for a skill hook. This case is untested.
+- Task 2: the hook moved into the frontmatter. The user approved the removal of `hooks/hooks.json`. A `settings.json` hook can also fire inside the `claude --print` call that `evaluate.sh` makes. Then the hook recurses. That child session does not register a skill-scoped hook. Both points are inferred, not tested.
+- Task 7: the user said yes. `grammar-hook.md` moved to `passive-skills/`. The task 5 pointer still names the deployed path `~/.agent/workflows/grammar-hook.md`. An agent reads the skill only when the skill is active. At that time the workflow is back in `shared-workflows/`.
+
+- The user approved one deliberate cut: the old line "Whenever the user sends a message, you must secretly evaluate…". In Claude Code the hook is the only evaluator. In Antigravity the workflow evaluates.
+
 ## Files to create / modify
 
 - `custom-skills/grammar-tutor/SKILL.md` → `passive-skills/grammar-tutor/SKILL.md`: the fixes, then the move.
