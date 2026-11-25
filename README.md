@@ -117,7 +117,6 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `diagram`               | Diagram from text, two branches: a ~4 KB Mermaid HTML page you edit and reload (no install), or a D2 render committed next to a doc: SVG that follows light/dark, ASCII for Markdown, PNG/PDF/PPTX, animated steps. D2 needs the `d2` CLI. |
 | `doc-check`             | Check plan session docs against the code before a session runs. One read-only agent per doc, plus a cross-provider pass on request. Fix only blockers, wrong facts and harmful or vacuous checks. Re-check changed lines until clean. A launch gate catches a doc edited after its check. |
 | `domain-modeling`       | Build the project's glossary in `CONTEXT.md`: challenge fuzzy terms, stress-test with scenarios, record the canonical word. Decisions go to `decision-record`. Vendored from mattpocock/skills. |
-| `grammar-tutor`         | Gentle English grammar and style tutor.                                                            |
 | `grill-me`              | Interview the user relentlessly about a plan: a design tree worked in rounds, facts fetched by the agent, decisions left to the user, done when the frontier is empty. |
 | `lesson-record`         | Record what a solved problem taught as one file under `docs/lessons/`, so a later plan or fix in the same area reads it. Prefers a test or lint rule over a doc. `craft`, `diagnosing-bugs` and `multi-session-plan` read the store. See [ADR-0001](docs/adr/0001-lesson-store.md). |
 | `multi-session-plan`    | Break a large build into a sequenced roadmap of linked docs under `docs/`. Expand–contract for wide refactors; the roadmap holds the fog. |
@@ -198,6 +197,8 @@ Present in the repo but **not** installed by `bootstrap.sh` (which only overlays
 | `beautiful-mermaid` | Create, style, and render beautiful Mermaid diagrams.                   |
 | `markdown-new`      | Convert public web pages into clean Markdown via markdown.new.          |
 | `caveman`           | Ultra-compressed caveman-speak reply mode (`CAVEMAN-SKILL.md`, no dir). |
+| `grammar-tutor`     | Gentle English grammar and style tutor. Activate it together with `grammar-hook`. |
+| `grammar-hook`      | Antigravity workflow for `grammar-tutor`. Move it to `shared-workflows/` to activate it. |
 
 ## Custom agents
 

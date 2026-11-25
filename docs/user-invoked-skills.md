@@ -26,7 +26,6 @@ Source: skills with `disable-model-invocation: true` in `custom-skills/` and the
 - Learning and explanation
   - `wtf`: explain the last message, or a file, link, or passage, in plain language.
   - `teach`: teach you a new skill or concept inside this workspace.
-  - `grammar-tutor`: grammar help, style evaluation, and English tutoring.
 - Housekeeping
   - `papercuts`: work through `~/.papercuts/log.md`: cluster papercuts into root-cause families, verify them, fix the ones you pick.
 
