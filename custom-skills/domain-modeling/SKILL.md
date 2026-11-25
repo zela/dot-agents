@@ -56,7 +56,7 @@ When a hard-to-reverse choice with a real trade-off surfaces, do not record it h
 
 ## Composition
 
-- With `grill-me`: run both in one session when the plan touches domain terms. The interview sharpens the plan, and this skill keeps the words honest.
+- With `grill-me`: it collects the terms that its rounds settle and offers to write them at the end. This skill is for a dedicated glossary pass that is too large for that list.
 - With `design-an-interface`, `multi-session-plan`, and `census`: they read `CONTEXT.md` for names and do not change it.
 
 ---

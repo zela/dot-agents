@@ -24,8 +24,16 @@ Each round of answers reshapes the tree. Settled decisions push the frontier out
 
 Facts are your job, never the user's. When a frontier question needs a fact from the environment (the codebase, the filesystem, a tool), find it yourself. Use a subagent when the search is wide. Do not block on it. A running search is an unsettled prerequisite, so only the questions downstream of it wait. Ask the rest of the frontier now. Decisions are the user's. Put each one to them and wait. Do not ask again about a decision that the user made after they saw the trade-off. A bare directive ("build it with X") gets exactly one challenge. Never mark your own proposal as settled.
 
-Offer the `domain-modeling` skill when a term is fuzzy or overloaded, or when the repo has a `CONTEXT.md`. Only the user can invoke it. It fixes the terms while this session fixes the decisions.
+Collect domain terms as the rounds go. A term names a project-specific concept, never a general programming idea or a field name. A term counts when the session settles its meaning. This happens when the user chose between two meanings, corrected your word, or named a concept that had no name. Before the first round, read `CONTEXT-MAP.md` and the context files that it lists. If the repo has no map, read the root `CONTEXT.md` if it exists. If the user gives a term a different meaning than its entry, ask about the conflict in the next round.
 
-The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Before you call it empty, combine the user's answers with your own defaults and look for effects nobody asked about. Ask one question per real combination. Do not act on the plan until the user confirms that you reached a shared understanding. If the outcome is a load-bearing decision, offer `decision-record`.
+The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Before you call it empty, combine the user's answers with your own defaults and look for effects nobody asked about. Ask one question per real combination. Do not act on the plan until the user confirms that you reached a shared understanding. In the message that asks for that confirmation, list the terms that the session settled. Use the format below. Ask whether to write them to `CONTEXT.md`. Mark each entry that changes an existing definition. Quote the old definition next to it. If the session settled no terms, leave the list out. If the outcome is a load-bearing decision, offer `decision-record`.
+
+```
+**<Term>**:
+<What it is, in one or two sentences.>
+_Avoid_: <the synonyms that the session rejected>
+```
+
+If the repo has a `CONTEXT-MAP.md`, ask which context each term belongs to. Write each term to the `CONTEXT.md` of its context. If the repo has neither file, create `CONTEXT.md` at the repo root. Give it a `# <Project>` heading, one line about the project, and a `## Language` section. Offer the `domain-modeling` skill only for a larger glossary job, such as one glossary built from terms spread across many docs. Only the user can invoke it.
 
 <sub>The frontier-and-rounds model is from the `grilling` primitive in [mattpocock/skills](https://github.com/mattpocock/skills) (MIT), the successor of the one-question-at-a-time `grill-me` this skill started as. See [the evaluation](../../docs/notes/mattpocock-skills-eval.md).</sub>
