@@ -59,7 +59,7 @@
 ## Reuse references (read-only)
 
 - `AGENTS.md` § Papercuts, § Writing, § Build Right: the rules R1 cuts against.
-- `custom-skills/census/SKILL.md:66`: the other copy of the verifier fallback, for the shared path.
+- The other copy of the verifier fallback: `custom-skills/census/SKILL.md:66` until Session 04 runs, then `custom-skills/census/references/verifier-fallback.md`. Each skill keeps its own copy (roadmap item 3).
 
 ## Acceptance / verification
 
