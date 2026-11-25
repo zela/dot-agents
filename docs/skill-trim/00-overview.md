@@ -47,7 +47,7 @@ Sessions are batches by file ownership: each skill belongs to exactly one sessio
 
 **Status legend:** ☐ not started · ◐ in progress · ☑ done.
 
-- ◐ [Session 01 — grammar-tutor](./session-01-grammar-tutor.md)
+- ☑ [Session 01 — grammar-tutor](./session-01-grammar-tutor.md)
   - Goal: fix the skill, then move it to `passive-skills/`.
   - Words: `SKILL.md` 232 → 129, `hooks/hooks.json` 20 → removed, `evaluate.sh` 156 and `grammar-hook.md` 138 unchanged.
 - ☑ [Session 02 — prose skills](./session-02-prose-skills.md)
