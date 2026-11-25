@@ -128,11 +128,11 @@ On the other machine: `git pull && ~/dot-agents/bootstrap.sh --upstream`
 | `review-staged`         | Review the staged diff or a named branch range. Stress-test each code, spec and prose finding, fix the survivors and the writing-rule breaks, and commit granularly. A docs-only diff skips `code-review` and the typecheck, test and lint step. |
 | `run-state`             | Execute a long-horizon many-step run (bulk migration, backlog, long refactor) via an external state file, so context stays bounded and the session can be `/clear`'d and resumed. |
 | `ship-session`          | Close out a build session: verify acceptance, convert the plan to as-built, commit. No code review. |
-| `simple-english`        | Rewrite technical docs/runbooks/SKILL.md with ASD-STE100 (Simplified Technical English) discipline. Vendored (MIT); scoped to technical writing so it doesn't collide with `stop-slop`. |
+| `simple-english`        | Rewrite technical docs/runbooks/SKILL.md with ASD-STE100 (Simplified Technical English) discipline. Adapted from AminBlg/SimpleEnglish (MIT). It is scoped to technical writing, so it does not collide with `stop-slop`. |
 | `stop-slop`             | Rewrite, check or draft prose that people read (MR comments, reports, notes) without AI writing tells. It keeps every source fact. Merged from hardikpandya/stop-slop and EveryInc `ce-noslop` (MIT). |
 | `system-design-mentor`  | Staff-level engineering mentor for Frontend and Backend system design.                             |
 | `third-opinion`         | Get a read-only opinion from another provider's CLI: Codex from Claude Code, Claude from Codex, Copilot on request. |
-| `wtf`                   | Explain the last message, or a file, link or passage, in plain words: the point first, then what you must decide or do. Vendored from EveryInc (MIT). |
+| `wtf`                   | Explain the last message, or a file, link or passage, in plain words: the point first, then what you must decide or do. Adapted from EveryInc (MIT). |
 
 User-invoked skills carry `disable-model-invocation: true`, so their descriptions cost no context on Claude Code. Those that also carry an `agents/openai.yaml` policy cost none on any host.
 
