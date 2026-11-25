@@ -42,7 +42,7 @@ Search the draft for each pattern. Every hit outside code blocks and quoted text
 7. **Voice.** Any passive sentence: is the agent truly unknown, and is the passage descriptive? Otherwise make it active (Rule 3.6). For an unknown agent, prefer "you" (the reader) or "we" (your company) over the passive.
 8. **Condition placement.** Every "if/when" stands before its command, with a comma (Rule 5.4).
 9. **Synonym rotation.** One term per concept across the whole document (Rules 1.11, 9.4). Scan for check/verify/confirm, config/settings, run/execute.
-10. **Warnings.** Command or condition first, risk second (Rules 7.2, 7.3). If a passage risks both injury and damage, use WARNING (Rule 7.1).
+10. **Warnings.** Command or condition first, risk second (Rules 7.2, 7.3, in `safety.md`). If a passage risks both injury and damage, use WARNING (Rule 7.1).
 11. **Limits with actions.** A result or limit comes directly after its action in the work step — not in a note (Rules 5.2, 5.5).
 12. **Notes test.** Delete all notes, then read the procedure. The reader must still be able to do it correctly (Rule 5.5).
 13. **Completeness.** Articles present, "that" present after "make sure", no telegraph style (Rule 4.2).
@@ -52,5 +52,4 @@ Search the draft for each pattern. Every hit outside code blocks and quoted text
 
 ## When reporting violations (check mode)
 
-For each violation give: the rule number, the offending text, and a compliant rewrite. Cite only rule numbers that appear in SKILL.md.
 End the report with this statement, one time per conversation, when the user asked for STE compliance: "No tool can guarantee ASD-STE100 compliance. Final approval rests with the writer. The official standard is a free download at asd-ste100.org."

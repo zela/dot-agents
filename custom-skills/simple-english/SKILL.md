@@ -1,12 +1,12 @@
 ---
 name: simple-english
-description: 'Write or rewrite technical documentation in ASD-STE100 (Simplified Technical English) discipline. Use for docs, READMEs, runbooks, procedures, API guides, error messages, release notes, incident reports, and SKILL.md or agent instructions: text a reader follows exactly and reads cold. Also triggers on "STE" or "ASD-STE100". General prose belongs to stop-slop and grammar-tutor.'
+description: 'Write, rewrite, or check technical documentation in ASD-STE100 (Simplified Technical English) discipline. Use for docs, READMEs, runbooks, procedures, API guides, error messages, release notes, incident reports, and SKILL.md or agent instructions: text a reader follows exactly and reads cold. It also triggers on "STE" or "ASD-STE100". General prose belongs to stop-slop.'
 license: MIT
 compatibility: claude-code cursor codex gemini-cli opencode
 metadata:
   version: "2.0.0"
   standard: ASD-STE100 Issue 9 (2025-01-15)
-  vendored-from: AminBlg/SimpleEnglish
+  adapted-from: AminBlg/SimpleEnglish
 ---
 
 # Simple English: Plain Words, Aerospace Discipline
@@ -20,12 +20,12 @@ When asked to write or rewrite text:
 1. **Select the mode** (Plain or Strict, the table that follows). In Strict mode, read `references/strict-vocabulary.md` before you draft.
 2. **Classify each passage** as procedural or descriptive. Every other rule depends on this.
 3. **Fix your vocabulary before you draft.** Use `make sure that` for check/verify/confirm/validate/ensure as verbs, and `configuration` for config/settings/options. Use no other word for these concepts in the whole document.
-4. **Define a technical term at its first use** when a reader outside the field needs it: concept words, not product names or the tool the document is about.
+4. **Define a technical term at its first use**, in documents too, as rule 2 of the Plain English rules describes.
 5. **Apply the catalog** that follows. For replies and explanations for outsiders, apply the Plain English rules first.
 6. **Do the self-check** before you deliver. This step is not optional.
 7. **Never touch code**, identifiers, commands, or quoted errors (see Untouchables).
 
-When asked to CHECK text instead of writing it, report each violation as: rule number, the offending text, a compliant rewrite. Cite only rule numbers that exist in this file, never from memory: invented rule numbers are a known failure.
+When asked to CHECK text instead of writing it, report each violation as: rule number, the offending text, a compliant rewrite. Cite only rule numbers that exist in this file, `references/strict-vocabulary.md`, or `references/safety.md`. Never cite from memory: invented rule numbers are a known failure.
 
 ## Two Modes
 
@@ -61,13 +61,12 @@ Apply these six rules to your reply to the user and to explanations written for 
 
 ## THE RULE CATALOG
 
-53 rules in 9 sections, paraphrased from ASD-STE100 Issue 9 with software examples. Rules marked (S) are Strict mode only (see `references/strict-vocabulary.md`). The official wording is in the free standard at asd-ste100.org.
+53 rules in 9 sections, paraphrased from ASD-STE100 Issue 9 with software examples. The rules that apply only in Strict mode are in `references/strict-vocabulary.md`. Section 7 is in `references/safety.md`. The official wording is in the free standard at asd-ste100.org.
 
 ### Section 1 — Words (Rules 1.1-1.14)
 
 | Rule | Instruction |
 |---|---|
-| 1.1-1.4, 1.6 (S) | Use only approved words, as their listed part of speech, meaning, and form. |
 | 1.5 | You can use domain words as technical nouns ("webhook", "commit", "endpoint"). |
 | 1.7 | Do not use technical nouns as verbs. |
 | 1.8 | Use the technical nouns of your project or industry. |
@@ -99,7 +98,6 @@ Break long noun chains with prepositions (of, on, in, for):
 
 | Rule | Instruction |
 |---|---|
-| 3.1 (S) | Use only the verb forms that the dictionary gives. |
 | 3.2 | Use only: infinitive, imperative, simple present, simple past, simple future, past participle as adjective. |
 | 3.3 | Use the past participle only as an adjective ("the cached response"). |
 | 3.4 | No auxiliary verbs for complex constructions. No present perfect, no "is to be installed". |
@@ -156,16 +154,7 @@ No imperative in descriptive text. Descriptions explain. Procedures instruct.
 
 ### Section 7 — Safety instructions (Rules 7.1-7.3)
 
-| Rule | Instruction |
-|---|---|
-| 7.1 | Use a word that shows the risk level ("WARNING" = injury, "CAUTION" = damage). If the two risks occur together, use "WARNING". |
-| 7.2 | Start with a clear command or condition. |
-| 7.3 | Then give the risk or the possible result. |
-
-Never bury the instruction after the explanation. The same pattern fits destructive CLI flags and irreversible migrations.
-
-**Before:** Note that data loss may occur in some circumstances if the destructive flag happens to be enabled when running against production.
-**After:** CAUTION: Do not use the `--force` flag against production. The flag deletes rows that do not match the source.
+When the text has or needs a warning or a caution (injury, damage, data loss, a destructive flag, an irreversible migration), read `references/safety.md`.
 
 ### Section 8 — Punctuation and word count (Rules 8.1-8.7)
 
@@ -189,7 +178,6 @@ Rule 8.6 matters for software text: `sqlpipe run --config sqlpipe.yaml` in backt
 | Rule | Instruction |
 |---|---|
 | 9.1 | When a word-for-word replacement does not work, restructure the sentence. |
-| 9.2 (S) | Use each approved word correctly: approved meaning, approved part of speech. |
 | 9.3 | Prefer the one-word verb over the phrasal verb ("decrease", not "go down"; "install", not "set up"). Strict mode: the phrasal verb is a violation. |
 | 9.4 | Keep one consistent style and terminology through the whole document. |
 
@@ -224,10 +212,8 @@ For the specific overused words, `references/word-swaps.md` maps each one to a p
 
 ## Word Choice
 
-One word, one meaning, one part of speech, for the whole document (Rules 1.11, 9.4).
+One word, one meaning, one part of speech, for the whole document (Rules 1.11, 9.4). Step 3 fixes the two recurring concepts. For the other words:
 
-- The settings file is `configuration`, never config, settings, or options in the same document.
-- The verify concept is `make sure that`, never check, verify, confirm, validate, or ensure as verbs. Strict mode routes the rest with `references/strict-vocabulary.md`.
 - When a plain word does the job, take it over the technical one, and define the technical one when you must keep it.
 - Common swaps: however → but, therefore → as a result, since (= because) → because, perform → do, avoid → prevent, repeat → do again, acceptable → permitted, now → delete it.
 
@@ -250,12 +236,12 @@ The reply is Plain mode, in every mode: 25 words per sentence, simple tenses, ac
 
 ## Self-Check Before You Deliver
 
-This step is not optional. Run these six checks (checks 1-5 on your draft, check 6 on your reply):
+Run these six checks (checks 1-5 on your draft, check 6 on your reply):
 
 1. Count words in your three longest sentences. Over the 20/25 limit → split them.
 2. Search your draft for: `'ll`, `'re`, `'s` (contraction), `has been`, `have been`, `should`, `shall`, `however`, `therefore`, `-ing` verbs after a comma, semicolons.
 3. Search for every `if` and `when`. Each one stands at the START of its sentence, before the command. "Increase the timeout if the network is slow" → "If the network is slow, increase the timeout."
-4. Search for check, verify, confirm, ensure, and validate as verbs, and for config, settings, and options. Replace each hit with `make sure that` or `configuration`. Strict mode: route the rest with `references/strict-vocabulary.md`.
+4. Search for the words that step 3 replaces. Replace each hit with `make sure that` or `configuration`. Strict mode: route the rest with `references/strict-vocabulary.md`.
 5. Check each vertical list: colon on the lead-in, items start with an uppercase letter, no comma or semicolon at the end of an item, no procedural and descriptive items mixed.
 6. Read your reply with the same eyes. The first sentence gives the answer, each technical term has a definition, and the reply has 5 sentences or fewer (code and lists excluded). Over 5: cut, do not compress. Then scan it against the Signs of AI Writing. If your reply is only the rewritten text, this check passes.
 
@@ -287,8 +273,9 @@ No tool can guarantee STE compliance. If the user asks for a compliance claim, s
 - `references/checklist.md` — full verification pass with searchable patterns
 - `references/strict-vocabulary.md` — the dictionary discipline for Strict mode
 - `references/word-swaps.md` — slop-to-plain word map
+- `references/safety.md` — Section 7, for warnings and cautions
 - `references/use-cases.md` — patterns for error messages, runbooks, incident reports, release notes, commits, agent prompts, UI copy, i18n
 
 ---
 
-<sub>Vendored from [AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish) (MIT — see `LICENSE`), body verbatim. Only the frontmatter `description` was adjusted, to fence triggering to technical/procedural writing and cede general prose to `stop-slop` / `grammar-tutor` — the upstream description bids for "de-slop / make this readable / explain simply", which collides with those. Rule catalog and references unchanged. To update, re-pull from source and re-apply the same frontmatter fence.</sub>
+<sub>Adapted from [AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish) at 2.0.0 (MIT, see `LICENSE`).</sub>
