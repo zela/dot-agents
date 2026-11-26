@@ -64,7 +64,6 @@ if [ "${#changed[@]}" -eq 0 ]; then
 fi
 echo "craft: ${#changed[@]} changed source file(s) since $base"
 
-# Every package (the root included) with its own Vitest and coverage provider.
 # A local binary and provider only: npx or Vitest's own prompt would install them.
 packages=()
 while IFS= read -r pkg; do
@@ -90,7 +89,6 @@ if [ "${#packages[@]}" -gt 0 ]; then
   args=(run --passWithNoTests --coverage.enabled=true --coverage.reporter=lcov
     --coverage.allowExternal=true --no-coverage.thresholds)
   if [ -n "$since" ]; then args+=("--changed=$base"); else args+=(--changed); fi
-  for f in "${changed[@]}"; do args+=("--coverage.include=$root/$f"); done
 
   i=0
   for pkg in "${packages[@]}"; do
@@ -98,8 +96,23 @@ if [ "${#packages[@]}" -gt 0 ]; then
     # Istanbul when the package has it: Cloudflare's Workers pool cannot use V8 coverage.
     provider=v8
     [ -d "$pkg/node_modules/@vitest/coverage-istanbul" ] && provider=istanbul
+    # Vitest 3 and 4 match an include against the absolute path. Vitest 5 matches it
+    # against the normalized path from the package, so that form climbs only to the
+    # nearest common directory. Each file goes in both forms.
+    pkgargs=()
+    for f in "${changed[@]}"; do
+      pkgargs+=("--coverage.include=$root/$f")
+      p=$pkg up=""
+      while [ "$p" != . ]; do
+        case $f in "$p"/*) break ;; esac
+        case $p in */*) p=${p%/*} ;; *) p=. ;; esac
+        up="../$up"
+      done
+      [ "$p" = . ] || f=${f#"$p"/}
+      pkgargs+=("--coverage.include=$up$f")
+    done
     echo "craft: coverage from the tests in $pkg ($provider)" >&2
-    if ! (cd "$pkg" && node_modules/.bin/vitest "${args[@]}" \
+    if ! (cd "$pkg" && node_modules/.bin/vitest "${args[@]}" "${pkgargs[@]}" \
       --coverage.provider="$provider" --coverage.reportsDirectory="$raw/$i" >&2); then
       echo "craft: Vitest failed in $pkg (see its output above), so its coverage is not scored" >&2
       continue
