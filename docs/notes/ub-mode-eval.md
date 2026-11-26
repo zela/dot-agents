@@ -11,12 +11,13 @@ Evaluated on 2026-10-28 from shallow clones: ub-mode `57a8bdd` (2026-10-25), cra
 - Executed: this workstation has `node`, `pnpm`, and `uv`, and no `cargo`, `go`, `mvn`, or `clj`. The user's projects are mostly TypeScript with Astro or React, tested with Vitest.
 - Executed: graded each ub-mode principle against the text of `AGENTS.md`, `tdd`, `domain-modeling`, and every custom skill, by grep and by reading the matching lines.
 - Executed: `craft/scripts/check-changed.sh` against stub `crapper` and `dryer` binaries in a scratch repository. File selection, `--since`, the coverage command, the no-provider branch, the stale-report warning, the duplicate filter, and the missing-tool exit all behaved as written.
-- Executed (2026-11-26): the per-package coverage path with Istanbul and the pinned crapper and dryer, on Vitest 3.2.4, 4.0.18, 4.1.8 and 5.1.1. The scratch workspace had a root, two packages, and a package nested in one of them. On 3.2.4 and 5.1.1:
+- Executed (2026-11-26): the per-package coverage path with Istanbul and the pinned crapper and dryer, on Vitest 3.2.4, 4.0.18, 4.1.8 and 5.1.1. The scratch workspace had a root, two packages, and a package nested in one of them. On every version:
   - A file in one package got coverage from another package's tests, including a path with `(auth)`.
+  - A package run did not fail on a changed file from outside the package that no test in it loads. V8 on 4.1.8 and 5.1.1 also passed this case.
   - Each run left out the tests of the packages inside it that run on their own.
+  - With a root `projects` config, only the root ran, and every changed file got coverage.
   - A 100% glob threshold in a package config did not fail the run.
   - A failing test dropped that package's report.
-  - On 4.0.18 and 4.1.8, a package run failed when it did not load a changed file from outside the package. That is the Istanbul failure under "crapper: no fork, a wrapper".
 - Not executed: crapper, dryer, and mutator themselves. Claude Code's auto-mode classifier blocked running the cloned code. Every tool-behaviour claim below that is not a README quote is read from source. The trial in "Not done yet" confirms or refutes it.
 
 ## Verdict: rewrite the skill as `craft`, use crapper and dryer through a wrapper, defer mutator
@@ -76,11 +77,12 @@ Read from source: `--coverage-command` returns before every per-language runner 
 So `craft/scripts/check-changed.sh` runs Vitest itself and passes crapper `--use-existing-coverage`. It runs the local `node_modules/.bin/vitest run --changed --passWithNoTests` in each package that has its own Vitest and a coverage provider, the root included. Each run gets `--coverage.include` for every changed file and uses that package's config.
 
 - Istanbul is used when a package has it, because Cloudflare's Workers pool does not support V8 coverage.
-- Each run excludes the packages inside it that run on their own, so their tests do not run twice under the outer config. With a root `projects` config this exclude does not work: Vitest resolves it per project.
+- Each run excludes the packages inside it that run on their own, so their tests do not run twice under the outer config.
+- A root `projects` config, or a `vitest.workspace` file, makes the root run the only run. There Vitest applies `--exclude` per project, and Vitest 3 and 4 ignore `--project=!name` (executed on 3.2.4, 4.0.18 and 4.1.8; it works on 5.1.1). The script finds the config by text search for `projects:` or `workspace:`, so it does not load the config.
 - Coverage thresholds are off. A package whose tests fail has its report dropped. crapper applies the same rule to a failed `--coverage-command`.
 - The script rewrites each report to repo-relative paths and sums the hits into one `coverage/craft/lcov.info`. That keeps crapper's last-report-wins rule (below) from dropping one package's coverage.
-- Vitest 3 and 4 match `--coverage.include` against absolute paths, and Vitest 5 against package-relative ones. The script passes each changed file in both forms.
-- Vitest 4 with Istanbul fails a run when an include matches a changed file outside the package and no test in the package loads it. The run ends with "Unknown Error: undefined". Executed on 4.0.18 and 4.1.8, for a file in a sibling package and for one at the root. V8 on Vitest 4, and Istanbul on 3.2.4 and 5.1.1, do not fail. The cause is inferred from the source: the uncovered-file pass reads `instrumenter.lastFileCoverage()` after a transform that did not instrument the file (`@vitest/coverage-istanbul` 4.0.18 `provider.js:2234-2236`). The script drops that package's report. The committed version at 626f2b0 passed the same absolute includes, so it fails the same way (inferred, not run).
+- Vitest 3 and 4 match `--coverage.include` against the absolute path. Vitest 5 matches a file inside the package by its path from the package, and a file outside it by its absolute path too. So each changed file gets an escaped `**/<repo path>` include, and a file inside the package also gets its path from the package.
+- No include names a file outside the package by a path that a glob from the package can reach, such as `../shared/x.ts` or an absolute path. On Vitest 4 with Istanbul, such a file is listed as untested when no test in the package loads it. Vitest then finds no server whose root holds the file, throws an undefined error (`coverage.AVPTjMgw.js:3205-3221` in 4.0.18), and the run ends with "Unknown Error: undefined". Executed on 4.0.18 and 4.1.8. The committed version at 626f2b0 passed absolute includes, so it had this failure (inferred, not run).
 
 Without a package that writes a report, it scores complexity only. It installs nothing, and upstream fixes still arrive with each pinned upgrade.
 
@@ -150,7 +152,7 @@ Iteration 1 had two flaws. Its prompts gave the traps away, so the hidden tests 
 
 ## Not done yet
 
-1. A run on one of the user's real projects with the current script. The user's commit 626f2b0 records a run of the first per-package version on oninvest-drafter, with Vitest 4.1.8: the BFF package ran on Istanbul and the FE package on V8. A rerun of the current script there is still to do. Not yet checked: a root `projects` config, a real Workers pool, `.astro` files.
+1. A run on one of the user's real projects with the current script. The user's commit 626f2b0 records a run of the first per-package version on oninvest-drafter, with Vitest 4.1.8: the BFF package ran on Istanbul and the FE package on V8. A rerun of the current script there is still to do. That project stays on Vitest 4: `@cloudflare/vitest-pool-workers` 0.23.0, the latest on 2026-11-26, requires `vitest ^4.1.0`. Not yet checked: a real Workers pool, `.astro` files.
 2. The user chose to keep the reply length as it is.
 
 ## Shipped (2026-10-28)
