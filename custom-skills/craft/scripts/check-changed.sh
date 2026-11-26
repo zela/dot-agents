@@ -7,8 +7,8 @@
 #   check-changed.sh --since main  # everything since the merge base with main
 #
 # It installs nothing. Coverage comes from the Vitest and coverage provider of
-# each package that has them, the root included. Without them, crapper scores
-# complexity only.
+# each package that has them, the root included. If no package writes a report,
+# crapper scores complexity only.
 # It writes coverage/craft/ (merged LCOV) and .metrics/ (crapper and dryer snapshots).
 
 set -euo pipefail
@@ -85,8 +85,10 @@ if [ "${#packages[@]}" -gt 0 ]; then
   root=$(pwd -P)
   raw=$(mktemp -d)
   tmp+=("$raw")
+  # A project's coverage thresholds would fail a run that covers only the changed
+  # files. The --no- form passes a boolean; --coverage.thresholds=false passes a string.
   args=(run --passWithNoTests --coverage.enabled=true --coverage.reporter=lcov
-    --coverage.reportOnFailure=true --coverage.allowExternal=true)
+    --coverage.allowExternal=true --no-coverage.thresholds)
   if [ -n "$since" ]; then args+=("--changed=$base"); else args+=(--changed); fi
   for f in "${changed[@]}"; do args+=("--coverage.include=$root/$f"); done
 
@@ -97,9 +99,11 @@ if [ "${#packages[@]}" -gt 0 ]; then
     provider=v8
     [ -d "$pkg/node_modules/@vitest/coverage-istanbul" ] && provider=istanbul
     echo "craft: coverage from the tests in $pkg ($provider)" >&2
-    (cd "$pkg" && node_modules/.bin/vitest "${args[@]}" --coverage.provider="$provider" \
-      --coverage.reportsDirectory="$raw/$i" >&2) ||
-      echo "craft: Vitest in $pkg exited non-zero; its coverage still counts" >&2
+    if ! (cd "$pkg" && node_modules/.bin/vitest "${args[@]}" \
+      --coverage.provider="$provider" --coverage.reportsDirectory="$raw/$i" >&2); then
+      echo "craft: Vitest failed in $pkg (see its output above), so its coverage is not scored" >&2
+      continue
+    fi
     [ -f "$raw/$i/lcov.info" ] || continue
     # Vitest writes SF paths relative to the package, or absolute.
     awk -v pkg="$pkg" -v root="$root" '
