@@ -75,6 +75,18 @@ done < <(
     while IFS= read -r p; do dirname "$p"; done | sort -u
 )
 
+# A root projects config already runs each package with its own config, and
+# Vitest 3 and 4 ignore --exclude and --project=! there, so the root run owns
+# every package. Detected by text, not by loading the config.
+for pkg in "${packages[@]}"; do
+  [ "$pkg" = . ] || continue
+  if ls vitest.workspace.* >/dev/null 2>&1 ||
+    grep -Eqs '(^|[^[:alnum:]_])(projects|workspace)[[:space:]]*:' vitest.config.* vite.config.*; then
+    echo "craft: the root Vitest config lists projects, so only the root run collects coverage" >&2
+    packages=(.)
+  fi
+done
+
 coverage=(--no-coverage)
 if [ "${#packages[@]}" -gt 0 ]; then
   # Each package runs its own tests with its own config (a Workers pool, say),
