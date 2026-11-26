@@ -111,6 +111,13 @@ if [ "${#packages[@]}" -gt 0 ]; then
       [ "$p" = . ] || f=${f#"$p"/}
       pkgargs+=("--coverage.include=$up$f")
     done
+    # Without a projects config, a run's default include also finds the tests of
+    # each package inside it and runs them under its own config.
+    pre=""
+    [ "$pkg" = . ] || pre="$pkg/"
+    for p in "${packages[@]}"; do
+      case $p in .) ;; "$pre"?*) pkgargs+=(--exclude "${p#"$pre"}/**") ;; esac
+    done
     echo "craft: coverage from the tests in $pkg ($provider)" >&2
     if ! (cd "$pkg" && node_modules/.bin/vitest "${args[@]}" "${pkgargs[@]}" \
       --coverage.provider="$provider" --coverage.reportsDirectory="$raw/$i" >&2); then
