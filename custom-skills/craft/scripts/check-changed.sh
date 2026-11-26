@@ -89,6 +89,10 @@ if [ "${#packages[@]}" -gt 0 ]; then
   args=(run --passWithNoTests --coverage.enabled=true --coverage.reporter=lcov
     --coverage.allowExternal=true --no-coverage.thresholds)
   if [ -n "$since" ]; then args+=("--changed=$base"); else args+=(--changed); fi
+  anywhere=()
+  for f in "${changed[@]}"; do
+    anywhere+=("**/$(printf '%s' "$f" | sed 's/[][\\*?{}()!+@]/\\&/g')")
+  done
 
   i=0
   for pkg in "${packages[@]}"; do
@@ -96,20 +100,22 @@ if [ "${#packages[@]}" -gt 0 ]; then
     # Istanbul when the package has it: Cloudflare's Workers pool cannot use V8 coverage.
     provider=v8
     [ -d "$pkg/node_modules/@vitest/coverage-istanbul" ] && provider=istanbul
-    # Vitest 3 and 4 match an include against the absolute path. Vitest 5 matches it
-    # against the normalized path from the package, so that form climbs only to the
-    # nearest common directory. Each file goes in both forms.
+    # Vitest 3 and 4 match an include against the absolute path, and Vitest 5 does
+    # so for a file outside the package: the escaped repo path under **/ serves both.
+    # Vitest 5 matches a file inside the package by its path from the package, so
+    # that file also goes in that form. Nothing names a file outside the package
+    # by a path that its glob can reach: Vitest 4 Istanbul then lists the file as
+    # untested, cannot transform it, and stops the run.
     pkgargs=()
+    j=0
     for f in "${changed[@]}"; do
-      pkgargs+=("--coverage.include=$root/$f")
-      p=$pkg up=""
-      while [ "$p" != . ]; do
-        case $f in "$p"/*) break ;; esac
-        case $p in */*) p=${p%/*} ;; *) p=. ;; esac
-        up="../$up"
-      done
-      [ "$p" = . ] || f=${f#"$p"/}
-      pkgargs+=("--coverage.include=$up$f")
+      pkgargs+=("--coverage.include=${anywhere[$j]}")
+      j=$((j + 1))
+      if [ "$pkg" = . ]; then
+        pkgargs+=("--coverage.include=$f")
+      else
+        case $f in "$pkg"/*) pkgargs+=("--coverage.include=${f#"$pkg"/}") ;; esac
+      fi
     done
     # Without a projects config, a run's default include also finds the tests of
     # each package inside it and runs them under its own config.
