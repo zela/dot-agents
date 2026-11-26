@@ -72,10 +72,11 @@ else
   echo "craft: no local Vitest with @vitest/coverage-v8 or @vitest/coverage-istanbul. Scoring complexity only." >&2
 fi
 
-# crapper merges every lcov.info under coverage/ and target/coverage/.
+# crapper reads every lcov.info under coverage/ and target/coverage/. For a file
+# that is in two reports, the report read last replaces the other, in glob order.
 stale=$(find coverage target/coverage -name lcov.info -not -path 'coverage/craft/*' 2>/dev/null || true)
 if [ -n "$stale" ]; then
-  echo "craft: crapper also merges these reports; scores can be stale while they exist:" >&2
+  echo "craft: crapper also reads these reports; one can replace this run's coverage, so scores can be stale while they exist:" >&2
   printf '  %s\n' $stale >&2
 fi
 
