@@ -6,9 +6,10 @@
 #   check-changed.sh               # working tree against HEAD, plus untracked files
 #   check-changed.sh --since main  # everything since the merge base with main
 #
-# It installs nothing. Coverage comes from the project's own Vitest and coverage
-# provider. Without them, crapper scores complexity only.
-# It writes coverage/craft/ (Vitest LCOV) and .metrics/ (crapper and dryer snapshots).
+# It installs nothing. Coverage comes from the Vitest and coverage provider of
+# each package that has them, the root included. Without them, crapper scores
+# complexity only.
+# It writes coverage/craft/ (merged LCOV) and .metrics/ (crapper and dryer snapshots).
 
 set -euo pipefail
 
@@ -59,17 +60,87 @@ if [ "${#changed[@]}" -eq 0 ]; then
 fi
 echo "craft: ${#changed[@]} changed source file(s) since $base"
 
+# Every package (the root included) with its own Vitest and coverage provider.
+# A local binary and provider only: npx or Vitest's own prompt would install them.
+packages=()
+while IFS= read -r pkg; do
+  [ -x "$pkg/node_modules/.bin/vitest" ] || continue
+  [ -d "$pkg/node_modules/@vitest/coverage-istanbul" ] || [ -d "$pkg/node_modules/@vitest/coverage-v8" ] || continue
+  packages+=("$pkg")
+done < <(
+  git ls-files --cached --others --exclude-standard -- package.json '*/package.json' |
+    while IFS= read -r p; do dirname "$p"; done | sort -u
+)
+
 coverage=(--no-coverage)
-vitest=node_modules/.bin/vitest
-if [ -x "$vitest" ] && { [ -d node_modules/@vitest/coverage-v8 ] || [ -d node_modules/@vitest/coverage-istanbul ]; }; then
-  # A local binary and provider only: npx or Vitest's own prompt would install them.
-  cmd="$vitest run --passWithNoTests --coverage.enabled=true --coverage.reporter=lcov"
-  cmd="$cmd --coverage.reportsDirectory=coverage/craft --coverage.reportOnFailure=true"
-  if [ -n "$since" ]; then cmd="$cmd --changed=$base"; else cmd="$cmd --changed"; fi
-  for f in "${changed[@]}"; do cmd="$cmd --coverage.include=$(printf %q "$f")"; done
-  coverage=(--coverage-command "$cmd")
+if [ "${#packages[@]}" -gt 0 ]; then
+  # Each package runs its own tests with its own config (a Workers pool, say),
+  # and a test in one package can cover a file in another. crapper keeps only the
+  # last report for a file that two reports cover, so the reports are merged
+  # here into one, with repo-relative paths.
+  root=$(pwd -P)
+  raw=$(mktemp -d)
+  args=(run --passWithNoTests --coverage.enabled=true --coverage.reporter=lcov
+    --coverage.reportOnFailure=true --coverage.allowExternal=true)
+  if [ -n "$since" ]; then args+=("--changed=$base"); else args+=(--changed); fi
+  for f in "${changed[@]}"; do args+=("--coverage.include=$root/$f"); done
+
+  i=0
+  for pkg in "${packages[@]}"; do
+    i=$((i + 1))
+    # Istanbul when the package has it: Cloudflare's Workers pool cannot use V8 coverage.
+    provider=v8
+    [ -d "$pkg/node_modules/@vitest/coverage-istanbul" ] && provider=istanbul
+    echo "craft: coverage from the tests in $pkg ($provider)" >&2
+    (cd "$pkg" && node_modules/.bin/vitest "${args[@]}" --coverage.provider="$provider" \
+      --coverage.reportsDirectory="$raw/$i" >&2) ||
+      echo "craft: Vitest in $pkg exited non-zero; its coverage still counts" >&2
+    [ -f "$raw/$i/lcov.info" ] || continue
+    # Vitest writes SF paths relative to the package, or absolute.
+    awk -v pkg="$pkg" -v root="$root" '
+      function norm(p,   n, i, part, out, k, s) {
+        n = split(p, part, "/"); k = 0
+        for (i = 1; i <= n; i++) {
+          if (part[i] == "" || part[i] == ".") continue
+          if (part[i] == ".." && k > 0) { k--; continue }
+          out[++k] = part[i]
+        }
+        s = ""
+        for (i = 1; i <= k; i++) s = s (i > 1 ? "/" : "") out[i]
+        return s
+      }
+      /^SF:/ {
+        f = substr($0, 4)
+        if (index(f, root "/") == 1) f = substr(f, length(root) + 2)
+        else if (pkg != ".") f = pkg "/" f
+        print "SF:" norm(f); next
+      }
+      { print }' "$raw/$i/lcov.info" >> "$raw/all.info"
+  done
+
+  if [ -f "$raw/all.info" ]; then
+    mkdir -p coverage/craft
+    # Sum line and branch hits per file across the package reports.
+    awk '
+      /^SF:/ { f = substr($0, 4); seen[f] = 1; next }
+      /^DA:/ { split(substr($0, 4), a, ","); da[f SUBSEP a[1]] += a[2]; next }
+      /^BRDA:/ {
+        split(substr($0, 6), b, ",")
+        k = f SUBSEP b[1] "," b[2] "," b[3]
+        br[k] += (b[4] == "-" ? 0 : b[4]); next
+      }
+      END {
+        for (k in da) { split(k, p, SUBSEP); out[p[1]] = out[p[1]] "DA:" p[2] "," da[k] "\n" }
+        for (k in br) { split(k, p, SUBSEP); out[p[1]] = out[p[1]] "BRDA:" p[2] "," br[k] "\n" }
+        for (f in seen) printf "SF:%s\n%send_of_record\n", f, out[f]
+      }' "$raw/all.info" > coverage/craft/lcov.info
+    coverage=(--use-existing-coverage)
+  else
+    echo "craft: no package wrote a coverage report. Scoring complexity only." >&2
+  fi
+  rm -rf "$raw"
 else
-  echo "craft: no local Vitest with @vitest/coverage-v8 or @vitest/coverage-istanbul. Scoring complexity only." >&2
+  echo "craft: no package has a local Vitest with @vitest/coverage-v8 or @vitest/coverage-istanbul. Scoring complexity only." >&2
 fi
 
 # crapper reads every lcov.info under coverage/ and target/coverage/. For a file

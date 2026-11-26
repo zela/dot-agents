@@ -4,8 +4,9 @@
 
 ## Before you run it
 
-- The script runs the tests related to the changed files (`vitest run --changed`). If those tests take minutes in this project, ask the user first. Under `AGENTS.md`, that run is a heavy operation.
-- The script installs nothing. For coverage, it needs `node_modules/.bin/vitest` and `@vitest/coverage-v8` or `@vitest/coverage-istanbul`. Without them, it scores complexity only. Say so in the Right note. Name the dev dependency that the user can add.
+- The script runs the tests related to the changed files (`vitest run --changed`). It does this in each package that has a coverage setup, the root included. If those tests take minutes in this project, ask the user first. Under `AGENTS.md`, that run is a heavy operation.
+- The script installs nothing. A package has a coverage setup when its own `node_modules` holds `.bin/vitest` and `@vitest/coverage-v8` or `@vitest/coverage-istanbul`. If no package has one, the script scores complexity only. Say so in the Right note. Name the dev dependency that the user can add to each package with tests.
+- A package that runs its tests in Cloudflare's Workers pool (`@cloudflare/vitest-pool-workers`) needs `@vitest/coverage-istanbul`. That pool does not support V8 coverage. The script uses Istanbul whenever a package has it.
 - The script writes `coverage/craft/` and `.metrics/`. Both are generated output. Keep them out of every commit.
 - Exit 3 means that crapper or dryer is not on `PATH`. Give the user the lines that the script prints. Then do the other Right items by hand. The user installs the tools.
 - A warning about other `lcov.info` reports means that crapper also reads them. For a file that is in two reports, one report replaces the other. As a result, the scores can be stale. Name the files to the user. The user decides whether to remove them.
