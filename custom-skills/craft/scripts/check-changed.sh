@@ -13,6 +13,10 @@
 
 set -euo pipefail
 
+# Bash keeps one EXIT trap, so every temp path is registered here.
+tmp=()
+trap 'if [ "${#tmp[@]}" -gt 0 ]; then rm -rf "${tmp[@]}"; fi' EXIT
+
 since=""
 case "${1:-}" in
   --since) since="${2:?--since needs a git ref}" ;;
@@ -80,6 +84,7 @@ if [ "${#packages[@]}" -gt 0 ]; then
   # here into one, with repo-relative paths.
   root=$(pwd -P)
   raw=$(mktemp -d)
+  tmp+=("$raw")
   args=(run --passWithNoTests --coverage.enabled=true --coverage.reporter=lcov
     --coverage.reportOnFailure=true --coverage.allowExternal=true)
   if [ -n "$since" ]; then args+=("--changed=$base"); else args+=(--changed); fi
@@ -138,7 +143,6 @@ if [ "${#packages[@]}" -gt 0 ]; then
   else
     echo "craft: no package wrote a coverage report. Scoring complexity only." >&2
   fi
-  rm -rf "$raw"
 else
   echo "craft: no package has a local Vitest with @vitest/coverage-v8 or @vitest/coverage-istanbul. Scoring complexity only." >&2
 fi
@@ -164,7 +168,7 @@ while IFS= read -r f; do all+=("$f"); done < <(
   { git ls-files; git ls-files --others --exclude-standard; } | sources
 )
 list=$(mktemp)
-trap 'rm -f "$list"' EXIT
+tmp+=("$list")
 printf '%s\n' "${changed[@]}" > "$list"
 dryer "${all[@]}" | awk -v list="$list" '
   BEGIN { while ((getline f < list) > 0) changed[f] = 1; RS = "" }
