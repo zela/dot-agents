@@ -152,7 +152,7 @@ Iteration 1 had two flaws. Its prompts gave the traps away, so the hidden tests 
 
 ## Not done yet
 
-1. A run on one of the user's real projects with the current script. The user's commit 626f2b0 records a run of the first per-package version on oninvest-drafter, with Vitest 4.1.8: the BFF package ran on Istanbul and the FE package on V8. A rerun of the current script there is still to do. That project stays on Vitest 4: `@cloudflare/vitest-pool-workers` 0.23.0, the latest on 2026-11-26, requires `vitest ^4.1.0`. Not yet checked: a real Workers pool, `.astro` files.
+1. Not yet checked: `.astro` files. Executed on 2026-11-26 on oninvest-drafter (Vitest 4.1.8), with `--since 3a7991b~1`. That range has 9 changed source files across `apps/bff`, `apps/fe` and `packages/eval-pipeline`. BFF ran its 551 tests in the Workers pool on Istanbul and FE ran 195 on V8, in 33 s. Every changed file got a coverage record, and the `eval-pipeline` files were covered by BFF tests from outside that package. The project stays on Vitest 4, because `@cloudflare/vitest-pool-workers` 0.23.0, the latest on 2026-11-26, requires `vitest ^4.1.0`.
 2. The user chose to keep the reply length as it is.
 
 ## Shipped (2026-10-28)
